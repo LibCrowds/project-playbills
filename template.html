@@ -1,76 +1,100 @@
 <link type="text/css" rel="stylesheet" href="https://annotorious.github.io/latest/themes/dark/annotorious-dark.css"/>
 <style>
     #openseadragon {
-        width: 100%;
-        height: 600px;
-        background-color: #000;
+        height: calc(100vh - 96px);
     }
+	.project-content {
+		background-color: #000;
+		margin-top: 48px;
+	}
+	.bg-inverse {
+		background-color: #1B1B1B;
+	}
 </style>
-<div class="row skeleton">
+<div class="row project-content">
 
     <!-- Image column -->
-    <div class="col-xs-12 col-sm-8">
+    <div class="col-sm-9 pr-0">
         <div id="openseadragon"></div>
     </div>
 	
   	<!-- Question and answer column -->
-    <div class="col-xs-12 col-sm-4">
-        <div class="row">
-            <div class="col-xs-12">
-                <p class="lead">Please mark each play</p>
-            </div>
-      	</div>
-        <hr>
-        <div class="row">
-            <div class="col-xs-12 text-center">
-                <div id="annotation-fields"></div>
-            </div>
-        </div>
-        <hr>
-        <div class="row">
-            <div class="col-xs-6 text-right">
-                <a href="../tutorial" class="btn btn-inverse"><span class="fa fa-book"></span> Tutorial</a>
-            </div>
-            <div class="col-xs-6 text-left">
-                <a href="#comments" id="comments-btn" class="btn btn-inverse" data-toggle="collapse"><span class="fa fa-plus"></span>Comment</a>
-            </div>
-        </div>
-        <div class="row">
-            <div class="col-xs-12">
-                <div class="collapse" id="comments">
-                    <textarea id="comments" class="form-control" rows="5" placeholder="Comments"></textarea>
-                </div>
-            </div>
-        </div>
-      <div class="row">
-        <div class="col-xs-6 col-xs-offset-3 text-center">
-            <button class="btn btn-success btn-answer"><span class="fa fa-thumbs-o-up"></span> Done</button>
-        </div>
-      </div>
-      
-      
-      <hr>
-      
-      
-      <!-- Feedback items for the user -->
-		<div class="text-center">
-		    <p>You are working on task: <span class="label label-default" id="task-id">#</span></p>
+    <div class="col-sm-3 pl-0 pr-0">
+		<div class="container-fluid bg-inverse py-2">
+            <p class="text-white">
+				Use the selection tool to identify each field...
+			</p>
+			<hr>
+			<div id="annotation-buttons" class="text-center"></div>
+			<hr>
+			<div class="row">
+				<div class="col-sm-6 text-right">
+					<a href="../tutorial" class="text-white"> <span class="fa fa-book"></span> Tutorial</a>
+				</div>
+				<div class="col-sm-6 text-left">
+					<a href="#comments" id="comments-btn" data-toggle="collapse" class="text-white"><span class="fa fa-plus"></span> Comment</a>
+				</div>
+			</div>
+			<div class="collapse mt-1" id="comments">
+				<textarea id="comments" class="form-control" rows="5" placeholder="Comments"></textarea>
+			</div>
+			<hr>
+			<div class="row">
+				<div class="col-sm-12 text-center">
+					<button class="btn btn-success btn-answer"><span class="fa fa-floppy-o"></span> Save</button>
+				</div>
+			</div>
+			<hr>
+			<div class="text-center">
+				<p class="text-white">You are working on task: <span id="task-id">#</span></p>
+			</div>
 		</div>
-
-       
     </div>
 </div>
 
-<script type="text/javascript" src="https://cdn.rawgit.com/LibCrowds/project-crop-images/df314d2e/assets/openseadragon-2.2.1/openseadragon.min.js"></script>
 <script type="text/javascript" src="https://annotorious.github.io/latest/annotorious.min.js"></script>
 <script>
+	// Specify categories
+	const categories = {
+		"title": {
+			"title": "Title",
+			"placeholder": "Type the title",
+			"color": "#BA0000"
+		},
+		"author": {
+			"title": "Author",
+			"placeholder": "Type the author",
+			"color": "blue"
+		}
+	};
+	
     // Setup the OpenSeadragon viewer.
     const viewer = OpenSeadragon({
         id: "openseadragon",
-        prefixUrl: "https://cdn.rawgit.com/LibCrowds/project-crop-images/df314d2e/assets/openseadragon-2.2.1/images/",
-        defaultZoomLevel: 0.9
+        prefixUrl: "/static/img/openseadragon/",
+        defaultZoomLevel: 0.5
     });
+    
+    // Setup annotations.
     anno.makeAnnotatable(viewer);
+	
+	/** Add a category to new annotations. */
+	anno.addHandler('onAnnotationCreated', (annotation) => {
+		if ($('.annotation.active').length !== 1) {
+			pybossaNotify('The active category could not be determined', 'error');
+		}
+		annotation.category = $('.annotation.active').first().data('category');
+	});
+	
+	/** Change the placeholder before the editor is shown.  */
+	anno.addHandler('onEditorShown', (annotation) => {
+		const category    = $('.annotation.active').first().data('category'),
+		      placeholder = categories[category].placeholder;
+		if ($('.annotation.active').length !== 1) {
+			pybossaNotify('The active category could not be determined', 'error');
+		}
+		$('.annotorious-editor-text').attr('placeholder', placeholder);
+	});
     
     /** Clear the comments box. */
     function resetComments() {
@@ -108,14 +132,19 @@
     }
     
     /** Setup annotation buttons. */
-    function setupButtons(task) {
-        const fields = task.info.fields || ['annotation'];
-        $('#annotation-fields').html('');
-        for (let i = 0; i < fields.length; i++) {
-            $('#annotation-fields').append(`<button id="${fields[i]}-annotation" class="btn btn-default annotation">${fields[i]}</button>`);
+    function setupButtons() {
+        $('#annotation-buttons').html('');
+		for(let key in categories) {
+			if (categories.hasOwnProperty(key)) {
+				let button = $(`<button data-category="${key}" href="#">${categories[key].title}</button><br><br>`);
+				button.addClass('btn btn-info annotation');
+				$('#annotation-buttons').append(button);
+			}
         }
         
         $('.annotation').on('click', function() {
+			$('.annotation').removeClass('active');
+			$(this).addClass('active');
             anno.activateSelector();
         });
     }
@@ -125,7 +154,7 @@
         if (!$.isEmptyObject(task)) {
             loadImage(task.info.url_b);
             viewer.addHandler('tile-loaded', function() {
-                setupButtons(task);
+                setupButtons();
                 loadAnnotations(task);
                 deferred.resolve(task);
             });
@@ -143,7 +172,7 @@
                 task.answer = {
                     annotations: anno.getAnnotations()
                 };
-                console.log(task.answer);
+                console.log(JSON.stringify(task.answer, null, 2));
                 pybossa.saveTask(task.id, task.answer).done(function() {
                     deferred.resolve();
                     pybossaNotify('Answer saved!', 'success', true);
@@ -152,10 +181,9 @@
                 });
             });
         } else {
-          $(".skeleton").hide();
-          $('image-container').hide();
+          $(".project-content").hide();
           pybossaNotify('Congratulations! You have contributed to all available tasks!', 'success');
         }
     });
-    pybossa.run('marktest');
+    pybossa.run('project-annotate');
 </script>
