@@ -1,69 +1,127 @@
-<link type="text/css" rel="stylesheet" href="https://annotorious.github.io/latest/themes/dark/annotorious-dark.css"/>
+<link type="text/css" rel="stylesheet" href="https://annotorious.github.com/latest/annotorious.css"/>
 <style>
-    #openseadragon {
-        height: calc(100vh - 96px);
-    }
-	.project-content {
-		background-color: #000;
-		margin-top: 48px;
+	#openseadragon {
+		background-color: #DEDEDE;
+		border-right: 1px solid #D0D0D0;
 	}
-	.bg-inverse {
-		background-color: #1B1B1B;
+	#answer-column {
+		overflow-y: auto;
 	}
 </style>
-<div class="row project-content">
 
-    <!-- Image column -->
-    <div class="col-sm-9 pr-0">
-        <div id="openseadragon"></div>
-    </div>
+<div class="project-content bg-faded">
+	<div class="row">
 	
-  	<!-- Question and answer column -->
-    <div class="col-sm-3 pl-0 pr-0">
-		<div class="container-fluid bg-inverse py-2">
-            <p class="text-white">
-				Use the selection tool to identify each field...
-			</p>
+		<!-- Image column -->
+		<div class="col-sm-9">
+			<div id="openseadragon" class="h-100"></div>
+		</div>
+		
+		<!-- Question and answer column -->
+		<div id="answer-column" class="col-sm-3 text-center py-2">
+			<div id="opeanseadragon-buttons" class="btn-group">
+				<button id="zoom-in" class="btn btn-secondary btn-sm"><span class="fa fa-search-plus"></button>
+				<button id="zoom-out" class="btn btn-secondary btn-sm"><span class="fa fa-search-minus"></button>
+				<button id="home" class="btn btn-secondary btn-sm"><span class="fa fa-home"></button>
+				<button id="full-page" class="btn btn-secondary btn-sm"><span class="fa fa-expand"></button>
+			</div>
 			<hr>
 			<div id="annotation-buttons" class="text-center"></div>
 			<hr>
 			<div class="row">
 				<div class="col-sm-6 text-right">
-					<a href="../tutorial" class="text-white"> <span class="fa fa-book"></span> Tutorial</a>
+					<a href="../tutorial"><small><span class="fa fa-book"></span> Tutorial</small></a>
 				</div>
 				<div class="col-sm-6 text-left">
-					<a href="#comments" id="comments-btn" data-toggle="collapse" class="text-white"><span class="fa fa-plus"></span> Comment</a>
+					<a href="#comments" id="comments-btn" data-toggle="collapse"><small><span class="fa fa-plus"></span> Comment</small></a>
 				</div>
 			</div>
 			<div class="collapse mt-1" id="comments">
-				<textarea id="comments" class="form-control" rows="5" placeholder="Comments"></textarea>
+				<textarea id="comments" class="form-control" rows="5" placeholder="Enter any additional comments"></textarea>
 			</div>
 			<hr>
-			<div class="row">
-				<div class="col-sm-12 text-center">
-					<button class="btn btn-success btn-answer"><span class="fa fa-floppy-o"></span> Save</button>
-				</div>
-			</div>
-			<hr>
-			<div class="text-center">
-				<p class="text-white">You are working on task: <span id="task-id">#</span></p>
-			</div>
+			<button class="btn btn-success btn-answer"><span class="fa fa-floppy-o"></span> Save</button>
+			<p class="mt-2">You are working on task: <span id="task-id" class="badge badge-info">#</span></p>
 		</div>
-    </div>
+	</div>
 </div>
 
+<script type="text/javascript" src="https://cdn.socket.io/socket.io-1.3.7.js"></script>
 <script type="text/javascript" src="https://annotorious.github.io/latest/annotorious.min.js"></script>
+<script type="text/javascript" src="https://annotorious.github.io/latest/anno-fancybox.min.js"></script>
 <script>
+	/**
+	 * Client that adds additional info to annotations and handles RethinkDB access.
+	 */
+	function AnnotationClient(task) {
+		this.task = task;
+		this.baseURL = '/rethinkdb/annotate/';
+		
+		this.saveAnnotation = function(annotation) {
+			annotation.category = $('.annotation.active').first().data('category');
+			annotation.task_id = task.id;
+			$.ajax({
+				type: "POST",
+				contentType: "application/json; charset=utf-8",
+				url: this.baseURL + "insert",
+				data: JSON.stringify([annotation]),
+				dataType: "json",
+				error: function(err) {
+					notify(err.statusText, 'error');
+				}
+			});
+		};
+		
+		this.loadAnnotations = function() {
+			const filters = {task_id: task.id};
+			$.getJSON(this.baseURL + "get", filters, function(annotations) {
+				for (let a of annotations) {
+					anno.addAnnotation(a);
+				}
+			});
+		};
+		
+		this.updateAnnotation = function(annotation) {
+			$.ajax({
+				type: "PUT",
+				contentType: "application/json; charset=utf-8",
+				url: this.baseURL + "update/" + annotation.id,
+				data: JSON.stringify(annotation),
+				dataType: "json",
+				error: function(err) {
+					notify(err.statusText, 'error');
+				}
+			});
+		};
+	}
+	
+	client = null;
+	
 	// Specify categories
 	const categories = {
 		"title": {
 			"title": "Title",
-			"placeholder": "Type the title",
+			"placeholder": "Type the title of the play",
 			"color": "#BA0000"
 		},
+		"subtitle": {
+			"title": "Subtitle",
+			"placeholder": "Type any subtitle for the play",
+			"color": "blue"
+		},
 		"author": {
-			"title": "Author",
-			"placeholder": "Type the author",
+			"title": "Actor",
+			"placeholder": "Type the name of an actor",
+			"color": "blue"
+		},
+		"role": {
+			"title": "Role",
+			"placeholder": "Type the name or role of a character in the play",
+			"color": "blue"
+		},
+		"theatre": {
+			"title": "Theatre",
+			"placeholder": "Type the name of the theatre",
 			"color": "blue"
 		}
 	};
@@ -72,18 +130,29 @@
     const viewer = OpenSeadragon({
         id: "openseadragon",
         prefixUrl: "/static/img/openseadragon/",
-        defaultZoomLevel: 0.5
+        defaultZoomLevel: 0.5,
+		zoomInButton:   "zoom-in",
+		zoomOutButton:  "zoom-out",
+		homeButton:     "home",
+		fullPageButton: "full-page",
     });
     
     // Setup annotations.
     anno.makeAnnotatable(viewer);
+	anno.addPlugin('FancyBoxSelector', { activate: true });
 	
-	/** Add a category to new annotations. */
-	anno.addHandler('onAnnotationCreated', (annotation) => {
-		if ($('.annotation.active').length !== 1) {
-			pybossaNotify('The active category could not be determined', 'error');
-		}
-		annotation.category = $('.annotation.active').first().data('category');
+	/** */
+	anno.addHandler('onAnnotationCreated', (annotation) => {  // I think we have to add the category here, it's safer
+		client.saveAnnotation(annotation);
+	});
+	
+	/** */
+	anno.addHandler('onAnnotationUpdated', (annotation) => {
+		client.updateAnnotation(annotation);
+	});
+	
+	anno.addHandler('beforeAnnotationRemoved', (annotation) => {  
+		// Confirm deletion
 	});
 	
 	/** Change the placeholder before the editor is shown.  */
@@ -91,7 +160,7 @@
 		const category    = $('.annotation.active').first().data('category'),
 		      placeholder = categories[category].placeholder;
 		if ($('.annotation.active').length !== 1) {
-			pybossaNotify('The active category could not be determined', 'error');
+			notify('The active category could not be determined', 'error');
 		}
 		$('.annotorious-editor-text').attr('placeholder', placeholder);
 	});
@@ -136,8 +205,8 @@
         $('#annotation-buttons').html('');
 		for(let key in categories) {
 			if (categories.hasOwnProperty(key)) {
-				let button = $(`<button data-category="${key}" href="#">${categories[key].title}</button><br><br>`);
-				button.addClass('btn btn-info annotation');
+				let button = $(`<button data-category="${key}" href="#">${categories[key].title}</button>`);
+				button.addClass('btn btn-primary btn-sm btn-block annotation');
 				$('#annotation-buttons').append(button);
 			}
         }
@@ -148,6 +217,10 @@
             anno.activateSelector();
         });
     }
+	
+	viewer.addHandler('open-failed', function(evt) {
+		notify(evt.message, 'error');
+	});
   
    /** Load the image. */
     pybossa.taskLoaded(function(task, deferred) {
@@ -156,6 +229,8 @@
             viewer.addHandler('tile-loaded', function() {
                 setupButtons();
                 loadAnnotations(task);
+				client = new AnnotationClient(task);
+				client.loadAnnotations();
                 deferred.resolve(task);
             });
         } else {
