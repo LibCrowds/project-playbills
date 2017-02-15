@@ -1,177 +1,232 @@
-<link type="text/css" rel="stylesheet" href="https://annotorious.github.com/latest/annotorious.css"/>
 <style>
-	#openseadragon {
-		background-color: #DEDEDE;
-		border-right: 1px solid #D0D0D0;
-	}
-	#answer-column {
-		overflow-y: auto;
-	}
+    #openseadragon {
+        height: 60vh;
+        background-color: #000000;
+    }
+    .btn {
+        cursor: pointer;
+    }
+    #navigation-buttons {
+        position: absolute;
+        z-index: 2;
+    }
+    #answer-column {
+        overflow-y: auto;
+    }
+    .selection,
+    .selection-box {
+        border-width: 2px !important;
+        border-style: solid !important;
+    }
+    .selection {
+        opacity: .75;
+    }
+    .selection:hover,
+    .selection.focus {
+        background-color: rgba(0, 0, 0, 0.5);
+    }
+    .btn-mark:before {
+        font-family: FontAwesome;
+        content: '\f10c'
+    }
+    .btn-mark.active:before {
+        content: '\f111'
+    }
+    .btn-mark:after {
+        content: ''
+    }
+    .text-initial {
+        color: initial;
+    }
+    @media (min-width: 768px) {
+        #openseadragon {
+            height: 100%;
+        }
+    }
 </style>
 
-<div class="project-content bg-faded">
-	<div class="row">
-	
-		<!-- Image column -->
-		<div class="col-sm-9">
-			<div id="openseadragon" class="h-100"></div>
-		</div>
-		
-		<!-- Question and answer column -->
-		<div id="answer-column" class="col-sm-3 text-center py-2">
-			<div id="opeanseadragon-buttons" class="btn-group">
-				<button id="zoom-in" class="btn btn-secondary btn-sm"><span class="fa fa-search-plus"></button>
-				<button id="zoom-out" class="btn btn-secondary btn-sm"><span class="fa fa-search-minus"></button>
-				<button id="home" class="btn btn-secondary btn-sm"><span class="fa fa-home"></button>
-				<button id="full-page" class="btn btn-secondary btn-sm"><span class="fa fa-expand"></button>
-			</div>
-			<hr>
-			<div id="annotation-buttons" class="text-center"></div>
-			<hr>
-			<div class="row">
-				<div class="col-sm-6 text-right">
-					<a href="../tutorial"><small><span class="fa fa-book"></span> Tutorial</small></a>
-				</div>
-				<div class="col-sm-6 text-left">
-					<a href="#comments" id="comments-btn" data-toggle="collapse"><small><span class="fa fa-plus"></span> Comment</small></a>
-				</div>
-			</div>
-			<div class="collapse mt-1" id="comments">
-				<textarea id="comments" class="form-control" rows="5" placeholder="Enter any additional comments"></textarea>
-			</div>
-			<hr>
-			<button class="btn btn-success btn-answer"><span class="fa fa-floppy-o"></span> Save</button>
-			<p class="mt-2">You are working on task: <span id="task-id" class="badge badge-info">#</span></p>
-		</div>
-	</div>
+<div id="project-content" class="bg-faded container-fluid d-flex flex-column h-100">
+    <div class="row">
+    
+        <!-- Viewer column -->
+        <div class="col-sm-12 col-md-9 px-0">
+            <div id="navigation-buttons" class="btn-group ml-2 mt-2">
+                <button id="zoom-in" class="btn btn-secondary btn-sm"><span class="fa fa-search-plus"></span></button>
+                <button id="zoom-out" class="btn btn-secondary btn-sm"><span class="fa fa-search-minus"></span></button>
+                <button id="home" class="btn btn-secondary btn-sm"><span class="fa fa-home"></span></button>
+                <button id="full-page" class="btn btn-secondary btn-sm"><span class="fa fa-expand"></span></button>
+            </div>
+            <div id="openseadragon"></div>
+        </div>
+        
+        <!-- Question and answer column -->
+        <div id="answer-column" class="col-sm-12 col-md-3 text-center py-3">
+            <p>
+                Click on a category below to annotate.
+            </p>
+            <hr>
+            <div id="annotation-buttons" class="text-center">
+                <button data-category="title" data-color="#2ecc71" class="btn btn-secondary btn-sm btn-block btn-mark d-flex align-items-center justify-content-between">
+                    <span class="text-initial">Title</span>
+                </button>
+                <button data-category="playwright" data-color="#9b59b6" class="btn btn-secondary btn-sm btn-block btn-mark d-flex align-items-center justify-content-between">
+                    <span class="text-initial">Playwright</span>
+                </button>
+                <button data-category="director" data-color="#34495e" class="btn btn-secondary btn-sm btn-block btn-mark d-flex align-items-center justify-content-between">
+                    <span class="text-initial">Director</span>
+                </button>
+                <button data-category="venue" data-color="#f1c40f" class="btn btn-secondary btn-sm btn-block btn-mark d-flex align-items-center justify-content-between">
+                    <span class="text-initial">Venue</span>
+                </button>
+                <button data-category="actor" data-color="#3498db" class="btn btn-secondary btn-sm btn-block btn-mark d-flex align-items-center justify-content-between">
+                    <span class="text-initial">Actor and Role</span>
+                </button>
+                <button data-category="dates" data-color="#e74c3c" class="btn btn-secondary btn-sm btn-block btn-mark d-flex align-items-center justify-content-between">
+                    <span class="text-initial">Dates</span>
+                </button>
+                <button data-category="production-staff" data-color="#e67e22" class="btn btn-secondary btn-sm btn-block btn-mark d-flex align-items-center justify-content-between">
+                    <span class="text-initial">Production Staff and Role</span>
+                </button>
+            <hr>
+                <button class="btn btn-success btn-sm btn-answer text-center"><span class="fa fa-floppy-o"></span> Mark as Complete</button>
+                <hr>
+                <p class="mt-2"><small>You are working on task: <span id="task-id" class="badge badge-info"></span></small></p>
+                <p><a href="../tutorial"><small><span class="fa fa-book"></span> Tutorial</small></a></p>
+        </div>
+    </div>
 </div>
 
 <script type="text/javascript" src="https://cdn.socket.io/socket.io-1.3.7.js"></script>
-<script type="text/javascript" src="https://annotorious.github.io/latest/annotorious.min.js"></script>
-<script type="text/javascript" src="https://annotorious.github.io/latest/anno-fancybox.min.js"></script>
 <script>
-	/**
-	 * Client that adds additional info to annotations and handles RethinkDB access.
-	 */
-	function AnnotationClient(task) {
-		this.task = task;
-		this.baseURL = '/rethinkdb/annotate/';
-		
-		this.saveAnnotation = function(annotation) {
-			annotation.category = $('.annotation.active').first().data('category');
-			annotation.task_id = task.id;
-			$.ajax({
-				type: "POST",
-				contentType: "application/json; charset=utf-8",
-				url: this.baseURL + "insert",
-				data: JSON.stringify([annotation]),
-				dataType: "json",
-				error: function(err) {
-					notify(err.statusText, 'error');
-				}
-			});
-		};
-		
-		this.loadAnnotations = function() {
-			const filters = {task_id: task.id};
-			$.getJSON(this.baseURL + "get", filters, function(annotations) {
-				for (let a of annotations) {
-					anno.addAnnotation(a);
-				}
-			});
-		};
-		
-		this.updateAnnotation = function(annotation) {
-			$.ajax({
-				type: "PUT",
-				contentType: "application/json; charset=utf-8",
-				url: this.baseURL + "update/" + annotation.id,
-				data: JSON.stringify(annotation),
-				dataType: "json",
-				error: function(err) {
-					notify(err.statusText, 'error');
-				}
-			});
-		};
-	}
-	
-	client = null;
-	
-	// Specify categories
-	const categories = {
-		"title": {
-			"title": "Title",
-			"placeholder": "Type the title of the play",
-			"color": "#BA0000"
-		},
-		"subtitle": {
-			"title": "Subtitle",
-			"placeholder": "Type any subtitle for the play",
-			"color": "blue"
-		},
-		"author": {
-			"title": "Actor",
-			"placeholder": "Type the name of an actor",
-			"color": "blue"
-		},
-		"role": {
-			"title": "Role",
-			"placeholder": "Type the name or role of a character in the play",
-			"color": "blue"
-		},
-		"theatre": {
-			"title": "Theatre",
-			"placeholder": "Type the name of the theatre",
-			"color": "blue"
-		}
-	};
-	
-    // Setup the OpenSeadragon viewer.
+    let taskID = null;
+    const table = 'selection';
+    
+    /**
+     * A class for interacting with the RethinkDB database.
+     */
+    class DatabaseClient {
+        
+        /**
+         * Make a request.
+         */
+        static request(method, endpoint, data, callback) {
+            const baseURL = `/rethinkdb/${table}/`;
+            $.ajax({
+                type: method,
+                contentType: "application/json; charset=utf-8",
+                url: baseURL + endpoint,
+                data: data,
+                dataType: "json",
+                success: function(result) {
+                    if (result === null) {
+                        notify('Result not found, has it just been deleted?', 'warning');
+                    } else if (result.errors) {
+                        logError(new Error(result.first_error), true);
+                    } else if (typeof callback !== 'undefined') {
+                        callback(result);    
+                    }
+                },
+                error: function(err) {
+                    logError(err, true);
+                }
+            });
+        }
+        
+        /** 
+         * Save some record data.
+         */
+        static save(data) {
+            DatabaseClient.request('POST', `${taskID}/insert`, JSON.stringify([data]));
+        }
+        
+        /** 
+         * Load a single record.
+         */
+        static load(primary_key, callback) {
+            DatabaseClient.request('GET', `get/${primary_key}`, primary_key, callback);
+        }
+        
+        /**
+         * Delete a record.
+         */
+        static remove(primary_key, callback) {
+            DatabaseClient.request('DELETE', `${taskID}/delete/${primary_key}`, null, callback);
+        }
+        
+        /** 
+         * Filter records.
+         */
+        static filter(data, callback) {
+            DatabaseClient.request('GET', 'filter', data, callback);
+        }
+        
+        /** 
+         * Update records.
+         */
+        static update(primary_key, data, callback) {
+            DatabaseClient.request('PUT', `${taskID}/update/${primary_key}`, data, callback);
+        }
+        
+        /**
+         * Subscribe to the project's event stream and handle changes.
+         */
+        static subscribe() {
+            const origin  = window.location.origin,
+                  url     = `${origin}/rethinkdb/${table}/subscribe`,
+                  source  = new EventSource(url);
+            source.onmessage = function (msg) {
+                const data = JSON.parse(msg.data);
+                if (data.old_val !== null && data.new_val !== null) {
+                    console.log('record updated');
+                    // Record updated
+                } else if (data.new_val !== null && data.new_val.task_id == taskID) {
+                    console.log('record added');
+                    drawSelections([data.new_val]);  // Record added
+                } else if (data.old_val.task_id !== null && data.old_val.task_id == taskID) {
+                    console.log('record removed');
+                    $(`#${data.old_val.id}`).remove();  // Record removed
+                }
+            };
+        }
+    }
+    
+    class Selector {
+        
+    }
+    
     const viewer = OpenSeadragon({
         id: "openseadragon",
         prefixUrl: "/static/img/openseadragon/",
-        defaultZoomLevel: 0.5,
-		zoomInButton:   "zoom-in",
-		zoomOutButton:  "zoom-out",
-		homeButton:     "home",
-		fullPageButton: "full-page",
+        zoomInButton:   "zoom-in",
+        zoomOutButton:  "zoom-out",
+        homeButton:     "home",
+        fullPageButton: "full-page",
+        showNavigator: true,
+        navigatorPosition: 'BOTTOM_RIGHT',
+        homeFillsViewer: true,
+        minZoomLevel: 0.2,
+        gestureSettingsMouse: {
+            clickToZoom: false
+        },
+        gestureSettingsTouch: {
+            clickToZoom: false
+        },
+        gestureSettingsPen: {
+            clickToZoom: false
+        }
     });
     
-    // Setup annotations.
-    anno.makeAnnotatable(viewer);
-	anno.addPlugin('FancyBoxSelector', { activate: true });
-	
-	/** */
-	anno.addHandler('onAnnotationCreated', (annotation) => {  // I think we have to add the category here, it's safer
-		client.saveAnnotation(annotation);
-	});
-	
-	/** */
-	anno.addHandler('onAnnotationUpdated', (annotation) => {
-		client.updateAnnotation(annotation);
-	});
-	
-	anno.addHandler('beforeAnnotationRemoved', (annotation) => {  
-		// Confirm deletion
-	});
-	
-	/** Change the placeholder before the editor is shown.  */
-	anno.addHandler('onEditorShown', (annotation) => {
-		const category    = $('.annotation.active').first().data('category'),
-		      placeholder = categories[category].placeholder;
-		if ($('.annotation.active').length !== 1) {
-			notify('The active category could not be determined', 'error');
-		}
-		$('.annotorious-editor-text').attr('placeholder', placeholder);
-	});
+    const selector = viewer.selection({
+        prefixUrl: "/static/img/openseadragonselection/",
+        restrictToImage: true
+    });
     
-    /** Clear the comments box. */
-    function resetComments() {
-        $('#comments').removeClass('in');
-        $('#comments').val('');
-    }
+    // Subscribe to project's the public event stream.
+    DatabaseClient.subscribe();
     
-    /** Load an image into the viewer. */
+    /**
+     * Load an image into the viewer.
+     */ 
     function loadImage(imageURL) {
         viewer.open({
             type: 'image',
@@ -180,84 +235,156 @@
         });
     }
     
-    /** Load previous annotations. */
-    function loadAnnotations(task) {
-        let annotations = [];
-        $.ajax({
-            url: '/api/taskrun',
-            data: `all=1?task_id=${task.id}`,
-            dataType: 'json'
-        }).done(function(taskRuns) {
-            for (let i = 0; i < taskRuns.length; i++) {
-                let trAnnotations = taskRuns[i].info.annotations;
-                for (let i = 0; i < trAnnotations; i++) {
-                    annotations.push($.JSON.parse(trAnnotations[i]));
-                }
-            }
-            for (let i = 0; i < annotations.length; i++) {
-                anno.add(annotations[i]);
-            }
-        });
+    /**
+     * Create record data from a selection.
+     */
+    function createRecordDataFromSelection(s) {
+        const args         = [s.x, s.y, s.width, s.height, s.degrees],
+              imageRect    = new OpenSeadragon.Rect(...args),
+                viewportRect = viewer.viewport.imageToViewportRectangle(imageRect);
+              data         = {
+                  category:     $('.btn-mark.active').data('category'),
+                  color:        $('.btn-mark.active').data('color'),
+                  imageRect:    imageRect,
+                  viewportRect: viewportRect
+            };
+        return data;
     }
     
-    /** Setup annotation buttons. */
-    function setupButtons() {
-        $('#annotation-buttons').html('');
-		for(let key in categories) {
-			if (categories.hasOwnProperty(key)) {
-				let button = $(`<button data-category="${key}" href="#">${categories[key].title}</button>`);
-				button.addClass('btn btn-primary btn-sm btn-block annotation');
-				$('#annotation-buttons').append(button);
-			}
-        }
-        
-        $('.annotation').on('click', function() {
-			$('.annotation').removeClass('active');
-			$(this).addClass('active');
-            anno.activateSelector();
-        });
-    }
-	
-	viewer.addHandler('open-failed', function(evt) {
-		notify(evt.message, 'error');
-	});
-  
-   /** Load the image. */
-    pybossa.taskLoaded(function(task, deferred) {
-        if (!$.isEmptyObject(task)) {
-            loadImage(task.info.url_b);
-            viewer.addHandler('tile-loaded', function() {
-                setupButtons();
-                loadAnnotations(task);
-				client = new AnnotationClient(task);
-				client.loadAnnotations();
-                deferred.resolve(task);
+    /**
+     * Draw a list of selections.
+     */
+    function drawSelections(selections) {
+        for (let s of selections) {
+            let elem = document.createElement("div");
+            elem.id = s.id;
+            elem.className = "selection";
+            elem.style.borderColor = s.data.color;
+            $(`#${s.id}`).remove();
+            viewer.addOverlay({
+                element: elem,
+                location: new OpenSeadragon.Rect(s.data.viewportRect.x,
+                                                 s.data.viewportRect.y,
+                                                 s.data.viewportRect.width,
+                                                 s.data.viewportRect.height)
             });
+        }
+    }
+    
+    /**
+     * Convert a selection back to a selection-box on click.
+     */
+    $('#openseadragon').on('click', '.selection', function() {
+        const primary_key = $(this).attr('id'),
+              callback    = function(record) {
+                  const pk   = record.id,
+                        cat  = record.data.category,
+                        r    = record.data.viewportRect,
+                        args = [r.x, r.y, r.width, r.height, r.degrees];
+                  selector.current_record = record;
+                  selector.rect = new OpenSeadragon.SelectionRect(...args);
+                  $(`.btn-mark[data-category="${cat}"]:not(.active)`).click();
+                  $(`#${pk}`).hide();
+                  selector.draw();
+              };
+        DatabaseClient.load(primary_key, callback);
+    });
+    
+    /**
+     * Handle a faliure to open an image
+     */
+    viewer.addHandler('open-failed', function(evt) {
+        notify(evt.message, 'error');
+    });
+    
+    /**
+     * Handle a selection being created/updated.
+     */
+    viewer.addHandler('selection', function(s) {
+        const selection = createRecordDataFromSelection(s);
+        if (selector.current_record) {
+            const primary_key = selector.current_record.id;
+            DatabaseClient.update(primary_key, selection);
+			selector.current_record = null;
         } else {
-            deferred.resolve(task);
+            DatabaseClient.save(selection);
         }
     });
+    
+    /**
+     * Handle a selection being canceled/destroyed.
+     */
+    viewer.addHandler('selection_cancel', function() {
+        if (selector.current_record) {
+			const primary_key = selector.current_record.id;
+            DatabaseClient.remove(primary_key);
+			selector.current_record = null;
+        }
+    });
+    
+    /**
+     * Enable/disable selector when a mark button is clicked.
+     */
+    $('.btn-mark').on('click', function() {
+        $('.btn-mark.active').not(this).removeClass('active');
+        $(this).toggleClass('active');
+        if ($('.btn-mark.active').length) {
+            const color = $('.btn-mark.active').data('color'),
+                  style = `.selection-box { border-color: ${color} !important; }`;
+            $("<style>").text(style).appendTo("head");
+            selector.enable();
+        } else {
+            selector.disable();
+        }
+    });
+    
+    /**
+     * Load the mark button colours.
+     */
+    $('.btn-mark').each(function() {
+        $(this).css('color', $(this).data('color'));
+    });
   
-    /** Present the task. */
+   /**
+    * Load the task.
+    */
+    pybossa.taskLoaded(function(task, deferred) {
+        deferred.resolve(task);
+    });
+  
+    /**
+     * Present the task.
+     */ 
     pybossa.presentTask(function(task, deferred) {
         if (!$.isEmptyObject(task)) {
-          	resetComments();
             $('#task-id').html(task.id);
+            taskID = task.id;
+            loadImage(task.info.url_b);
+            const params = {task_id: task.id};
+            viewer.addHandler('open', function() {
+                DatabaseClient.filter(params, drawSelections);
+            });
+            
             $('.btn-answer').off('click').on('click', function() {
-                task.answer = {
-                    annotations: anno.getAnnotations()
+                const saveCallback = function(selections) {
+                    task.answer = {
+                        selections: selections
+                    };
+                    
+                    console.log(JSON.stringify(task.answer, null, 2));
+                    
+                    pybossa.saveTask(task.id, task.answer).done(function() {
+                        deferred.resolve();
+                        notify('Answer saved, thanks!', 'success');
+                    }).fail(function(xhr, status, error) {
+                        logError(new Error(error));
+                    });
                 };
-                console.log(JSON.stringify(task.answer, null, 2));
-                pybossa.saveTask(task.id, task.answer).done(function() {
-                    deferred.resolve();
-                    pybossaNotify('Answer saved!', 'success', true);
-                }).fail(function(xhr, status, error) {
-                    pybossaLogError(new Error(error));
-                });
+                DatabaseClient.filter(null, saveCallback);
             });
         } else {
-          $(".project-content").hide();
-          pybossaNotify('Congratulations! You have contributed to all available tasks!', 'success');
+          $("#project-content").hide();
+          notify('Congratulations! You have contributed to all available tasks!', 'success');
         }
     });
     pybossa.run('project-annotate');
