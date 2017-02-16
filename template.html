@@ -47,7 +47,7 @@
 
 <div id="project-content" class="bg-faded container-fluid d-flex flex-column h-100">
     <div class="row">
-    
+
         <!-- Viewer column -->
         <div class="col-sm-12 col-md-9 px-0">
             <div id="navigation-buttons" class="btn-group ml-2 mt-2">
@@ -58,7 +58,7 @@
             </div>
             <div id="openseadragon"></div>
         </div>
-        
+
         <!-- Question and answer column -->
         <div id="answer-column" class="col-sm-12 col-md-3 text-center py-3">
             <p>
@@ -87,11 +87,23 @@
                 <button data-category="production-staff" data-color="#e67e22" class="btn btn-secondary btn-sm btn-block btn-mark d-flex align-items-center justify-content-between">
                     <span class="text-initial">Production Staff and Role</span>
                 </button>
-            <hr>
-                <button class="btn btn-success btn-sm btn-answer text-center"><span class="fa fa-floppy-o"></span> Mark as Complete</button>
-                <hr>
-                <p class="mt-2"><small>You are working on task: <span id="task-id" class="badge badge-info"></span></small></p>
-                <p><a href="../tutorial"><small><span class="fa fa-book"></span> Tutorial</small></a></p>
+			</div>
+			<hr>
+			<button class="btn btn-success btn-sm btn-answer"><span class="fa fa-floppy-o"></span> Mark as Complete</button>
+			<hr>
+			<div class="text-left">
+				<p class="mt-2"><small>You are working on task: <span id="task-id" class="badge badge-info"></span></small></p>
+				<p class="mb-1"><small><strong>Recent changes:</strong></small></p>
+				<div class="card text-left">
+					<div class="card-block p-1">
+						<div class="card-text">
+							<ul id="auditlogs-summary" class="list-unstyled m-0"></ul>
+						</div>
+					</div>
+				</div>
+			</div>
+			<button class="btn btn-info btn-sm my-2">View All</button>
+			<p><a href="../tutorial"><small><span class="fa fa-book"></span> Tutorial</small></a></p>
         </div>
     </div>
 </div>
@@ -99,21 +111,21 @@
 <script type="text/javascript" src="https://cdn.socket.io/socket.io-1.3.7.js"></script>
 <script>
     let taskID = null;
-    const table = 'selection';
-    
+    const mainTable  = 'selection',
+	      auditTable = 'auditlogs';
+
     /**
      * A class for interacting with the RethinkDB database.
      */
     class DatabaseClient {
-        
+
         /**
          * Make a request.
          */
-        static request(method, endpoint, data, callback) {
-            const baseURL = `/rethinkdb/${table}/`;
+        static request(method, table, endpoint, data, callback) {
+			const baseURL = `/rethinkdb/${table}/`;
             $.ajax({
                 type: method,
-                contentType: "application/json; charset=utf-8",
                 url: baseURL + endpoint,
                 data: data,
                 dataType: "json",
@@ -122,78 +134,64 @@
                         notify('Result not found, has it just been deleted?', 'warning');
                     } else if (result.errors) {
                         logError(new Error(result.first_error), true);
-                    } else if (typeof callback !== 'undefined') {
-                        callback(result);    
+                    } else if (callback) {
+                        callback(result);
                     }
                 },
-                error: function(err) {
-                    logError(err, true);
+                error: function(jqXHR) {
+                    logError(new Error(jqXHR.statusText), true);
                 }
             });
         }
-        
-        /** 
+
+        /**
          * Save some record data.
          */
-        static save(data) {
-            DatabaseClient.request('POST', `${taskID}/insert`, JSON.stringify([data]));
+        static save(table, data, callback) {
+            DatabaseClient.request('POST', table, `insert/${taskID}`, JSON.stringify(data), callback);
         }
-        
-        /** 
+
+        /**
          * Load a single record.
          */
-        static load(primary_key, callback) {
-            DatabaseClient.request('GET', `get/${primary_key}`, primary_key, callback);
+        static load(table, callback, primary_key) {
+            DatabaseClient.request('GET', table, `get/${primary_key}`, null, callback);
         }
-        
+
         /**
          * Delete a record.
          */
-        static remove(primary_key, callback) {
-            DatabaseClient.request('DELETE', `${taskID}/delete/${primary_key}`, null, callback);
+        static remove(table, callback, primary_key) {
+            DatabaseClient.request('DELETE', table, `delete/${primary_key}`, null, callback);
         }
-        
-        /** 
+
+        /**
          * Filter records.
          */
-        static filter(data, callback) {
-            DatabaseClient.request('GET', 'filter', data, callback);
+        static filter(table, data, callback) {
+            DatabaseClient.request('GET', table, 'filter', data, callback);
         }
-        
-        /** 
+
+        /**
          * Update records.
          */
-        static update(primary_key, data, callback) {
-            DatabaseClient.request('PUT', `${taskID}/update/${primary_key}`, data, callback);
+        static update(table, data, callback, primary_key) {
+            DatabaseClient.request('PUT', table, `update/${primary_key}`, data, callback);
         }
-        
+
         /**
          * Subscribe to the project's event stream and handle changes.
          */
-        static subscribe() {
+        static subscribe(table, callback) {
             const origin  = window.location.origin,
                   url     = `${origin}/rethinkdb/${table}/subscribe`,
                   source  = new EventSource(url);
             source.onmessage = function (msg) {
-                const data = JSON.parse(msg.data);
-                if (data.old_val !== null && data.new_val !== null) {
-                    console.log('record updated');
-                    // Record updated
-                } else if (data.new_val !== null && data.new_val.task_id == taskID) {
-                    console.log('record added');
-                    drawSelections([data.new_val]);  // Record added
-                } else if (data.old_val.task_id !== null && data.old_val.task_id == taskID) {
-                    console.log('record removed');
-                    $(`#${data.old_val.id}`).remove();  // Record removed
-                }
+				callback(msg);
             };
         }
     }
-    
-    class Selector {
-        
-    }
-    
+
     const viewer = OpenSeadragon({
         id: "openseadragon",
         prefixUrl: "/static/img/openseadragon/",
@@ -215,18 +213,46 @@
             clickToZoom: false
         }
     });
-    
+
     const selector = viewer.selection({
         prefixUrl: "/static/img/openseadragonselection/",
-        restrictToImage: true
+        restrictToImage: true,
+		styleConfirmDenyButtons: false
     });
-    
-    // Subscribe to project's the public event stream.
-    DatabaseClient.subscribe();
-    
+
+
+	/**
+	 * Handle changes to the main table.
+	 */
+	function handleMainTableChanges(msg) {
+		const data = JSON.parse(msg.data);
+		if (data.old_val !== null && data.new_val !== null) {
+			console.log('record updated');
+			// Record updated
+		} else if (data.new_val !== null && data.new_val.task_id == taskID) {
+			drawSelections([data.new_val]);  // Record added
+		} else if (data.old_val.task_id !== null && data.old_val.task_id == taskID) {
+			$(`#${data.old_val.id}`).remove();  // Record removed
+		}
+	}
+
+	/**
+	 * Handle changes to the audit logs table.
+	 */
+	function handleAuditTableChanges(msg) {
+		const data = JSON.parse(msg.data);
+		if (data.new_val !== null) {
+			loadAuditLogs([data.new_val])
+		}
+	}
+
+	// Setup event stream subscriptions
+	DatabaseClient.subscribe(mainTable, handleMainTableChanges);
+	DatabaseClient.subscribe(auditTable, handleAuditTableChanges);
+
     /**
      * Load an image into the viewer.
-     */ 
+     */
     function loadImage(imageURL) {
         viewer.open({
             type: 'image',
@@ -234,14 +260,14 @@
             buildPyramid: false
         });
     }
-    
+
     /**
      * Create record data from a selection.
      */
     function createRecordDataFromSelection(s) {
         const args         = [s.x, s.y, s.width, s.height, s.degrees],
               imageRect    = new OpenSeadragon.Rect(...args),
-                viewportRect = viewer.viewport.imageToViewportRectangle(imageRect);
+              viewportRect = viewer.viewport.imageToViewportRectangle(imageRect);
               data         = {
                   category:     $('.btn-mark.active').data('category'),
                   color:        $('.btn-mark.active').data('color'),
@@ -250,7 +276,7 @@
             };
         return data;
     }
-    
+
     /**
      * Draw a list of selections.
      */
@@ -270,7 +296,31 @@
             });
         }
     }
-    
+
+	/**
+	 * Return the time if the timestamp is today, otherwise the date.
+	 */
+	function formatWhen(ts) {
+		if (new Date(ts).setHours(0, 0, 0, 0) === new Date().setHours(0, 0, 0, 0)) {
+			return new Date(ts).toLocaleTimeString();
+		}
+		return new Date(ts).toLocaleTimeString();
+	}
+
+	/**
+	 * Load audit logs into an element.
+	 */
+	function loadAuditLogs(logs) {
+		for (let log of logs) {
+			if ($('#auditlogs-summary li').length > 10) {
+				$('#auditlogs-summary li:last-child').remove();
+			}
+			const user = log.user_name || log.user_ip,
+			      when = formatWhen(log.when);
+			$('#auditlogs-summary').prepend(`<li>${when} : ${user} - ${log.action}</li>`);
+		}
+	}
+
     /**
      * Convert a selection back to a selection-box on click.
      */
@@ -287,16 +337,16 @@
                   $(`#${pk}`).hide();
                   selector.draw();
               };
-        DatabaseClient.load(primary_key, callback);
+        DatabaseClient.load(mainTable, callback, primary_key);
     });
-    
+
     /**
      * Handle a faliure to open an image
      */
     viewer.addHandler('open-failed', function(evt) {
         notify(evt.message, 'error');
     });
-    
+
     /**
      * Handle a selection being created/updated.
      */
@@ -304,24 +354,24 @@
         const selection = createRecordDataFromSelection(s);
         if (selector.current_record) {
             const primary_key = selector.current_record.id;
-            DatabaseClient.update(primary_key, selection);
+            DatabaseClient.update(mainTable, selection, null, primary_key);
 			selector.current_record = null;
         } else {
-            DatabaseClient.save(selection);
+            DatabaseClient.save(mainTable, selection);
         }
     });
-    
+
     /**
      * Handle a selection being canceled/destroyed.
      */
     viewer.addHandler('selection_cancel', function() {
         if (selector.current_record) {
 			const primary_key = selector.current_record.id;
-            DatabaseClient.remove(primary_key);
+            DatabaseClient.remove(mainTable, null, primary_key);
 			selector.current_record = null;
         }
     });
-    
+
     /**
      * Enable/disable selector when a mark button is clicked.
      */
@@ -337,42 +387,44 @@
             selector.disable();
         }
     });
-    
+
     /**
      * Load the mark button colours.
      */
     $('.btn-mark').each(function() {
         $(this).css('color', $(this).data('color'));
     });
-  
+
    /**
     * Load the task.
     */
     pybossa.taskLoaded(function(task, deferred) {
         deferred.resolve(task);
     });
-  
+
     /**
      * Present the task.
-     */ 
+     */
     pybossa.presentTask(function(task, deferred) {
         if (!$.isEmptyObject(task)) {
             $('#task-id').html(task.id);
             taskID = task.id;
             loadImage(task.info.url_b);
-            const params = {task_id: task.id};
             viewer.addHandler('open', function() {
-                DatabaseClient.filter(params, drawSelections);
+				const mainArgs = {filter: JSON.stringify({task_id: task.id})};
+				const auditArgs = {filter: JSON.stringify({table: mainTable, task_id: task.id})};
+                DatabaseClient.filter(mainTable, mainArgs, function(result) { drawSelections(result.data); });
+				DatabaseClient.filter(auditTable, auditArgs, function(result) { loadAuditLogs(result.data); });
             });
-            
+
             $('.btn-answer').off('click').on('click', function() {
-                const saveCallback = function(selections) {
+                const saveAnswer = function(selections) {
                     task.answer = {
                         selections: selections
                     };
-                    
+
                     console.log(JSON.stringify(task.answer, null, 2));
-                    
+
                     pybossa.saveTask(task.id, task.answer).done(function() {
                         deferred.resolve();
                         notify('Answer saved, thanks!', 'success');
@@ -380,7 +432,7 @@
                         logError(new Error(error));
                     });
                 };
-                DatabaseClient.filter(null, saveCallback);
+                DatabaseClient.filter(mainTable, null, saveAnswer);
             });
         } else {
           $("#project-content").hide();
