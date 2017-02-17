@@ -6,10 +6,6 @@
     .btn {
         cursor: pointer;
     }
-    #navigation-buttons {
-        position: absolute;
-        z-index: 2;
-    }
     #answer-column {
         overflow-y: auto;
     }
@@ -38,6 +34,29 @@
     .text-initial {
         color: initial;
     }
+    .hud {
+        background-color: rgba(0, 0, 0, 0.5);
+        position: absolute;
+        z-index: 2;
+        border-radius: 2.5rem;
+        padding-top: .25rem;
+        padding-bottom: .25rem;
+    }
+    .btn-hud {
+        background: none;
+        color: #fff;
+        opacity: 0.65;
+        text-shadow: 0 0 5px #000;
+        font-size: 1.25rem;
+    }
+    .btn-hud:hover,
+    .btn-hud:focus {
+        opacity: 1;
+    }
+    #next,
+    #previous {
+        top: 50%;
+    }
     @media (min-width: 768px) {
         #openseadragon {
             height: 100%;
@@ -50,11 +69,11 @@
 
         <!-- Viewer column -->
         <div class="col-sm-12 col-md-9 px-0">
-            <div id="navigation-buttons" class="btn-group ml-2 mt-2">
-                <button id="zoom-in" class="btn btn-secondary btn-sm"><span class="fa fa-search-plus"></span></button>
-                <button id="zoom-out" class="btn btn-secondary btn-sm"><span class="fa fa-search-minus"></span></button>
-                <button id="home" class="btn btn-secondary btn-sm"><span class="fa fa-home"></span></button>
-                <button id="full-page" class="btn btn-secondary btn-sm"><span class="fa fa-expand"></span></button>
+            <div class="hud ml-2 mt-2 d-flex flex-column">
+                <button id="zoom-in" class="btn btn-hud"><span class="fa fa-plus-circle"></span></button>
+                <button id="zoom-out" class="btn btn-hud"><span class="fa fa-minus-circle"></span></button>
+                <button id="home" class="btn btn-hud"><span class="fa fa-home"></span></button>
+                <button id="full-page" class="btn btn-hud"><span class="fa fa-expand"></span></button>
             </div>
             <div id="openseadragon"></div>
         </div>
@@ -62,53 +81,85 @@
         <!-- Question and answer column -->
         <div id="answer-column" class="col-sm-12 col-md-3 text-center py-3">
             <p>
-                Click on a category below to annotate.
+                Click on a category below to mark fields for subsequent transcription.
             </p>
             <hr>
-            <div id="annotation-buttons" class="text-center">
-                <button data-category="title" data-color="#2ecc71" class="btn btn-secondary btn-sm btn-block btn-mark d-flex align-items-center justify-content-between">
+
+            <div id="mark-buttons" class="text-center" role="tablist" role="tablist" aria-multiselectable="true">
+                <button class="btn btn-secondary btn-sm btn-block btn-mark d-flex align-items-center justify-content-between mb-2"
+                        data-category="title" data-color="#2ecc71" data-toggle="collapse" href="#titleCollapse" data-parent="#mark-buttons">
                     <span class="text-initial">Title</span>
                 </button>
-                <button data-category="playwright" data-color="#9b59b6" class="btn btn-secondary btn-sm btn-block btn-mark d-flex align-items-center justify-content-between">
+                <div class="collapse" id="titleCollapse" role="tabpanel">
+                    <div class="card card-block text-left mb-2">
+                      Anim pariatur cliche reprehenderit, enim eiusmod high life accusamus terry richardson ad squid. Nihil anim keffiyeh helvetica, craft beer labore wes anderson cred nesciunt sapiente ea proident.
+                    </div>
+                </div>
+                <button class="btn btn-secondary btn-sm btn-block btn-mark d-flex align-items-center justify-content-between mb-2"
+                        data-category="playwright" data-color="#9b59b6" data-toggle="collapse" data-target="#playwrightCollapse" data-parent="#mark-buttons">
                     <span class="text-initial">Playwright</span>
                 </button>
-                <button data-category="director" data-color="#34495e" class="btn btn-secondary btn-sm btn-block btn-mark d-flex align-items-center justify-content-between">
-                    <span class="text-initial">Director</span>
-                </button>
-                <button data-category="venue" data-color="#f1c40f" class="btn btn-secondary btn-sm btn-block btn-mark d-flex align-items-center justify-content-between">
-                    <span class="text-initial">Venue</span>
-                </button>
-                <button data-category="actor" data-color="#3498db" class="btn btn-secondary btn-sm btn-block btn-mark d-flex align-items-center justify-content-between">
-                    <span class="text-initial">Actor and Role</span>
-                </button>
-                <button data-category="dates" data-color="#e74c3c" class="btn btn-secondary btn-sm btn-block btn-mark d-flex align-items-center justify-content-between">
+                <div class="collapse" id="playwrightCollapse" role="tabpanel">
+                    <div class="card card-block text-left mb-2">
+                      Anim pariatur cliche reprehenderit, enim eiusmod high life accusamus terry richardson ad squid. Nihil anim keffiyeh helvetica, craft beer labore wes anderson cred nesciunt sapiente ea proident.
+                    </div>
+                </div>
+
+                <button class="btn btn-secondary btn-sm btn-block btn-mark d-flex align-items-center justify-content-between mb-2"
+                        data-category="dates" data-color="#e74c3c" data-toggle="collapse" data-target="#datesCollapse" data-parent="#mark-buttons">
                     <span class="text-initial">Dates</span>
                 </button>
-                <button data-category="production-staff" data-color="#e67e22" class="btn btn-secondary btn-sm btn-block btn-mark d-flex align-items-center justify-content-between">
+                <div class="collapse" id="datesCollapse" role="tabpanel">
+                    <div class="card card-block text-left mb-2">
+                      Anim pariatur cliche reprehenderit, enim eiusmod high life accusamus terry richardson ad squid. Nihil anim keffiyeh helvetica, craft beer labore wes anderson cred nesciunt sapiente ea proident.
+                    </div>
+                </div>
+                <button class="btn btn-secondary btn-sm btn-block btn-mark d-flex align-items-center justify-content-between mb-2"
+                        data-category="director" data-color="#34495e" data-toggle="collapse" data-target="#directorCollapse" data-parent="#mark-buttons">
+                    <span class="text-initial">Director</span>
+                </button>
+                <div class="collapse" id="directorCollapse" role="tabpanel">
+                    <div class="card card-block text-left mb-2">
+                      Anim pariatur cliche reprehenderit, enim eiusmod high life accusamus terry richardson ad squid. Nihil anim keffiyeh helvetica, craft beer labore wes anderson cred nesciunt sapiente ea proident.
+                    </div>
+                </div>
+                <button class="btn btn-secondary btn-sm btn-block btn-mark d-flex align-items-center justify-content-between mb-2"
+                        data-category="venue" data-color="#f1c40f" data-toggle="collapse" data-target="#venueCollapse" data-parent="#mark-buttons">
+                    <span class="text-initial">Venue</span>
+                </button>
+                <div class="collapse" id="venueCollapse" role="tabpanel">
+                    <div class="card card-block text-left mb-2">
+                      Anim pariatur cliche reprehenderit, enim eiusmod high life accusamus terry richardson ad squid. Nihil anim keffiyeh helvetica, craft beer labore wes anderson cred nesciunt sapiente ea proident.
+                    </div>
+                </div>
+                <button class="btn btn-secondary btn-sm btn-block btn-mark d-flex align-items-center justify-content-between mb-2"
+                        data-category="actor" data-color="#3498db" data-toggle="collapse" data-target="#actorCollapse" data-parent="#mark-buttons">
+                    <span class="text-initial">Actor and Role</span>
+                </button>
+                <div class="collapse" id="actorCollapse" role="tabpanel">
+                    <div class="card card-block text-left mb-2">
+                      Anim pariatur cliche reprehenderit, enim eiusmod high life accusamus terry richardson ad squid. Nihil anim keffiyeh helvetica, craft beer labore wes anderson cred nesciunt sapiente ea proident.
+                    </div>
+                </div>
+                <button class="btn btn-secondary btn-sm btn-block btn-mark d-flex align-items-center justify-content-between mb-2"
+                        data-category="production-staff" data-color="#e67e22" data-toggle="collapse" data-target="#productionStaffCollapse" data-parent="#mark-buttons">
                     <span class="text-initial">Production Staff and Role</span>
                 </button>
+                <div class="collapse" id="productionStaffCollapse" role="tabpanel">
+                    <div class="card card-block text-left mb-2">
+                      Anim pariatur cliche reprehenderit, enim eiusmod high life accusamus terry richardson ad squid. Nihil anim keffiyeh helvetica, craft beer labore wes anderson cred nesciunt sapiente ea proident.
+                    </div>
+                </div>
 			</div>
 			<hr>
 			<button class="btn btn-success btn-sm btn-answer"><span class="fa fa-floppy-o"></span> Mark as Complete</button>
 			<hr>
-			<div class="text-left">
-				<p class="mt-2"><small>You are working on task: <span id="task-id" class="badge badge-info"></span></small></p>
-				<p class="mb-1"><small><strong>Recent changes:</strong></small></p>
-				<div class="card text-left">
-					<div class="card-block p-1">
-						<div class="card-text">
-							<ul id="auditlogs-summary" class="list-unstyled m-0"></ul>
-						</div>
-					</div>
-				</div>
-			</div>
-			<button class="btn btn-info btn-sm my-2">View All</button>
+            <p class="mt-2"><small>You are working on task: <span id="task-id" class="badge badge-info"></span></small></p>
 			<p><a href="../tutorial"><small><span class="fa fa-book"></span> Tutorial</small></a></p>
         </div>
     </div>
 </div>
 
-<script type="text/javascript" src="https://cdn.socket.io/socket.io-1.3.7.js"></script>
 <script>
     let taskID = null;
     const mainTable  = 'selection',
@@ -128,6 +179,7 @@
                 type: method,
                 url: baseURL + endpoint,
                 data: data,
+                contentType: "application/json;",
                 dataType: "json",
                 success: function(result) {
                     if (result === null) {
@@ -203,6 +255,8 @@
         navigatorPosition: 'BOTTOM_RIGHT',
         homeFillsViewer: true,
         minZoomLevel: 0.2,
+        showReferenceStrip: true,
+        referenceStripScroll: 'vertical',
         gestureSettingsMouse: {
             clickToZoom: false
         },
@@ -216,8 +270,7 @@
 
     const selector = viewer.selection({
         prefixUrl: "/static/img/openseadragonselection/",
-        restrictToImage: true,
-		styleConfirmDenyButtons: false
+        restrictToImage: true
     });
 
 
@@ -376,6 +429,8 @@
      * Enable/disable selector when a mark button is clicked.
      */
     $('.btn-mark').on('click', function() {
+        const parent = $(this).data('parent');
+        $(`${parent} .collapse`).collapse('hide');
         $('.btn-mark.active').not(this).removeClass('active');
         $(this).toggleClass('active');
         if ($('.btn-mark.active').length) {
@@ -439,5 +494,5 @@
           notify('Congratulations! You have contributed to all available tasks!', 'success');
         }
     });
-    pybossa.run('project-annotate');
+    pybossa.run('project-playbills-mark');
 </script>
