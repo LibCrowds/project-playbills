@@ -232,8 +232,6 @@
               bounds  = overlay.getBounds(viewer.viewport);
         viewer.removeOverlay(id);
         selector.rect = new OpenSeadragon.SelectionRect(bounds.x, bounds.y, bounds.width, bounds.height, bounds.degrees);
-        $('#toggle-selection span').removeClass('fa-toggle-off');
-        $('#toggle-selection span').addClass('fa-toggle-on');
         selector.draw();
         selector.enable();
     });
@@ -255,15 +253,15 @@
     /**
      * Toggle icon for toggle selection button.
      */
-    $('#toggle-selection').on('click', function () {
-        if ($(this).children('span').hasClass('fa-toggle-on')) {
-            $(this).children('span').removeClass('fa-toggle-on');
-            $(this).children('span').addClass('fa-toggle-off');
+    viewer.addHandler('selection_toggle', function(evt) {
+        if (evt.enabled) {
+            $('#toggle-selection span').addClass('fa-toggle-on');
+            $('#toggle-selection span').removeClass('fa-toggle-off');
         } else {
-            $(this).children('span').removeClass('fa-toggle-off');
-            $(this).children('span').addClass('fa-toggle-on');
+            $('#toggle-selection span').removeClass('fa-toggle-on');
+            $('#toggle-selection span').addClass('fa-toggle-off');
         }
-        $(this).blur();
+        $('#toggle-selection').blur();
     });
 
    /**
