@@ -34,7 +34,7 @@ if __name__ == '__main__':
     description = '''Generate tasks for project-playbills-mark.
     
     By default it loads ark_and_aleph_system_numbers.csv, adds a row for each category defined in categories.json, 
-    then generates a new csv file containing all data assoicated with each Aleph System number.
+    then generates a csv file containing the tasks for the given Aleph System number.
     '''
     here = os.path.dirname(__file__)
     default_csv = os.path.join(here, 'ark_and_aleph_system_numbers.csv')
