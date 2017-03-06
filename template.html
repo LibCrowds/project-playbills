@@ -152,7 +152,8 @@
 </div>
 
 <script>
-    let currentArk = null;
+    let currentArk = null,
+        overlayID  = 1;
 
     // Setup viewer
     OpenSeadragon.setString("Tooltips.FullPage", "Fullscreen");
@@ -261,7 +262,6 @@
             location: new OpenSeadragon.Rect(vpRect.x, vpRect.y, vpRect.width, vpRect.height, vpRect.degrees)
         }
         viewer.addOverlay(overlay);
-        overlays[overlayID] = overlay;
         overlayID += 1;
     }
     
