@@ -212,8 +212,6 @@
     function drawOverlay(s) {
         let elem   = document.createElement("div"),
             vpRect = viewer.viewport.imageToViewportRectangle(s);
-        console.log(s)
-        console.log(vpRect)
         elem.className = 'overlay';
         elem.id = overlayID;
         let overlay = {
@@ -229,23 +227,15 @@
      * Convert an overlay back to a selection box on click.
      */
     $('#openseadragon').on('click', '.overlay', function() {
-        viewer.currentOverlays.map(function(overlay) {
-            let bounds = overlay.getBounds(viewer.viewport),
-            vpRect = new OpenSeadragon.Rect(bounds.x, bounds.y, bounds.width, bounds.height, bounds.degrees);
-            return viewer.viewport.viewportToImageRectangle(vpRect);
-        });
         const id      = $(this).attr('id'),
-        overlay = overlays[id];
-              console.log(overlay);
-              viewer.removeOverlay(id);
-              
+              overlay = viewer.getOverlayById(id),
+              bounds  = overlay.getBounds(viewer.viewport);
+        viewer.removeOverlay(id);
         selector.rect = new OpenSeadragon.SelectionRect(bounds.x, bounds.y, bounds.width, bounds.height, bounds.degrees);
-        console.log(selector.rect);
         $('#toggle-selection span').removeClass('fa-toggle-off');
         $('#toggle-selection span').addClass('fa-toggle-on');
         selector.draw();
         selector.enable();
-        $(this).remove();
     });
     
     /**
