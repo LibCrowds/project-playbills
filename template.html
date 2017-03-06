@@ -302,15 +302,12 @@
 
                 console.log(JSON.stringify(task.answer, null, 2));
 
-/**
                 pybossa.saveTask(task.id, task.answer).done(function() {
                     deferred.resolve();
                     notify('Answer saved, thanks!', 'success');
                 }).fail(function(xhr, status, error) {
                     logError(new Error(error));
                 });
-                
-                */
             });
         } else {
           $("#project-content").hide();
