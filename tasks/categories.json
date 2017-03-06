@@ -1,0 +1,30 @@
+[
+    {
+        "category": "play",
+        "title": "Play",
+        "question": "Draw a rectangle around each play being performed.",
+        "help": "Multiple plays were often performed on the same day, a rectangle should be drawn around each. Any upcoming plays that are mentioned can be ignored.",
+        "example": "https://api.bl.uk/image/iiif/ark:/81055/vdc_100022588702.0x000060/300,2720,2000,900/300,/0/default.jpg"
+    },
+    {
+        "category": "title",
+        "title": "Title",
+        "question": "Draw a rectangle around each title (and subtitle) listed.",
+        "help": "Along with the main performance additional plays were often be performed on the same day, a rectangle should be drawn around the title for each of these.",
+        "example": "https://api.bl.uk/image/iiif/ark:/81055/vdc_100022588702.0x000059/600,800,1750,280/300,/0/default.jpg"
+    },
+    {
+        "category": "actor_and_role",
+        "title": "Actor and Role",
+        "question": "Draw a rectangle around each actor and role listed.",
+        "help": "A single rectangle should be drawn around around each actor and role.",
+        "example": "https://api.bl.uk/image/iiif/ark:/81055/vdc_100022588702.0x000059/900,1310,1200,80/300,/0/default.jpg"
+    },
+    {
+        "category": "dates",
+        "title": "Dates",
+        "question": "Draw a rectangle around the dates of this play, if shown.",
+        "help": "Each playbill usually gives details on or more plays being performed on a particular date. Dates for any plays being shown on following days can be ignored.",
+        "example": "https://api.bl.uk/image/iiif/ark:/81055/vdc_100022588702.0x000059/1150,170,1050,100/300,/0/default.jpg"
+    }
+]
