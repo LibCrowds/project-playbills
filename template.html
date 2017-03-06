@@ -82,7 +82,7 @@
             <div class="card card-block text-left mb-2">
                 <p id="question" class="lead text-center"></h3>
                 <p id="help"></p>
-                <button id="example" class="btn btn-secondary btn-sm mt-2" data-toggle="popover" title="Example" alt="Example Selection" role="button">
+                <button class="btn btn-secondary btn-sm mt-2" data-toggle="modal" data-target="#exampleModal" role="button">
                     Show Example
                 </button>
                 <a href="../tutorial" class="btn btn-secondary btn-sm mt-1" role="button">View Tutorial</a>
@@ -106,7 +106,23 @@
     </div>
 </div>
 
-
+<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+     <div class="modal-dialog" role="document">
+         <div class="modal-content">
+             <div class="modal-header">
+                 <h5 class="modal-title" id="exampleModalLabel">Example</h5>
+                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                     <span aria-hidden="true">&times;</span>
+                 </button>
+             </div>
+             <div class="modal-body"></div>
+                 <div class="modal-footer">
+                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                 </div>
+             </div>
+         </div>
+     </div>
+</div>
 
 <script>
     let overlayID = 1,
@@ -281,12 +297,7 @@
             $('#task-id').html(task.id);
             $('#help').html(task.info.help);
             $('#question').html(task.info.question);
-            $('#example').popover({
-                trigger: 'focus',
-                placement: 'left',
-                html: true,
-                content: `<div><img src="${task.info.example}" width="300" class="mb-4"></div>`
-            });
+            $('#exampleModal .modal-body').html(`<img src="${task.info.example}" width="100%">`);
             loadImage(task.info.image_ark);
             loadUserProgress();
 
