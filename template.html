@@ -3,44 +3,29 @@
         height: 60vh;
         background-color: #000000;
     }
-    .btn {
-        cursor: pointer;
-    }
     #answer-column {
         overflow-y: auto;
     }
-    .selection,
-    .selection-box {
-        border-width: 2px !important;
-        border-style: solid !important;
+    .popover { 
+        max-width:600px !important; 
     }
-    .selection {
+    .overlay,
+    .selection-box {
+        border: 2px solid #FD953A !important;
+    }
+    .overlay {
         opacity: .75;
     }
-    .selection:hover,
-    .selection.focus {
+    .hud,
+    .overlay:hover,
+    .overlay:focus,
+    .tooltip.tooltip-hud .tooltip-inner {
         background-color: rgba(0, 0, 0, 0.5);
-    }
-    .btn-mark:before {
-        font-family: FontAwesome;
-        content: '\f10c'
-    }
-    .btn-mark.active:before {
-        content: '\f111'
-    }
-    .btn-mark:after {
-        content: ''
-    }
-    .text-initial {
-        color: initial;
     }
     .hud {
-        background-color: rgba(0, 0, 0, 0.5);
         position: absolute;
         z-index: 2;
         border-radius: 2.5rem;
-        padding-top: .25rem;
-        padding-bottom: .25rem;
     }
     .btn-hud {
         background: none;
@@ -48,14 +33,14 @@
         opacity: 0.65;
         text-shadow: 0 0 5px #000;
         font-size: 1.25rem;
+        padding: .5rem;
     }
     .btn-hud:hover,
     .btn-hud:focus {
         opacity: 1;
     }
-    #next,
-    #previous {
-        top: 50%;
+    .tooltip.tooltip-hud .tooltip-inner:before {
+        border-right-color: rgba(0, 0, 0, 0.5);
     }
     @media (min-width: 768px) {
         #openseadragon {
@@ -65,185 +50,73 @@
 </style>
 
 <div id="project-content" class="bg-faded container-fluid d-flex flex-column h-100">
-    <div class="row">
+    <div class="row h-100">
 
         <!-- Viewer column -->
         <div class="col-sm-12 col-md-9 px-0">
             <div class="hud ml-2 mt-2 d-flex flex-column">
-                <button id="zoom-in" class="btn btn-hud"><span class="fa fa-plus-circle"></span></button>
-                <button id="zoom-out" class="btn btn-hud"><span class="fa fa-minus-circle"></span></button>
-                <button id="home" class="btn btn-hud"><span class="fa fa-home"></span></button>
-                <button id="full-page" class="btn btn-hud"><span class="fa fa-expand"></span></button>
+                <button id="zoom-in" class="btn btn-hud" data-toggle="tooltip" role="button">
+                    <span class="fa fa-plus-circle"></span>
+                </button>
+                <button id="zoom-out" class="btn btn-hud" data-toggle="tooltip" role="button">
+                    <span class="fa fa-minus-circle"></span>
+                </button>
+                <button id="home" class="btn btn-hud" data-toggle="tooltip" role="button">
+                    <span class="fa fa-refresh"></span>
+                </button>
+                <button id="full-page" class="btn btn-hud" data-toggle="tooltip" role="button">
+                    <span class="fa fa-expand"></span>
+                </button>
+                <button id="image-quality" class="btn btn-hud" data-toggle="tooltip" title="Image quality" role="button">
+                    <span class="fa fa-cog"></span>
+                </button>
+                <button id="toggle-selection" class="btn btn-hud" data-toggle="tooltip" title="Toggle selection" role="button">
+                    <span class="fa fa-toggle-on"></span>
+                </button>
             </div>
-            <div id="openseadragon"></div>
+            <div id="openseadragon"></div> 
         </div>
 
         <!-- Question and answer column -->
-        <div id="answer-column" class="col-sm-12 col-md-3 text-center py-3">
-            <p>
-                Click on a category below to mark fields for subsequent transcription.
-            </p>
-            <hr>
-
-            <div id="mark-buttons" class="text-center" role="tablist" role="tablist" aria-multiselectable="true">
-                <button class="btn btn-secondary btn-sm btn-block btn-mark d-flex align-items-center justify-content-between mb-2"
-                        data-category="title" data-color="#2ecc71" data-toggle="collapse" href="#titleCollapse" data-parent="#mark-buttons">
-                    <span class="text-initial">Title</span>
+        <div id="answer-column" class="col-sm-12 col-md-3 py-3">
+            <div class="card card-block text-left mb-2">
+                <p id="question" class="lead text-center"></h3>
+                <p id="help"></p>
+                <button id="example" class="btn btn-secondary btn-sm mt-2" data-toggle="popover" title="Example" alt="Example Selection" role="button">
+                    Show Example
                 </button>
-                <div class="collapse" id="titleCollapse" role="tabpanel">
-                    <div class="card card-block text-left mb-2">
-                      Anim pariatur cliche reprehenderit, enim eiusmod high life accusamus terry richardson ad squid. Nihil anim keffiyeh helvetica, craft beer labore wes anderson cred nesciunt sapiente ea proident.
-                    </div>
-                </div>
-                <button class="btn btn-secondary btn-sm btn-block btn-mark d-flex align-items-center justify-content-between mb-2"
-                        data-category="playwright" data-color="#9b59b6" data-toggle="collapse" data-target="#playwrightCollapse" data-parent="#mark-buttons">
-                    <span class="text-initial">Playwright</span>
-                </button>
-                <div class="collapse" id="playwrightCollapse" role="tabpanel">
-                    <div class="card card-block text-left mb-2">
-                      Anim pariatur cliche reprehenderit, enim eiusmod high life accusamus terry richardson ad squid. Nihil anim keffiyeh helvetica, craft beer labore wes anderson cred nesciunt sapiente ea proident.
-                    </div>
-                </div>
-
-                <button class="btn btn-secondary btn-sm btn-block btn-mark d-flex align-items-center justify-content-between mb-2"
-                        data-category="dates" data-color="#e74c3c" data-toggle="collapse" data-target="#datesCollapse" data-parent="#mark-buttons">
-                    <span class="text-initial">Dates</span>
-                </button>
-                <div class="collapse" id="datesCollapse" role="tabpanel">
-                    <div class="card card-block text-left mb-2">
-                      Anim pariatur cliche reprehenderit, enim eiusmod high life accusamus terry richardson ad squid. Nihil anim keffiyeh helvetica, craft beer labore wes anderson cred nesciunt sapiente ea proident.
-                    </div>
-                </div>
-                <button class="btn btn-secondary btn-sm btn-block btn-mark d-flex align-items-center justify-content-between mb-2"
-                        data-category="director" data-color="#34495e" data-toggle="collapse" data-target="#directorCollapse" data-parent="#mark-buttons">
-                    <span class="text-initial">Director</span>
-                </button>
-                <div class="collapse" id="directorCollapse" role="tabpanel">
-                    <div class="card card-block text-left mb-2">
-                      Anim pariatur cliche reprehenderit, enim eiusmod high life accusamus terry richardson ad squid. Nihil anim keffiyeh helvetica, craft beer labore wes anderson cred nesciunt sapiente ea proident.
-                    </div>
-                </div>
-                <button class="btn btn-secondary btn-sm btn-block btn-mark d-flex align-items-center justify-content-between mb-2"
-                        data-category="venue" data-color="#f1c40f" data-toggle="collapse" data-target="#venueCollapse" data-parent="#mark-buttons">
-                    <span class="text-initial">Venue</span>
-                </button>
-                <div class="collapse" id="venueCollapse" role="tabpanel">
-                    <div class="card card-block text-left mb-2">
-                      Anim pariatur cliche reprehenderit, enim eiusmod high life accusamus terry richardson ad squid. Nihil anim keffiyeh helvetica, craft beer labore wes anderson cred nesciunt sapiente ea proident.
-                    </div>
-                </div>
-                <button class="btn btn-secondary btn-sm btn-block btn-mark d-flex align-items-center justify-content-between mb-2"
-                        data-category="actor" data-color="#3498db" data-toggle="collapse" data-target="#actorCollapse" data-parent="#mark-buttons">
-                    <span class="text-initial">Actor and Role</span>
-                </button>
-                <div class="collapse" id="actorCollapse" role="tabpanel">
-                    <div class="card card-block text-left mb-2">
-                      Anim pariatur cliche reprehenderit, enim eiusmod high life accusamus terry richardson ad squid. Nihil anim keffiyeh helvetica, craft beer labore wes anderson cred nesciunt sapiente ea proident.
-                    </div>
-                </div>
-                <button class="btn btn-secondary btn-sm btn-block btn-mark d-flex align-items-center justify-content-between mb-2"
-                        data-category="production-staff" data-color="#e67e22" data-toggle="collapse" data-target="#productionStaffCollapse" data-parent="#mark-buttons">
-                    <span class="text-initial">Production Staff and Role</span>
-                </button>
-                <div class="collapse" id="productionStaffCollapse" role="tabpanel">
-                    <div class="card card-block text-left mb-2">
-                      Anim pariatur cliche reprehenderit, enim eiusmod high life accusamus terry richardson ad squid. Nihil anim keffiyeh helvetica, craft beer labore wes anderson cred nesciunt sapiente ea proident.
-                    </div>
-                </div>
-			</div>
-			<hr>
-			<button class="btn btn-success btn-sm btn-answer"><span class="fa fa-floppy-o"></span> Mark as Complete</button>
-			<hr>
-            <p class="mt-2"><small>You are working on task: <span id="task-id" class="badge badge-info"></span></small></p>
-			<p><a href="../tutorial"><small><span class="fa fa-book"></span> Tutorial</small></a></p>
+                <a href="../tutorial" class="btn btn-secondary btn-sm mt-1" role="button">View Tutorial</a>
+            </div>
+            <div class="text-center">
+			    <button class="btn btn-success btn-sm btn-answer mt-2"><span class="fa fa-floppy-o mr-1"></span>Save</button>
+                <hr>
+                <p class="mt-2 mb-1">
+                    <span class="fa-stack mr-1">
+                      <i class="fa fa-circle fa-stack-2x"></i>
+                      <i class="fa fa-trophy fa-stack-1x fa-inverse"></i>
+                    </span><span id="rank"></span>
+                    <span class="fa-stack ml-3 mr-1">
+                      <i class="fa fa-circle fa-stack-2x"></i>
+                      <i class="fa fa-tasks fa-stack-1x fa-inverse"></i>
+                    </span><span id="score"></span>
+                </p>
+                <p class="mb-0"><small>You are working on task #<span id="task-id"></span></small></p>
+            </div>
         </div>
     </div>
 </div>
 
+
+
 <script>
-    let taskID = null;
-    const mainTable  = 'selection',
-	      auditTable = 'auditlogs';
+    let overlayID = 1,
+        overlays = {};
 
-    /**
-     * A class for interacting with the RethinkDB database.
-     */
-    class DatabaseClient {
-
-        /**
-         * Make a request.
-         */
-        static request(method, table, endpoint, data, callback) {
-			const baseURL = `/rethinkdb/${table}/`;
-            $.ajax({
-                type: method,
-                url: baseURL + endpoint,
-                data: data,
-                contentType: "application/json;",
-                dataType: "json",
-                success: function(result) {
-                    if (result === null) {
-                        notify('Result not found, has it just been deleted?', 'warning');
-                    } else if (result.errors) {
-                        logError(new Error(result.first_error), true);
-                    } else if (callback) {
-                        callback(result);
-                    }
-                },
-                error: function(jqXHR) {
-                    logError(new Error(jqXHR.statusText), true);
-                }
-            });
-        }
-
-        /**
-         * Save some record data.
-         */
-        static save(table, data, callback) {
-            DatabaseClient.request('POST', table, `insert/${taskID}`, JSON.stringify(data), callback);
-        }
-
-        /**
-         * Load a single record.
-         */
-        static load(table, callback, primary_key) {
-            DatabaseClient.request('GET', table, `get/${primary_key}`, null, callback);
-        }
-
-        /**
-         * Delete a record.
-         */
-        static remove(table, callback, primary_key) {
-            DatabaseClient.request('DELETE', table, `delete/${primary_key}`, null, callback);
-        }
-
-        /**
-         * Filter records.
-         */
-        static filter(table, data, callback) {
-            DatabaseClient.request('GET', table, 'filter', data, callback);
-        }
-
-        /**
-         * Update records.
-         */
-        static update(table, data, callback, primary_key) {
-            DatabaseClient.request('PUT', table, `update/${primary_key}`, data, callback);
-        }
-
-        /**
-         * Subscribe to the project's event stream and handle changes.
-         */
-        static subscribe(table, callback) {
-            const origin  = window.location.origin,
-                  url     = `${origin}/rethinkdb/${table}/subscribe`,
-                  source  = new EventSource(url);
-            source.onmessage = function (msg) {
-				callback(msg);
-            };
-        }
-    }
-
+    // Setup viewer
+    OpenSeadragon.setString("Tooltips.FullPage", "Fullscreen");
+    OpenSeadragon.setString("Tooltips.Home", "Reset zoom");
+    OpenSeadragon.setString("Tooltips.SelectionToggle", "Toggle Selection");
+    OpenSeadragon.setString("Tooltips.SelectionConfirm", "Confirm Selection");
     const viewer = OpenSeadragon({
         id: "openseadragon",
         prefixUrl: "/static/img/openseadragon/",
@@ -254,7 +127,7 @@
         showNavigator: true,
         navigatorPosition: 'BOTTOM_RIGHT',
         homeFillsViewer: true,
-        minZoomLevel: 0.2,
+        minZoomLevel: 0.1,
         showReferenceStrip: true,
         referenceStripScroll: 'vertical',
         gestureSettingsMouse: {
@@ -268,129 +141,118 @@
         }
     });
 
+    // Setup selector
     const selector = viewer.selection({
         prefixUrl: "/static/img/openseadragonselection/",
-        restrictToImage: true
+        restrictToImage: true,
+        toggleButton: document.getElementById('toggle-selection')
     });
-
-
-	/**
-	 * Handle changes to the main table.
-	 */
-	function handleMainTableChanges(msg) {
-		const data = JSON.parse(msg.data);
-		if (data.old_val !== null && data.new_val !== null) {
-			console.log('record updated');
-			// Record updated
-		} else if (data.new_val !== null && data.new_val.task_id == taskID) {
-			drawSelections([data.new_val]);  // Record added
-		} else if (data.old_val.task_id !== null && data.old_val.task_id == taskID) {
-			$(`#${data.old_val.id}`).remove();  // Record removed
-		}
-	}
-
-	/**
-	 * Handle changes to the audit logs table.
-	 */
-	function handleAuditTableChanges(msg) {
-		const data = JSON.parse(msg.data);
-		if (data.new_val !== null) {
-			loadAuditLogs([data.new_val])
-		}
-	}
-
-	// Setup event stream subscriptions
-	DatabaseClient.subscribe(mainTable, handleMainTableChanges);
-	DatabaseClient.subscribe(auditTable, handleAuditTableChanges);
+    selector.enable();
+    $('.confirm-button, .cancel-button').addClass('btn btn-hud');
+    $('.confirm-button, .cancel-button').attr('role', 'button');
+    $('.confirm-button').html('<span class="fa fa-home"></span>')
+    
+    // Setup tooltips
+    $('.btn-hud[data-toggle="tooltip"]').tooltip({
+        placement: 'right',
+        template: `<div class="tooltip tooltip-hud" role="tooltip"><div class="tooltip-arrow"></div>
+                  <div class="tooltip-inner"></div></div>`
+    });
 
     /**
      * Load an image into the viewer.
      */
-    function loadImage(imageURL) {
+    function loadImage(imageArk) {
+        const url = `http://api.bl.uk/image/iiif/${imageArk}/full/full/0/default.jpg`;
+        const size = '100';
         viewer.open({
             type: 'image',
-            url:  imageURL,
+            url:  url,
             buildPyramid: false
+        });
+    }
+    
+    /**
+     * Load the user's rank and score.
+     * Assumes that the current user's name has been added to currentUserName before this template was rendered.
+     */
+    function loadUserProgress() {
+        if (!currentUserName) {
+            return
+        }
+        $.ajax({
+            url: '/leaderboard/',
+            dataType: 'json',
+            contentType: 'application/json',
+            data: '{}'
+        }).done(function(data) {
+            for (let user of data.top_users) {
+                if (user.name == currentUserName) {
+                    $('#rank').append(user.rank);
+                    $('#score').html(user.score);
+                }
+            }
+        });
+    }
+    
+    /**
+     * Return an array of image rectangles from the current overlays.
+     */
+    function getOverlaysAsImageRectangles() {
+        return viewer.currentOverlays.map(function(overlay) {
+            let bounds = overlay.getBounds(viewer.viewport),
+                vpRect = new OpenSeadragon.Rect(bounds.x, bounds.y, bounds.width, bounds.height, bounds.degrees);
+            return viewer.viewport.viewportToImageRectangle(vpRect);
         });
     }
 
     /**
-     * Create record data from a selection.
+     * Draw an overlay from a selection.
      */
-    function createRecordDataFromSelection(s) {
-        const args         = [s.x, s.y, s.width, s.height, s.degrees],
-              imageRect    = new OpenSeadragon.Rect(...args),
-              viewportRect = viewer.viewport.imageToViewportRectangle(imageRect);
-              data         = {
-                  category:     $('.btn-mark.active').data('category'),
-                  color:        $('.btn-mark.active').data('color'),
-                  imageRect:    imageRect,
-                  viewportRect: viewportRect
-            };
-        return data;
-    }
-
-    /**
-     * Draw a list of selections.
-     */
-    function drawSelections(selections) {
-        for (let s of selections) {
-            let elem = document.createElement("div");
-            elem.id = s.id;
-            elem.className = "selection";
-            elem.style.borderColor = s.data.color;
-            $(`#${s.id}`).remove();
-            viewer.addOverlay({
-                element: elem,
-                location: new OpenSeadragon.Rect(s.data.viewportRect.x,
-                                                 s.data.viewportRect.y,
-                                                 s.data.viewportRect.width,
-                                                 s.data.viewportRect.height)
-            });
+    function drawOverlay(s) {
+        let elem   = document.createElement("div"),
+            vpRect = viewer.viewport.imageToViewportRectangle(s);
+        console.log(s)
+        console.log(vpRect)
+        elem.className = 'overlay';
+        elem.id = overlayID;
+        let overlay = {
+            element: elem,
+            location: new OpenSeadragon.Rect(vpRect.x, vpRect.y, vpRect.width, vpRect.height, vpRect.degrees)
         }
+        viewer.addOverlay(overlay);
+        overlays[overlayID] = overlay;
+        overlayID += 1;
     }
-
-	/**
-	 * Return the time if the timestamp is today, otherwise the date.
-	 */
-	function formatWhen(ts) {
-		if (new Date(ts).setHours(0, 0, 0, 0) === new Date().setHours(0, 0, 0, 0)) {
-			return new Date(ts).toLocaleTimeString();
-		}
-		return new Date(ts).toLocaleTimeString();
-	}
-
-	/**
-	 * Load audit logs into an element.
-	 */
-	function loadAuditLogs(logs) {
-		for (let log of logs) {
-			if ($('#auditlogs-summary li').length > 10) {
-				$('#auditlogs-summary li:last-child').remove();
-			}
-			const user = log.user_name || log.user_ip,
-			      when = formatWhen(log.when);
-			$('#auditlogs-summary').prepend(`<li>${when} : ${user} - ${log.action}</li>`);
-		}
-	}
-
+    
     /**
-     * Convert a selection back to a selection-box on click.
+     * Convert an overlay back to a selection box on click.
      */
-    $('#openseadragon').on('click', '.selection', function() {
-        const primary_key = $(this).attr('id'),
-              callback    = function(record) {
-                  const pk   = record.id,
-                        cat  = record.data.category,
-                        r    = record.data.viewportRect,
-                        args = [r.x, r.y, r.width, r.height, r.degrees];
-                  selector.current_record = record;
-                  selector.rect = new OpenSeadragon.SelectionRect(...args);
-                  $(`.btn-mark[data-category="${cat}"]:not(.active)`).click();
-                  $(`#${pk}`).hide();
-                  selector.draw();
-              };
-        DatabaseClient.load(mainTable, callback, primary_key);
+    $('#openseadragon').on('click', '.overlay', function() {
+        viewer.currentOverlays.map(function(overlay) {
+            let bounds = overlay.getBounds(viewer.viewport),
+            vpRect = new OpenSeadragon.Rect(bounds.x, bounds.y, bounds.width, bounds.height, bounds.degrees);
+            return viewer.viewport.viewportToImageRectangle(vpRect);
+        });
+        const id      = $(this).attr('id'),
+        overlay = overlays[id];
+              console.log(overlay);
+              viewer.removeOverlay(id);
+              
+        selector.rect = new OpenSeadragon.SelectionRect(bounds.x, bounds.y, bounds.width, bounds.height, bounds.degrees);
+        console.log(selector.rect);
+        $('#toggle-selection span').removeClass('fa-toggle-off');
+        $('#toggle-selection span').addClass('fa-toggle-on');
+        selector.draw();
+        selector.enable();
+        $(this).remove();
+    });
+    
+    /**
+     * Draw an overlay when a selection is confirmed.
+     */
+    viewer.addHandler('selection', function(s) {
+        drawOverlay(s);
     });
 
     /**
@@ -399,55 +261,19 @@
     viewer.addHandler('open-failed', function(evt) {
         notify(evt.message, 'error');
     });
-
+    
     /**
-     * Handle a selection being created/updated.
+     * Toggle icon for toggle selection button.
      */
-    viewer.addHandler('selection', function(s) {
-        const selection = createRecordDataFromSelection(s);
-        if (selector.current_record) {
-            const primary_key = selector.current_record.id;
-            DatabaseClient.update(mainTable, selection, null, primary_key);
-			selector.current_record = null;
+    $('#toggle-selection').on('click', function () {
+        if ($(this).children('span').hasClass('fa-toggle-on')) {
+            $(this).children('span').removeClass('fa-toggle-on');
+            $(this).children('span').addClass('fa-toggle-off');
         } else {
-            DatabaseClient.save(mainTable, selection);
+            $(this).children('span').removeClass('fa-toggle-off');
+            $(this).children('span').addClass('fa-toggle-on');
         }
-    });
-
-    /**
-     * Handle a selection being canceled/destroyed.
-     */
-    viewer.addHandler('selection_cancel', function() {
-        if (selector.current_record) {
-			const primary_key = selector.current_record.id;
-            DatabaseClient.remove(mainTable, null, primary_key);
-			selector.current_record = null;
-        }
-    });
-
-    /**
-     * Enable/disable selector when a mark button is clicked.
-     */
-    $('.btn-mark').on('click', function() {
-        const parent = $(this).data('parent');
-        $(`${parent} .collapse`).collapse('hide');
-        $('.btn-mark.active').not(this).removeClass('active');
-        $(this).toggleClass('active');
-        if ($('.btn-mark.active').length) {
-            const color = $('.btn-mark.active').data('color'),
-                  style = `.selection-box { border-color: ${color} !important; }`;
-            $("<style>").text(style).appendTo("head");
-            selector.enable();
-        } else {
-            selector.disable();
-        }
-    });
-
-    /**
-     * Load the mark button colours.
-     */
-    $('.btn-mark').each(function() {
-        $(this).css('color', $(this).data('color'));
+        $(this).blur();
     });
 
    /**
@@ -462,32 +288,41 @@
      */
     pybossa.presentTask(function(task, deferred) {
         if (!$.isEmptyObject(task)) {
+            const recordURL = `http://primocat.bl.uk/F/?func=direct&doc_number=${task.info.aleph_sys_no}`;
+            $('#record_url').html();
             $('#task-id').html(task.id);
-            taskID = task.id;
-            loadImage(task.info.url_b);
-            viewer.addHandler('open', function() {
-				const mainArgs = {filter: JSON.stringify({task_id: task.id})};
-				const auditArgs = {filter: JSON.stringify({table: mainTable, task_id: task.id})};
-                DatabaseClient.filter(mainTable, mainArgs, function(result) { drawSelections(result.data); });
-				DatabaseClient.filter(auditTable, auditArgs, function(result) { loadAuditLogs(result.data); });
+            $('#help').prepend(task.info.help);
+            $('#question').html(task.info.question);
+            $('#example').popover({
+                trigger: 'focus',
+                placement: 'left',
+                html: true,
+                content: `<div><img src="${task.info.example}" width="300" class="mb-4"></div>`
             });
+            loadImage(task.info.image_ark);
+            loadUserProgress();
 
             $('.btn-answer').off('click').on('click', function() {
-                const saveAnswer = function(selections) {
-                    task.answer = {
-                        selections: selections
-                    };
-
-                    console.log(JSON.stringify(task.answer, null, 2));
-
-                    pybossa.saveTask(task.id, task.answer).done(function() {
-                        deferred.resolve();
-                        notify('Answer saved, thanks!', 'success');
-                    }).fail(function(xhr, status, error) {
-                        logError(new Error(error));
-                    });
+                task.answer = {
+                    category: task.info.category,
+                    image_ark: task.info.image_ark,
+                    lark: task.info.ldark,
+                    color: task.info.color,
+                    aleph_sys_no: task.info.aleph_sys_no,
+                    coordinates: getOverlaysAsImageRectangles()
                 };
-                DatabaseClient.filter(mainTable, null, saveAnswer);
+
+                console.log(JSON.stringify(task.answer, null, 2));
+
+/**
+                pybossa.saveTask(task.id, task.answer).done(function() {
+                    deferred.resolve();
+                    notify('Answer saved, thanks!', 'success');
+                }).fail(function(xhr, status, error) {
+                    logError(new Error(error));
+                });
+                
+                */
             });
         } else {
           $("#project-content").hide();
