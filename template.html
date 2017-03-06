@@ -279,7 +279,7 @@
             const recordURL = `http://primocat.bl.uk/F/?func=direct&doc_number=${task.info.aleph_sys_no}`;
             $('#record_url').html();
             $('#task-id').html(task.id);
-            $('#help').prepend(task.info.help);
+            $('#help').html(task.info.help);
             $('#question').html(task.info.question);
             $('#example').popover({
                 trigger: 'focus',
