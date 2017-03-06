@@ -6,9 +6,6 @@
     #answer-column {
         overflow-y: auto;
     }
-    .popover { 
-        max-width:600px !important; 
-    }
     .overlay,
     .selection-box {
         border: 2px solid #FD953A !important;
@@ -27,7 +24,7 @@
         z-index: 2;
         border-radius: 2.5rem;
     }
-    .btn-hud {
+    .hud .btn-hud {
         background: none;
         color: #fff;
         opacity: 0.65;
@@ -35,8 +32,40 @@
         font-size: 1.25rem;
         padding: .5rem;
     }
-    .btn-hud:hover,
-    .btn-hud:focus {
+    .hud .btn-hud + .dropdown-menu .dropdown-item {
+        color: #fff;
+        opacity: 0.75;
+    }
+    .hud .dropdown-item:hover,
+    .hud .dropdown-item:focus,
+    .hud .dropdown-item.active {
+        color: #fff;
+        opacity: 0.85;
+        background-color: transparent;
+    }
+    .hud .dropdown-menu {
+        text-align: center;
+        top: 0%;
+        left: 100%;
+        margin: 0 .25rem;
+        font-size: 0.85rem;
+        min-width: 0rem;
+        background-color: rgba(0, 0, 0, 0.5);
+    }
+    .hud .dropdown {
+        justify-content: center;
+        display: flex;
+    }
+    .hud .dropdown-toggle:after {
+        content: initial;
+    }
+    .hud .dropdown-item:hover,
+    .hud .dropdown-item:focus {
+        color: #fff;
+        background-color: rgba(0, 0, 0, 0.6);
+    }
+    .hud .btn-hud:hover,
+    .hud .btn-hud:focus {
         opacity: 1;
     }
     .tooltip.tooltip-hud .tooltip-inner:before {
@@ -55,24 +84,22 @@
         <!-- Viewer column -->
         <div class="col-sm-12 col-md-9 px-0">
             <div class="hud ml-2 mt-2 d-flex flex-column">
-                <button id="zoom-in" class="btn btn-hud" data-toggle="tooltip" role="button">
-                    <span class="fa fa-plus-circle"></span>
-                </button>
-                <button id="zoom-out" class="btn btn-hud" data-toggle="tooltip" role="button">
-                    <span class="fa fa-minus-circle"></span>
-                </button>
-                <button id="home" class="btn btn-hud" data-toggle="tooltip" role="button">
-                    <span class="fa fa-refresh"></span>
-                </button>
-                <button id="full-page" class="btn btn-hud" data-toggle="tooltip" role="button">
-                    <span class="fa fa-expand"></span>
-                </button>
-                <button id="image-quality" class="btn btn-hud" data-toggle="tooltip" title="Image quality" role="button">
-                    <span class="fa fa-cog"></span>
-                </button>
-                <button id="toggle-selection" class="btn btn-hud" data-toggle="tooltip" title="Toggle selection" role="button">
-                    <span class="fa fa-toggle-on"></span>
-                </button>
+                <button id="zoom-in" class="btn btn-hud" role="button"><span class="fa fa-plus-circle"></span></button>
+                <button id="zoom-out" class="btn btn-hud" role="button"><span class="fa fa-minus-circle"></span></button>
+                <button id="home" class="btn btn-hud" role="button"><span class="fa fa-refresh"></span></button>
+                <button id="full-page" class="btn btn-hud" role="button"><span class="fa fa-expand"></span></button>
+                <div id="image-quality" class="dropdown">
+                    <button id="image-quality-link" class="btn btn-hud" data-toggle="dropdown" title="Image quality" role="button" aria-haspopup="true" aria-expanded="false">
+                        <span class="fa fa-cog"></span>
+                    </button>
+                    <div class="dropdown-menu" aria-labelledby="image-quality-link">
+                        <a class="dropdown-item active" data-percent="100" role="button">100%</a>
+                        <a class="dropdown-item" data-percent="75" role="button">75%</a>
+                        <a class="dropdown-item" data-percent="50" role="button">50%</a>
+                        <a class="dropdown-item" data-percent="25" role="button">25%</a>
+                    </div>
+                </div>
+                <button id="toggle-selection" class="btn btn-hud" title="Toggle selection" role="button"><span class="fa fa-toggle-on"></span></button>
             </div>
             <div id="openseadragon"></div> 
         </div>
@@ -125,8 +152,7 @@
 </div>
 
 <script>
-    let overlayID = 1,
-        overlays = {};
+    let currentArk = null;
 
     // Setup viewer
     OpenSeadragon.setString("Tooltips.FullPage", "Fullscreen");
@@ -169,7 +195,7 @@
     $('.confirm-button').html('<span class="fa fa-home"></span>')
     
     // Setup tooltips
-    $('.btn-hud[data-toggle="tooltip"]').tooltip({
+    $('.btn-hud').tooltip({
         placement: 'right',
         template: `<div class="tooltip tooltip-hud" role="tooltip"><div class="tooltip-arrow"></div>
                   <div class="tooltip-inner"></div></div>`
@@ -178,9 +204,9 @@
     /**
      * Load an image into the viewer.
      */
-    function loadImage(imageArk) {
-        const url = `http://api.bl.uk/image/iiif/${imageArk}/full/full/0/default.jpg`;
-        const size = '100';
+    function loadImage() {
+        const quality = $('#image-quality .dropdown-item.active').data('percent'),
+              url     = `http://api.bl.uk/image/iiif/${currentArk}/full/pct:${quality}/0/default.jpg`;
         viewer.open({
             type: 'image',
             url:  url,
@@ -253,6 +279,22 @@
     });
     
     /**
+     * Dismiss tooltip when image quality dropdown shown.
+     */
+    $('.hud .dropdown').on('show.bs.dropdown', function () {
+        $(this).find('.btn-hud').tooltip('dispose');
+    })
+    
+    /**
+     * Handle image quality selection.
+     */
+    $('#image-quality .dropdown-item').on('click', function() {
+        $('#image-quality .dropdown-item').removeClass('active');
+        $(this).addClass('active');
+        loadImage();
+    });
+    
+    /**
      * Draw an overlay when a selection is confirmed.
      */
     viewer.addHandler('selection', function(s) {
@@ -298,7 +340,8 @@
             $('#help').html(task.info.help);
             $('#question').html(task.info.question);
             $('#exampleModal .modal-body').html(`<img src="${task.info.example}" width="100%">`);
-            loadImage(task.info.image_ark);
+            currentArk = task.info.image_ark;
+            loadImage();
             loadUserProgress();
 
             $('.btn-answer').off('click').on('click', function() {
