@@ -231,7 +231,7 @@
         }).done(function(data) {
             for (let user of data.top_users) {
                 if (user.name == currentUserName) {
-                    $('#rank').append(user.rank);
+                    $('#rank').html(user.rank);
                     $('#score').html(user.score);
                 }
             }
