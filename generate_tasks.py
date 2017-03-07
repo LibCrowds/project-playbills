@@ -37,8 +37,8 @@ if __name__ == '__main__':
     then generates a csv file containing the tasks for the given Aleph System number.
     '''
     here = os.path.dirname(__file__)
-    default_csv = os.path.join(here, 'ark_and_aleph_system_numbers.csv')
-    default_json = os.path.join(here, 'categories.json')
+    default_csv = os.path.join(here, 'tasks', 'ark_and_aleph_system_numbers.csv')
+    default_json = os.path.join(here, 'tasks','categories.json')
     parser = argparse.ArgumentParser(description=description)
     parser.add_argument('sysno', help="The Aleph system number.")
     parser.add_argument('--arks', default=default_csv, help="The CSV input file.")
@@ -46,5 +46,5 @@ if __name__ == '__main__':
     args = parser.parse_args()
     categories = json.load(open(args.categories, 'rb'))
     data, headers = read_csv(args.arks, categories)
-    out_path = os.path.join(os.path.dirname(here), 'tasks.csv')
+    out_path = os.path.join(here, 'tasks.csv')
     write_csv(out_path, data[args.sysno], headers)

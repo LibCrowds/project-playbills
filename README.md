@@ -5,15 +5,17 @@ Playbills marking project for LibCrowds.
 
 ## Creating a new project
 
+Install and configure [pbs](https://github.com/Scifabric/pbs).
+
 Generate the tasks:
 
 ```
-python bin/generate_tasks_.py <Aleph system number>
+python generate_tasks.py <Aleph system number>
 ```
 
 Create the project:
 ```
-python bin/create_project_.py <endpoint> <api_key>
+python create_project.py <endpoint> <api_key>
 ```
 
 The first script generates the tasks for a given Aleph system number. The second creates a new project using a name 
