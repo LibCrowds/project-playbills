@@ -59,7 +59,7 @@
                 <button id="zoom-out" class="btn btn-hud" role="button"><span class="fa fa-minus-circle"></span></button>
                 <button id="home" class="btn btn-hud" role="button"><span class="fa fa-refresh"></span></button>
                 <button id="full-page" class="btn btn-hud" role="button"><span class="fa fa-expand"></span></button>
-                <button id="toggle-selection" class="btn btn-hud" title="Toggle selection" role="button"><span class="fa fa-toggle-on"></span></button>
+                <button id="toggle-selection" class="btn btn-hud" title="Toggle selection" role="button"><span class="fa fa-toggle-off"></span></button>
             </div>
             <div id="openseadragon"></div> 
         </div>
@@ -149,7 +149,6 @@
         restrictToImage: true,
         toggleButton: document.getElementById('toggle-selection')
     });
-    selector.enable();
     $('.confirm-button, .cancel-button').addClass('btn btn-hud');
     $('.confirm-button, .cancel-button').attr('role', 'button');
     $('.confirm-button').html('<span class="fa fa-home"></span>')
