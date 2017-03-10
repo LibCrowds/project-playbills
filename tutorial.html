@@ -2,14 +2,12 @@
 <p>
     The purpose of this project is to identify key data fields within an image taken from the British Library's 
     collection of historic playbills. On the following page you will be presented with an image and asked to draw
-    rectangles around a particular category of data (title, actor etc.). To draw a rectangle simply click and drag
-    around an area of the image. Once you have finished, click the Save button to move on to the next task.
-</p>
-<p>
-    Further guidance for each category, along with examples, is presented with each task.
+    rectangles around a particular category of data (title, actor etc.). To draw a rectangle click the toggle icon
+    towards the left of the viewer then click and drag over the image. Once you have identified all relevant 
+    areas click the Save button to move on to the next task.
 </p>
 <h2 class="mt-4">Viewer Controls</h2>
-<p>The following controls are provided towards the top left of the viewer:</p>
+<p>The following controls are provided towards the left of the viewer:</p>
 <ul class="list-unstyled">
     <li>
         <span class="fa-stack fa-lg mr-1">
@@ -38,18 +36,18 @@
     <li>
         <span class="fa-stack fa-lg mr-1">
           <i class="fa fa-circle fa-stack-2x"></i>
-          <i class="fa fa-cog fa-stack-1x fa-inverse"></i>
-        </span>Image quality
+          <i class="fa fa-toggle-on fa-stack-1x fa-inverse"></i>
+        </span>Toggle selection
     </li>
     <li>
         <span class="fa-stack fa-lg mr-1">
           <i class="fa fa-circle fa-stack-2x"></i>
-          <i class="fa fa-toggle-on fa-stack-1x fa-inverse"></i>
-        </span>Toggle selection
+          <i class="fa fa-clone fa-stack-1x fa-inverse"></i>
+        </span>Clone the most recent selection
     </li>
 </ul>
 <h2 class="mt-4">Selection controls</h2>
-<p>The following controls are provided to the right of each selection box:</p>
+<p>The following controls are provided over each selection box:</p>
 <ul class="list-unstyled">
     <li>
         <span class="fa-stack fa-lg mr-1">
@@ -64,9 +62,62 @@
         </span>Cancel selection
     </li>
 </ul>
-<p>
-    Click on a previously confirmed selection to update it.
-</p>
+<h2 class="mt-4">Keyboard Shortcuts</h2>
+<p>The following keys can be used to perform functions:</p>
+
+
+<div class="table-responsive">
+    <table id="plugins-table" class="table table-hover table-striped mb-0">
+        <thead>
+            <tr>
+                <th class="border-top-0 border-bottom-0 pb-1 card-label text-muted">Function</th>
+                <th class="border-top-0 border-bottom-0 pb-1 card-label text-muted text-center">Shortcut</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>Zoom in</td>
+                <td class="text-center">- / _</td>
+            </tr>
+            <tr>
+                <td>Zoom out</td>
+                <td class="text-center">= / +</td>
+            </tr>
+            <tr>
+                <td>Reset zoom</td>
+                <td class="text-center">0</td>
+            </tr>
+            <tr>
+                <td>Fullscreen</td>
+                <td class="text-center"></td>
+            </tr>
+            <tr>
+                <td>Toggle selection</td>
+                <td class="text-center">c</td>
+            </tr>
+            <tr>
+                <td>Clone the most recent selection</td>
+                <td class="text-center">v</td>
+            </tr>
+            <tr>
+                <td>Move viewport up</td>
+                <td class="text-center">w, up arrow</td>
+            </tr>
+            <tr>
+                <td>Move viewport down</td>
+                <td class="text-center">s, down arrow</td>
+            </tr>
+            <tr>
+                <td>Move viewport left</td>
+                <td class="text-center">a, left arrow</td>
+            </tr>
+            <tr>
+                <td>Move viewport right</td>
+                <td class="text-center">d, right arrow</td>
+            </tr>
+        </tbody>
+    </table>
+</div>
 <h2 class="mt-4">Multiple plays</h2>
 <p>
     Multiple plays were often performed on the same day, with a main performance being followed by one or more
