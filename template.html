@@ -9,23 +9,26 @@
     .selection-box {
         outline: 9999px rgba(0,0,0,0.6) solid;
     }
-    .overlay,
+    .selection-overlay,
     .selection-box {
         border: 2px solid #FD953A !important;
     }
-    .overlay {
+    .selection-overlay {
         opacity: .75;
     }
-    .hud,
-    .overlay:hover,
-    .overlay:focus,
-    .tooltip.tooltip-hud .tooltip-inner {
-        background-color: rgba(0, 0, 0, 0.6);
-    }
-    .hud {
+    .hud{
+        display: flex;
+        flex-direction: column;
+        margin: 1.5rem;
         position: absolute;
         z-index: 2;
         border-radius: 2.5rem;
+    }
+    .hud,
+    .selection-overlay:hover,
+    .selection-overlay:focus,
+    .tooltip.tooltip-hud .tooltip-inner {
+        background-color: rgba(0, 0, 0, 0.6);
     }
     .hud .btn-hud {
         background: none;
@@ -54,13 +57,6 @@
 
         <!-- Viewer column -->
         <div class="col-sm-12 col-md-9 px-0">
-            <div class="hud ml-2 mt-2 d-flex flex-column">
-                <button id="zoom-in" class="btn btn-hud" role="button"><span class="fa fa-plus-circle"></span></button>
-                <button id="zoom-out" class="btn btn-hud" role="button"><span class="fa fa-minus-circle"></span></button>
-                <button id="home" class="btn btn-hud" role="button"><span class="fa fa-refresh"></span></button>
-                <button id="full-page" class="btn btn-hud" role="button"><span class="fa fa-expand"></span></button>
-                <button id="toggle-selection" class="btn btn-hud" title="Toggle selection" role="button"><span class="fa fa-toggle-off"></span></button>
-            </div>
             <div id="openseadragon"></div> 
         </div>
 
@@ -78,14 +74,18 @@
 			    <button class="btn btn-success btn-sm btn-answer mt-2"><span class="fa fa-floppy-o mr-1"></span>Save</button>
                 <hr>
                 <p class="mt-2 mb-1">
-                    <span class="fa-stack mr-1">
+                    <span id="rank-icon" class="fa-stack mr-1" style="display: none;">
                       <i class="fa fa-circle fa-stack-2x"></i>
                       <i class="fa fa-trophy fa-stack-1x fa-inverse"></i>
                     </span><span id="rank"></span>
-                    <span class="fa-stack ml-3 mr-1">
+                    <span id="score-icon" class="fa-stack ml-3 mr-1" style="display: none;">
                       <i class="fa fa-circle fa-stack-2x"></i>
                       <i class="fa fa-tasks fa-stack-1x fa-inverse"></i>
                     </span><span id="score"></span>
+                    </span>
+                    <span id="not-signed-in" style="display: none;">
+                        <small><a href="../../account/signin">Sign in</a> to see your current rank and score</small>
+                    </span>
                 </p>
                 <p class="mb-0"><small>You are working on task #<span id="task-id"></span></small></p>
             </div>
@@ -109,154 +109,237 @@
          </div>
      </div>
 </div>
-
 <script>
-    let overlayID  = 1;
-
-    // Setup viewer
-    OpenSeadragon.setString("Tooltips.FullPage", "Fullscreen");
-    OpenSeadragon.setString("Tooltips.Home", "Reset zoom");
-    OpenSeadragon.setString("Tooltips.SelectionToggle", "Toggle Selection");
-    OpenSeadragon.setString("Tooltips.SelectionConfirm", "Confirm Selection");
-    const viewer = OpenSeadragon({
-        id: "openseadragon",
-        prefixUrl: "/static/img/openseadragon/",
-        zoomInButton:   "zoom-in",
-        zoomOutButton:  "zoom-out",
-        homeButton:     "home",
-        fullPageButton: "full-page",
-        showNavigator: true,
-        navigatorPosition: 'BOTTOM_RIGHT',
-        minZoomLevel: 0.1,
-        gestureSettingsMouse: {
-            clickToZoom: false
-        },
-        gestureSettingsTouch: {
-            clickToZoom: false
-        },
-        gestureSettingsPen: {
-            clickToZoom: false
-        }
-    });
-
-    // Setup selector
-    const selector = viewer.selection({
-        prefixUrl: "/static/img/openseadragonselection/",
-        restrictToImage: true,
-        toggleButton: document.getElementById('toggle-selection')
-    });
-    $('.confirm-button, .cancel-button').addClass('btn btn-hud');
-    $('.confirm-button, .cancel-button').attr('role', 'button');
-    $('.confirm-button').html('<span class="fa fa-home"></span>')
-    
-    // Setup tooltips
-    $('.btn-hud').tooltip({
-        placement: 'right',
-        template: `<div class="tooltip tooltip-hud" role="tooltip"><div class="tooltip-arrow"></div>
-                  <div class="tooltip-inner"></div></div>`
-    });
-
     /**
-     * Load an image into the viewer.
+     * Custom OpenSeadragon viewer class.
      */
-    function loadImage(id) {
-        viewer.open({
-            type: 'image',
-            tileSource:  `http://api.bl.uk/image/iiif/${id}/info.json`,
-            buildPyramid: false
-        });
-    }
+    class LibCrowdsViewer {
     
-    /**
-     * Load the user's rank and score.
-     * Assumes that the current user's name has been added to currentUserName before this template was rendered.
-     */
-    function loadUserProgress() {
-        if (!currentUserName) {
-            return
-        }
-        $.ajax({
-            url: '/leaderboard/',
-            dataType: 'json',
-            contentType: 'application/json',
-            data: '{}'
-        }).done(function(data) {
-            for (let user of data.top_users) {
-                if (user.name == currentUserName) {
-                    $('#rank').html(user.rank);
-                    $('#score').html(user.score);
+        constructor(container_id, enableSelector) {
+            this.baseIIIFURL = 'http://api.bl.uk/image/iiif/';
+            this.container_id = container_id;
+            this.selectorEnabled = enableSelector;
+            this.viewer = this.setupViewer();
+            this.selector = this.selectorEnabled ? this.setupSelector() : null;
+            this.lastSelection = null;
+            this.overlayID = 1;
+            this.setupHUD();
+        
+            // Clone last selection when 'v' is pressed;
+            this.viewer.container.addEventListener('keypress',(evt) => {
+                let key = evt.keyCode ? evt.keyCode : evt.charCode;
+                if (String.fromCharCode(key) === 'v') {
+                    this.cloneLastSelection();
                 }
-            }
-        });
-    }
-    
-    /**
-     * Return an array of image rectangles from the current overlays.
-     */
-    function getOverlaysAsImageRectangles() {
-        return viewer.currentOverlays.map(function(overlay) {
-            let bounds = overlay.getBounds(viewer.viewport),
-                vpRect = new OpenSeadragon.Rect(bounds.x, bounds.y, bounds.width, bounds.height, bounds.degrees);
-            return viewer.viewport.viewportToImageRectangle(vpRect);
-        });
-    }
-
-    /**
-     * Draw an overlay from a selection.
-     */
-    function drawOverlay(s) {
-        let elem   = document.createElement("div"),
-            vpRect = viewer.viewport.imageToViewportRectangle(s);
-        elem.className = 'overlay';
-        elem.id = overlayID;
-        let overlay = {
-            element: elem,
-            location: new OpenSeadragon.Rect(vpRect.x, vpRect.y, vpRect.width, vpRect.height, vpRect.degrees)
+            });
+        
+            // Draw an overlay when a selection is confirmed.
+            this.viewer.addHandler('selection',(s) => {
+                this.drawOverlay(s, 'selection-overlay');
+            });
+        
+            //Toggle icon for toggle selection button.
+            this.viewer.addHandler('selection_toggle', function(evt) {
+                if (evt.enabled) {
+                    $('#toggle-selection').html('<span class="fa fa-toggle-on"></span>');
+                } else {
+                    $('#toggle-selection').html('<span class="fa fa-toggle-off"></span>');
+                }
+                $('#toggle-selection').blur();
+            });
         }
-        viewer.addOverlay(overlay);
-        overlayID += 1;
-    }
     
-    /**
-     * Convert an overlay back to a selection box on click.
-     */
-    $('#openseadragon').on('click', '.overlay', function() {
-        const id      = $(this).attr('id'),
-              overlay = viewer.getOverlayById(id),
-              bounds  = overlay.getBounds(viewer.viewport);
-        viewer.removeOverlay(id);
-        selector.rect = new OpenSeadragon.SelectionRect(bounds.x, bounds.y, bounds.width, bounds.height, bounds.degrees);
-        selector.draw();
-        selector.enable();
-    });
+        /**
+         * Setup the viewer.
+         */
+        setupViewer() {
+            return OpenSeadragon({
+                id: this.container_id,
+                prefixUrl: "/static/img/openseadragon/",
+                showNavigationControl: false,
+                showNavigator: true,
+                navigatorPosition: 'BOTTOM_RIGHT',
+                minZoomLevel: 0.1,
+                gestureSettingsMouse: {
+                    clickToZoom: false
+                },
+                gestureSettingsTouch: {
+                    clickToZoom: false
+                },
+                gestureSettingsPen: {
+                    clickToZoom: false
+                }
+            });
+        }
     
-    /**
-     * Draw an overlay when a selection is confirmed.
-     */
-    viewer.addHandler('selection', function(s) {
-        drawOverlay(s);
-    });
+        /**
+         * Setup OpenSeadragon selector.
+         */
+        setupSelector() {
+            return this.viewer.selection({
+                prefixUrl: "/static/img/openseadragonselection/",
+                restrictToImage: true,
+                toggleButton: document.getElementById('#toggle-selection')
+            });
+        }
+        
+        /**
+         * Setup the heads up display.
+         */
+        setupHUD(selectorEnabled) {
+            let hud     = $('<div class="hud"></div>'),
+                buttons = [{
+                    id: "zoom-in",
+                    icon: "fa-plus-circle",
+                    tooltip: "Zoom in"
+                }, {
+                    id: "zoom-out",
+                    icon: "fa-minus-circle",
+                    tooltip: "Zoom out"
+                }, {
+                    id: "reset-zoom",
+                    icon: "fa-refresh",
+                    tooltip: "Reset Zoom"
+                }, {
+                    id: "fullscreen",
+                    icon: "fa-expand",
+                    tooltip: "Fullscreen"
+                }];
+                
+            if (this.selectorEnabled) {
+                buttons.push({
+                    id: "toggle-selection",
+                    icon: "fa-toggle-off",
+                    tooltip: "Toggle selection"
+                });
+                buttons.push({
+                    id: "clone-selection",
+                    icon: "fa-clone",
+                    tooltip: "Clone selection"
+                });
+            }
+            
+            for (let b of buttons) {
+                hud.append(
+                    `<button id="${ b.id }" class="btn btn-hud" data-toggle="tooltip" title="${ b.tooltip }" role="button">
+                    <span class="fa ${ b.icon }"></span>
+                    </button>`
+                );
+            }
+            
+            $(`#${this.container_id}`).prepend(hud);
 
+            $('.btn-hud').tooltip({
+                placement: 'right',
+                template: `<div class="tooltip tooltip-hud" role="tooltip">
+                          <div class="tooltip-arrow"></div>
+                          <div class="tooltip-inner"></div>
+                          </div>`
+            });
+        }
+    
+        /**
+         * Load an image into the viewer.
+         */
+        loadImage(id) {
+            this.viewer.open({
+                type: 'image',
+                tileSource:  `${this.baseIIIFURL}${id}/info.json`,
+                buildPyramid: false
+            });
+        }
+    
+        /**
+         * Draw an overlay from a selection.
+         */
+        drawOverlay(s, overlayClass) {
+            let elem    = document.createElement("div"),
+                vpRect  = this.viewer.viewport.imageToViewportRectangle(s),
+                overlay = {
+                    element: elem,
+                    location: new OpenSeadragon.Rect(vpRect.x, vpRect.y, vpRect.width, vpRect.height, vpRect.degrees)
+                };
+            elem.className = overlayClass ? `overlay ${overlayClass}` : 'overlay';
+            elem.id = this.overlayID;
+            this.viewer.addOverlay(overlay);
+            this.overlayID += 1;
+            this.lastSelection = s;
+            overlay.addEventListener('click',(evt) => { console.log(evt); this.convertOverlayToSelection(); });
+        }
+    
+        /**
+         * Return an array of image rectangles from the current overlays.
+         */
+        getOverlaysAsImageRectangles() {
+            return this.viewer.currentOverlays.map(function(overlay) {
+                let bounds = overlay.getBounds(this.viewer.viewport),
+                    vpRect = new OpenSeadragon.Rect(bounds.x, bounds.y, bounds.width, bounds.height, bounds.degrees);
+                return this.viewer.viewport.viewportToImageRectangle(vpRect);
+            });
+        }
+    
+        /**
+         * Convert an overlay back to a selection box.
+         */
+        convertOverlayToSelection(id) {
+            const overlay = viewer.getOverlayById(id),
+                  bounds  = overlay.getBounds(viewer.viewport);
+            viewer.removeOverlay(id);
+            selector.rect = new OpenSeadragon.SelectionRect(bounds.x, bounds.y, bounds.width, bounds.height, bounds.degrees);
+            selector.draw();
+            selector.enable();
+        }
+    
+        /**
+         * Clone the most recent selection (confirming any selection in progress).
+         */
+        cloneLastSelection() {
+            if (this.selector.isSelecting) {
+                this.selector.confirm();
+            }
+        
+            if (this.lastSelection) {
+                const vpRect = this.viewer.viewport.imageToViewportRectangle(this.lastSelection);
+                this.selector.rect = new OpenSeadragon.SelectionRect(
+                    vpRect.x + (vpRect.x*0.1), vpRect.y + (vpRect.y*0.1), vpRect.width, vpRect.height, vpRect.degrees
+                );
+                this.selector.draw();
+                this.selector.enable();
+            }
+        }
+    }
+</script>
+<script>
+    const lcViewer = new LibCrowdsViewer('openseadragon', 'toggle-selection');
+    
     /**
      * Handle a faliure to open an image
      */
-    viewer.addHandler('open-failed', function(evt) {
+    lcViewer.viewer.addHandler('open-failed', function(evt) {
         notify(evt.message, 'error');
     });
     
     /**
-     * Toggle icon for toggle selection button.
+     * Close last selection on click.
      */
-    viewer.addHandler('selection_toggle', function(evt) {
-        if (evt.enabled) {
-            $('#toggle-selection span').addClass('fa-toggle-on');
-            $('#toggle-selection span').removeClass('fa-toggle-off');
-        } else {
-            $('#toggle-selection span').removeClass('fa-toggle-on');
-            $('#toggle-selection span').addClass('fa-toggle-off');
-        }
-        $('#toggle-selection').blur();
+    $('#clone-selection').on('click', function() {
+        cloneSelection(lastSelection);
     });
+    
+    /**
+     * Load the user's rank and score.
+     */
+    function loadUserProgress() {
+        getUserRankAndScore().done(function(data) {
+            if (data) {
+                $('#rank').html(data.rank);
+                $('#score').html(data.score);
+                $('#rank-icon, #score-icon').show();
+            } else {
+                $('#not-signed-in').show();
+            }
+        });
+    }
 
    /**
     * Load the task.
@@ -276,7 +359,7 @@
             $('#help').html(task.info.help);
             $('#question').html(task.info.question);
             $('#exampleModal .modal-body').html(`<img src="${task.info.example}" width="100%">`);
-            loadImage(task.info.image_ark);
+            lcViewer.loadImage(task.info.image_ark);
             loadUserProgress();
 
             $('.btn-answer').off('click').on('click', function() {
@@ -286,7 +369,7 @@
                     lark: task.info.ldark,
                     color: task.info.color,
                     aleph_sys_no: task.info.aleph_sys_no,
-                    coordinates: getOverlaysAsImageRectangles()
+                    coordinates: lcViewer.getOverlaysAsImageRectangles()
                 };
 
                 console.log(JSON.stringify(task.answer, null, 2));
