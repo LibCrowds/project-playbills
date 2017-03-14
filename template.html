@@ -23,6 +23,7 @@
 <script>
     let lcViewerInterface = new LibCrowdsViewerInterface({ id: 'openseadragon', selectionEnabled: true });
     lcViewerInterface.viewer.setFullPage(true);
+    lcViewerInterface.selector.enable();
     
     /**
      * Add the question and answer sidebar to the viewer.
