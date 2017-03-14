@@ -16,7 +16,8 @@
 </style>
 <div id="project-content" class="bg-faded d-flex flex-column h-100">
     <div class="w-100 h-100">
-        <div id="openseadragon"></div>
+        <div id="openseadragon">
+        </div>
     </div>
 </div>
 <script>
@@ -74,10 +75,8 @@
                 task.answer = {
                     category: task.info.category,
                     image_ark: task.info.image_ark,
-                    lark: task.info.ldark,
-                    color: task.info.color,
                     aleph_sys_no: task.info.aleph_sys_no,
-                    coordinates: lcViewer.getOverlaysAsImageRectangles()
+                    coordinates: lcViewerInterface.getOverlaysAsImageRectangles()
                 };
 
                 console.log(JSON.stringify(task.answer, null, 2));
