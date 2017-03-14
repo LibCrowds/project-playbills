@@ -1,6 +1,7 @@
 # project-playbills-mark
 
-Playbills marking project for LibCrowds.
+Playbills marking project for LibCrowds, initially designed for use with the 
+[libcrowds-bs4-pybossa-theme](https://github.com/LibCrowds/libcrowds-bs4-pybossa-theme).
 
 
 ## Creating a new project
