@@ -1,49 +1,12 @@
 <style>
     #openseadragon {
         height: 60vh;
-        background-color: #000000;
+    }
+    .openseadragon-message {
+        color: #FFF;
     }
     #answer-column {
         overflow-y: auto;
-    }
-    .selection-box {
-        outline: 9999px rgba(0,0,0,0.6) solid;
-    }
-    .selection-overlay,
-    .selection-box {
-        border: 2px solid #FD953A !important;
-    }
-    .selection-overlay {
-        opacity: .75;
-    }
-    .hud{
-        display: flex;
-        flex-direction: column;
-        margin: 1.5rem;
-        position: absolute;
-        z-index: 2;
-        border-radius: 2.5rem;
-    }
-    .hud,
-    .selection-overlay:hover,
-    .selection-overlay:focus,
-    .tooltip.tooltip-hud .tooltip-inner {
-        background-color: rgba(0, 0, 0, 0.6);
-    }
-    .hud .btn-hud {
-        background: none;
-        color: #fff;
-        opacity: 0.65;
-        text-shadow: 0 0 5px #000;
-        font-size: 1.25rem;
-        padding: .5rem;
-    }
-    .hud .btn-hud:hover,
-    .hud .btn-hud:focus {
-        opacity: 1;
-    }
-    .tooltip.tooltip-hud .tooltip-inner:before {
-        border-right-color: rgba(0, 0, 0, 0.6);
     }
     @media (min-width: 768px) {
         #openseadragon {
@@ -51,293 +14,43 @@
         }
     }
 </style>
-
-<div id="project-content" class="bg-faded container-fluid d-flex flex-column h-100">
-    <div class="row h-100">
-
-        <!-- Viewer column -->
-        <div class="col-sm-12 col-md-9 px-0">
-            <div id="openseadragon"></div> 
-        </div>
-
-        <!-- Question and answer column -->
-        <div id="answer-column" class="col-sm-12 col-md-3 py-3">
-            <div class="card card-block text-left mb-2">
-                <p id="question" class="lead text-center"></h3>
-                <p id="help"></p>
-                <button class="btn btn-secondary btn-sm mt-2" data-toggle="modal" data-target="#exampleModal" role="button">
-                    Show Example
-                </button>
-                <a href="../tutorial" class="btn btn-secondary btn-sm mt-1" role="button">View Tutorial</a>
-            </div>
-            <div class="text-center">
-			    <button class="btn btn-success btn-sm btn-answer mt-2"><span class="fa fa-floppy-o mr-1"></span>Save</button>
-                <hr>
-                <p class="mt-2 mb-1">
-                    <span id="rank-icon" class="fa-stack mr-1" style="display: none;">
-                      <i class="fa fa-circle fa-stack-2x"></i>
-                      <i class="fa fa-trophy fa-stack-1x fa-inverse"></i>
-                    </span><span id="rank"></span>
-                    <span id="score-icon" class="fa-stack ml-3 mr-1" style="display: none;">
-                      <i class="fa fa-circle fa-stack-2x"></i>
-                      <i class="fa fa-tasks fa-stack-1x fa-inverse"></i>
-                    </span><span id="score"></span>
-                    </span>
-                    <span id="not-signed-in" style="display: none;">
-                        <small><a href="../../account/signin">Sign in</a> to see your current rank and score</small>
-                    </span>
-                </p>
-                <p class="mb-0"><small>You are working on task #<span id="task-id"></span></small></p>
-            </div>
-        </div>
+<div id="project-content" class="bg-faded d-flex flex-column h-100">
+    <div class="w-100 h-100">
+        <div id="openseadragon"></div>
     </div>
 </div>
-
-<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-     <div class="modal-dialog" role="document">
-         <div class="modal-content">
-             <div class="modal-header">
-                 <h5 class="modal-title" id="exampleModalLabel">Example</h5>
-                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                     <span aria-hidden="true">&times;</span>
-                 </button>
-             </div>
-             <div class="modal-body"></div>
-             <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-             </div>
-         </div>
-     </div>
-</div>
 <script>
+    let lcViewerInterface = new LibCrowdsViewerInterface({ id: 'openseadragon', selectionEnabled: true });
+    lcViewerInterface.viewer.setFullPage(true);
+    
     /**
-     * Custom OpenSeadragon viewer class.
+     * Add the question and answer sidebar to the viewer.
      */
-    class LibCrowdsViewer {
-    
-        constructor(container_id, enableSelector) {
-            this.baseIIIFURL = 'http://api.bl.uk/image/iiif/';
-            this.container_id = container_id;
-            this.selectorEnabled = enableSelector;
-            this.viewer = this.setupViewer();
-            this.selector = this.selectorEnabled ? this.setupSelector() : null;
-            this.lastSelection = null;
-            this.overlayID = 1;
-            this.setupHUD();
-        
-            // Clone last selection when 'v' is pressed;
-            this.viewer.container.addEventListener('keypress',(evt) => {
-                let key = evt.keyCode ? evt.keyCode : evt.charCode;
-                if (String.fromCharCode(key) === 'v') {
-                    this.cloneLastSelection();
-                }
-            });
-        
-            // Draw an overlay when a selection is confirmed.
-            this.viewer.addHandler('selection',(s) => {
-                this.drawOverlay(s, 'selection-overlay');
-            });
-        
-            //Toggle icon for toggle selection button.
-            this.viewer.addHandler('selection_toggle', function(evt) {
-                if (evt.enabled) {
-                    $('#toggle-selection').html('<span class="fa fa-toggle-on"></span>');
-                } else {
-                    $('#toggle-selection').html('<span class="fa fa-toggle-off"></span>');
-                }
-                $('#toggle-selection').blur();
-            });
-        }
-    
-        /**
-         * Setup the viewer.
-         */
-        setupViewer() {
-            return OpenSeadragon({
-                id: this.container_id,
-                prefixUrl: "/static/img/openseadragon/",
-                showNavigationControl: false,
-                showNavigator: true,
-                navigatorPosition: 'BOTTOM_RIGHT',
-                minZoomLevel: 0.1,
-                gestureSettingsMouse: {
-                    clickToZoom: false
-                },
-                gestureSettingsTouch: {
-                    clickToZoom: false
-                },
-                gestureSettingsPen: {
-                    clickToZoom: false
-                }
-            });
-        }
-    
-        /**
-         * Setup OpenSeadragon selector.
-         */
-        setupSelector() {
-            return this.viewer.selection({
-                prefixUrl: "/static/img/openseadragonselection/",
-                restrictToImage: true,
-                toggleButton: document.getElementById('#toggle-selection')
-            });
-        }
-        
-        /**
-         * Setup the heads up display.
-         */
-        setupHUD(selectorEnabled) {
-            let hud     = $('<div class="hud"></div>'),
-                buttons = [{
-                    id: "zoom-in",
-                    icon: "fa-plus-circle",
-                    tooltip: "Zoom in"
-                }, {
-                    id: "zoom-out",
-                    icon: "fa-minus-circle",
-                    tooltip: "Zoom out"
-                }, {
-                    id: "reset-zoom",
-                    icon: "fa-refresh",
-                    tooltip: "Reset Zoom"
-                }, {
-                    id: "fullscreen",
-                    icon: "fa-expand",
-                    tooltip: "Fullscreen"
-                }];
-                
-            if (this.selectorEnabled) {
-                buttons.push({
-                    id: "toggle-selection",
-                    icon: "fa-toggle-off",
-                    tooltip: "Toggle selection"
-                });
-                buttons.push({
-                    id: "clone-selection",
-                    icon: "fa-clone",
-                    tooltip: "Clone selection"
-                });
-            }
-            
-            for (let b of buttons) {
-                hud.append(
-                    `<button id="${ b.id }" class="btn btn-hud" data-toggle="tooltip" title="${ b.tooltip }" role="button">
-                    <span class="fa ${ b.icon }"></span>
-                    </button>`
-                );
-            }
-            
-            $(`#${this.container_id}`).prepend(hud);
-
-            $('.btn-hud').tooltip({
-                placement: 'right',
-                template: `<div class="tooltip tooltip-hud" role="tooltip">
-                          <div class="tooltip-arrow"></div>
-                          <div class="tooltip-inner"></div>
-                          </div>`
-            });
-        }
-    
-        /**
-         * Load an image into the viewer.
-         */
-        loadImage(id) {
-            this.viewer.open({
-                type: 'image',
-                tileSource:  `${this.baseIIIFURL}${id}/info.json`,
-                buildPyramid: false
-            });
-        }
-    
-        /**
-         * Draw an overlay from a selection.
-         */
-        drawOverlay(s, overlayClass) {
-            let elem    = document.createElement("div"),
-                vpRect  = this.viewer.viewport.imageToViewportRectangle(s),
-                overlay = {
-                    element: elem,
-                    location: new OpenSeadragon.Rect(vpRect.x, vpRect.y, vpRect.width, vpRect.height, vpRect.degrees)
-                };
-            elem.className = overlayClass ? `overlay ${overlayClass}` : 'overlay';
-            elem.id = this.overlayID;
-            this.viewer.addOverlay(overlay);
-            this.overlayID += 1;
-            this.lastSelection = s;
-            overlay.addEventListener('click',(evt) => { console.log(evt); this.convertOverlayToSelection(); });
-        }
-    
-        /**
-         * Return an array of image rectangles from the current overlays.
-         */
-        getOverlaysAsImageRectangles() {
-            return this.viewer.currentOverlays.map(function(overlay) {
-                let bounds = overlay.getBounds(this.viewer.viewport),
-                    vpRect = new OpenSeadragon.Rect(bounds.x, bounds.y, bounds.width, bounds.height, bounds.degrees);
-                return this.viewer.viewport.viewportToImageRectangle(vpRect);
-            });
-        }
-    
-        /**
-         * Convert an overlay back to a selection box.
-         */
-        convertOverlayToSelection(id) {
-            const overlay = viewer.getOverlayById(id),
-                  bounds  = overlay.getBounds(viewer.viewport);
-            viewer.removeOverlay(id);
-            selector.rect = new OpenSeadragon.SelectionRect(bounds.x, bounds.y, bounds.width, bounds.height, bounds.degrees);
-            selector.draw();
-            selector.enable();
-        }
-    
-        /**
-         * Clone the most recent selection (confirming any selection in progress).
-         */
-        cloneLastSelection() {
-            if (this.selector.isSelecting) {
-                this.selector.confirm();
-            }
-        
-            if (this.lastSelection) {
-                const vpRect = this.viewer.viewport.imageToViewportRectangle(this.lastSelection);
-                this.selector.rect = new OpenSeadragon.SelectionRect(
-                    vpRect.x + (vpRect.x*0.1), vpRect.y + (vpRect.y*0.1), vpRect.width, vpRect.height, vpRect.degrees
-                );
-                this.selector.draw();
-                this.selector.enable();
-            }
-        }
+    function buildTaskSidebar(task) {
+        let elem = $(`<h3 id="question" class="lead text-center">${task.info.question}</h3>
+                      <p>${task.info.help}</p>
+                      <div class="text-center mb-2">
+                          <a href="../tutorial" class="btn btn-outline-info mt-2" role="button">View Tutorial</a>
+    			          <button class="btn btn-outline-success btn-answer mt-2" role="button">
+                              <span class="fa fa-floppy-o mr-1"></span>Save
+                          </button>
+                      </div>`);
+        lcViewerInterface.loadSidebar('Task', elem);
     }
-</script>
-<script>
-    const lcViewer = new LibCrowdsViewer('openseadragon', 'toggle-selection');
     
     /**
-     * Handle a faliure to open an image
+     * Add the user progress sidebar to the viewer.
      */
-    lcViewer.viewer.addHandler('open-failed', function(evt) {
-        notify(evt.message, 'error');
-    });
-    
-    /**
-     * Close last selection on click.
-     */
-    $('#clone-selection').on('click', function() {
-        cloneSelection(lastSelection);
-    });
-    
-    /**
-     * Load the user's rank and score.
-     */
-    function loadUserProgress() {
+    function buildProgressSidebar() {
+        let elem = $('<p></p>');
         getUserRankAndScore().done(function(data) {
             if (data) {
-                $('#rank').html(data.rank);
-                $('#score').html(data.score);
-                $('#rank-icon, #score-icon').show();
+                elem.append(`<p><span class="fa fa-trophy mr-2"></span>Rank ${data.rank}</p>
+                             <p class="mb-0"><span class="fa fa-tasks mr-2"></span>${data.score} contributions</p>`);
             } else {
-                $('#not-signed-in').show();
+                elem.append('<small><a href="../../account/signin">Sign in</a> to see your rank and score</small>');
             }
+            lcViewerInterface.loadSidebar('Progress', elem);
         });
     }
 
@@ -353,14 +66,9 @@
      */
     pybossa.presentTask(function(task, deferred) {
         if (!$.isEmptyObject(task)) {
-            const recordURL = `http://primocat.bl.uk/F/?func=direct&doc_number=${task.info.aleph_sys_no}`;
-            $('#record_url').html();
-            $('#task-id').html(task.id);
-            $('#help').html(task.info.help);
-            $('#question').html(task.info.question);
-            $('#exampleModal .modal-body').html(`<img src="${task.info.example}" width="100%">`);
-            lcViewer.loadImage(task.info.image_ark);
-            loadUserProgress();
+            lcViewerInterface.loadImage(task.info.image_ark);
+            buildTaskSidebar(task);
+            buildProgressSidebar();
 
             $('.btn-answer').off('click').on('click', function() {
                 task.answer = {
