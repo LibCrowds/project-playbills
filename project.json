@@ -1,8 +1,5 @@
 {
     "name": "project-playbills-mark",
     "short_name": "project-playbills-mark",
-    "description": "Identify important data in historic playbills.",
-    "webhook": "https://analyse.libcrowds.com",
-    "category_id": 8,
-    "splash": "https://cdn.rawgit.com/LibCrowds/project-playbills-mark/master/assets/splash.jpg"
+    "description": "Identify important data in historic playbills."
 }
