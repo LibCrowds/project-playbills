@@ -1,5 +1,6 @@
 <style>
     #openseadragon {
+        font-size: 0.9rem;
         height: 60vh;
     }
     .openseadragon-message {
@@ -22,17 +23,17 @@
 </div>
 <script>
     let lcViewerInterface = new LibCrowdsViewerInterface({ id: 'openseadragon', selectionEnabled: true });
-    lcViewerInterface.viewer.setFullPage(true);
     lcViewerInterface.selector.enable();
+    $('#openseadragon').prepend($('.navbar'))
     
     /**
      * Add the question and answer sidebar to the viewer.
      */
     function buildTaskSidebar(task) {
-        let elem = $(`<h3 id="question" class="lead text-center">${task.info.question}</h3>
+        let elem = $(`<h3 class="lead text-center">${task.info.question}</h3>
                       <p>${task.info.help}</p>
                       <div class="text-center mb-2">
-                          <a href="../tutorial" class="btn btn-outline-info mt-2" role="button">View Tutorial</a>
+                          <a href="../tutorial" class="btn btn-outline-info mt-2" role="button">Tutorial</a>
     			          <button class="btn btn-outline-success btn-answer mt-2" role="button">
                               <span class="fa fa-floppy-o mr-1"></span>Save
                           </button>
@@ -69,6 +70,7 @@
     pybossa.presentTask(function(task, deferred) {
         if (!$.isEmptyObject(task)) {
             lcViewerInterface.loadImage(task.info.image_ark);
+            lcViewerInterface.removeSidebars();
             buildTaskSidebar(task);
             buildProgressSidebar();
 
