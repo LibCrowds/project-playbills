@@ -31,6 +31,7 @@ To generate a new project using the inputs provided above and push it to the ser
 python generate_project.py <task set> [--sysno=<sysno> or --project_id=<id>]
 cd /gen
 pbs create_project
+pbs add_tasks --tasks-file=tasks.json
 pbs update-task-redundancy --redundancy 3
 pbs update_project
 ```
