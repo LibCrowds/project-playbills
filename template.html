@@ -16,7 +16,8 @@
 <script>
     let lcViewerInterface = new LibCrowdsViewerInterface({ id: 'openseadragon', selectionEnabled: true });
     lcViewerInterface.selector.enable();
-    $('#openseadragon').prepend($('.navbar'))
+    $('#openseadragon').prepend($('.navbar'));
+    $('.navbar').css('z-index', 'inherit');
     
     /**
      * Add the question and answer sidebar to the viewer.
@@ -71,11 +72,9 @@
                     category: task.info.category,
                     image_ark: task.info.image_ark,
                     aleph_sys_no: task.info.aleph_sys_no,
-                    coordinates: lcViewerInterface.getOverlaysAsImageRectangles()
+                    regions: lcViewerInterface.getOverlaysAsImageRectangles()
                 };
-
                 console.log(JSON.stringify(task.answer, null, 2));
-
                 pybossa.saveTask(task.id, task.answer).done(function() {
                     deferred.resolve();
                     notify('Answer saved, thanks!', 'success');
