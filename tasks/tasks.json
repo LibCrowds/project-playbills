@@ -1,35 +1,25 @@
 {	
 	"performances": {
 		"nameSuffix": "Identify Performances",
-		"description": "Identify individual performances in historic playbills",
+		"shortNameSuffix": "mark_performances",
+		"description": "Identify performances in historic playbills",
 		"tasks": [
 			{
 				"category": "performance",
 				"question": "Identify each performance",
-				"guidance": "Alongside the main performance, the playbills often contain details of additional performances. a rectangle should be drawn around each. Any notes about upcoming or past performances can be ignored.",
+				"guidance": "Alongside the main performance, the playbills often contain details of additional performances. a rectangle should be drawn around each. Any notes about upcoming or past performances can be ignored."
 			}
 		]
 	},
-	"transcribe_actors": {
-		"nameSuffix": "Transcribe Actors and Roles",
-		"description": "Transcribe actors and roles in historic playbills",
+	"actors": {
+		"nameSuffix": "Identify Actors and Roles",
+		"shortNameSuffix": "mark_actors",
+		"description": "Identify actors and roles in historic playbills",
 		"tasks": [
 			{
 				"category": "actor",
-				"question": "Transcribe the name of the actor",
-				"guidance": "Transcribe the name of the highlighted actor (and role, if present).",
-				"fields": [
-					{
-						"id": "actor",
-						"placeholder": "Enter the actor's name",
-						"type": "text",
-					},
-					{
-						"id": "role",
-						"placeholder": "Enter the actor's role",
-						"type": "text",
-					}
-				]
+				"question": "Identify each actor and role",
+				"guidance": "Draw a rectangle around each actor (with the same rectangle encapsulating the associated role, if present)."
 			}
 		]
 	}
