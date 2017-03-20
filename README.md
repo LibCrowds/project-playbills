@@ -38,3 +38,14 @@ pbs update_project
 
 Visit the project settings page and update the category, webhook and 
 thumbnail. The project is now ready to be published.
+
+
+## Bad Ark Identifiers
+
+There are some ark identifiers in 
+[ark_and_aleph_system_numbers.csv](tasks/ark_and_aleph_system_numbers.csv) that
+do not point to images that can be retreived via the BL IIIF API. For now, these
+rows are being moved to [bad_arks.csv](tasks/bad_arks.csv). If you receive an 
+error message stating that a bad ark has been find while generating the project
+just copy that row over to [bad_arks.csv](tasks/bad_arks.csv) and run the script
+again. We'll deal with these later!

@@ -13,6 +13,17 @@ import shutil
 from BeautifulSoup import BeautifulSoup
 
 
+def verify_arks(data):
+    """Identify any arks that don't point to images via the BL IIIF api."""
+    for row in data[1:]:
+        ark = row[0]
+        url = 'http://api.bl.uk/image/iiif/{}/info.json'.format(ark)
+        r = requests.get(url)
+        info = r.json()
+        if not info.get('tiles'):
+            raise ValueError('Bad Ark: {}'.format(ark))
+    
+
 def update_shortname(old_project_json, new_project_json):
     """Update the short name in template and results files."""
     here = os.path.dirname(__file__)
@@ -130,12 +141,13 @@ def generate():
     record_title = get_record_title(args.sysno)
     default_project_json_path = os.path.join(here, 'project.json')
     default_project_json = json.load(open(default_project_json_path, 'rb'))
-    
+
     if args.id:
         pass
     elif args.sysno:
         data = get_ark_aleph_data(arks_path, taskset, args.sysno)
     
+    verify_arks(data)
     make_gen_dir()
     write_tasks_csv(data)
     project_json = write_project_json(record_title, taskset)
