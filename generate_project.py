@@ -19,12 +19,13 @@ def update_shortname(old_project_json, new_project_json):
     old = old_project_json['short_name']
     new = new_project_json['short_name']
     def replace(fn):
-        path = os.path.join(here, 'gen', fn)
-        with open(fn, 'rb') as f:
+        path_in = os.path.join(here, fn)
+        path_out = os.path.join(here, 'gen', fn)
+        with open(path_in, 'rb') as f:
             data_in = f.read()
         data_out = data_in.replace(old, new)
         print old, new
-        with open(fn, 'wb') as f:
+        with open(path_out, 'wb') as f:
             f.write(data_out)
     replace('results.html')
     replace('template.html')
