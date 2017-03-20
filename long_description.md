@@ -1,11 +1,43 @@
-<center>
-<a data-flickr-embed="true"  href="https://www.flickr.com/photos/132066275@N04/18956370974/in/album-72157652013005474/" title="Convert-a-Card"><img src="https://c7.staticflickr.com/1/535/18956370974_76bb6d42a0.jpg" width="500" height="281" alt="Convert-a-Card"></a><script async src="//embedr.flickr.com/assets/client-code.js" charset="utf-8"></script>
-</center>
+The British Library holds a considerable collection of Playbills dating from the 
+1730s to the 1950s. These are single-sheet items which list entertainments at 
+theatres, fairs, pleasure gardens and other such venues. Small ‘handbills’ 
+circulated amongst theatre-goers enjoying the performance and larger 
+‘great bills’ used for posting on walls and windows are assembled in over 1000 
+bound volumes, comprising an estimated 234,000 playbills. 
 
-The Library’s collection of playbills is one of the biggest in the world – there are over 200,000 individual playbills mostly dating from the late-18th to the late-19th centuries designed to entice theatre-goers to performances in their local area. Many of them are extremely fragile, since playbills were intended to be thrown away soon after a production was completed, and it is only thanks to a few major collectors we have them in the national collections today. 
+Given the ephemeral nature of Playbills (fires always needed lighting!) we are 
+fortunate to have such a large number survive, thanks largely to the zeal of 
+known collectors who gathered them together. These preserved Playbills offer a 
+wealth of historical detail with thousands of personal names of actors, 
+playwrights, composers, and theatre managers. Titles in characteristic large 
+type indicate the range and frequency of popular performances and much-loved 
+dramas but, equally important, glimpses the less well-known and even forgotten 
+plays. 
 
-With your help we aim to preserve these important artifacts for future generations...
+These promising rich details have been so near yet so far from our fingertips 
+because past constraints have left this mass of historical print largely 
+uncatalogued. Some volumes are listed on [Explore](http://explore.bl.uk) but the 
+entries do not expand beyond naming a location (town), particular theatre(s), 
+and giving an indication of approximate date(s).
 
-<center>![Playbill Image](https://data.bl.uk/images/playbills-pdf.jpg)</center>
+Current catalogue searching cannot uncover the level of detail important to 
+researchers: no titles; no names of actors, dramatis personae; no dates of 
+performance, or details of songs performed. Such indications can be crucial to 
+informing and guiding selection of material for closer examination.
 
-The playbills cover theatres in Bath (Royal), Bristol (Royal), Dublin (Royal), Edinburgh (miscellaneous), Hull (Royal), King's Lynn, Liverpool (Royal), London (Covent Garden, Drury Lane, Lyceum , Princess's, Old Vic, Olympic) , Manchester (Royal), Margate (Royal), Market Drayton, Newcastle-upon-Tyne, Nottingham (Royal and miscellaneous), Plymouth (miscellaneous), Portsmouth, Scarborough, Stafford (Royal), Tyneside (Newcastle upon-Tyne), Windsor (Castle), Wolverhampton and York (Royal), among others.
+Large numbers of Playbills have now been digitised and can be freely viewed on 
+the main catalogue [Explore the British Library](http://explore.bl.uk). 
+But, the detail is buried.
+
+Transcribing selected key components from individual playbills can be uploaded 
+to Explore and will help permanently enhance the way they can be found and 
+reviewed. Something that can be fun to read can be captured and recorded for 
+others to discover and interpret.
+
+Some of these plays may not have been independently recorded in printed form in 
+playbooks; some songs may not have been committed to any printed score so some 
+transcriptions will undoubtedly prove pioneering and help expose hidden details.
+
+This is a work-in-progress, so please have a go and do let us know what you 
+think: is there too much to transcribe, too little? Would a free-text box for 
+additional comments be helpful? 
