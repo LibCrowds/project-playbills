@@ -36,4 +36,5 @@ pbs update-task-redundancy --redundancy 3
 pbs update_project
 ```
 
-The project can now be published from the project settings page.
+Visit the project settings page and update the category, webhook and 
+thumbnail. The project is now ready to be published.
