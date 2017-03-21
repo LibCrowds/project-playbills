@@ -108,12 +108,9 @@ def get_ark_aleph_data(csv_path, taskset, aleph_sysno):
         reader = csv.reader(f)
         l = list(reader)
         headers = l[0] + sorted(tasks[0])
-        data = {}
-        for r in l[1:]:
-            sys_no = r[1]
-            row = [r + [t[k] for k in sorted(t)] for t in tasks]
-            data[sys_no] = data.get(sys_no, []) + row
-        return [headers] + data[aleph_sysno]
+        data = [{'image_ark': r[0], 'aleph_sys_no': r[1]} 
+                for r in l[1:] if r[1] == aleph_sysno]
+        return headers, data
 
 
 def make_gen_dir():
