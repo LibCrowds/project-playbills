@@ -173,7 +173,8 @@ def generate():
     new_project_json = write_project_json(title, taskset)
     copy_project_files()
     update_shortname(old_project_json, new_project_json)
-
+    msg = '\n"{0}" created with {1} tasks'
+    print(msg.format(new_project_json['name'], len(data)))
 
 if __name__ == '__main__':
     generate()
