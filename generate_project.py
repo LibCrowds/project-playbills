@@ -91,8 +91,10 @@ def get_json_data(json_data, taskset):
     input_data = [{'image_ark': row['info']['image_ark'],
                    'aleph_sys_no': row['info']['aleph_sys_no'],
                    'parent_task_id': row['task_id'],
-                   'region': region}
-                   for row in json_data for region in row['info']['regions']]
+                   'region': json.dumps(region)}
+                   for row in json_data 
+                   for region in row['info']['regions']]
+    
     product = list(itertools.product(tasks, input_data))
     data = [dict(row[0].items() + row[1].items()) for row in product]
     headers = set(itertools.chain(*[row.keys() for row in data]))
