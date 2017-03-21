@@ -12,7 +12,7 @@ import argparse
 import shutil
 import itertools
 from BeautifulSoup import BeautifulSoup
-    
+
 
 def verify_arks(data):
     """Identify any arks that don't point to images via the BL IIIF api."""
@@ -23,7 +23,7 @@ def verify_arks(data):
         info = r.json()
         if not info.get('tiles'):
             raise ValueError('Bad Ark: {}'.format(ark))
-    
+
 
 def update_shortname(old_project_json, new_project_json):
     """Update the short name in template and results files."""
@@ -72,7 +72,7 @@ def write_project_json(rec_title, taskset):
         json.dump(project, f)
     return project
 
-    
+
 def write_tasks_csv(fieldnames, data):
     """Write the tasks.csv file."""
     here = os.path.dirname(__file__)
@@ -81,14 +81,14 @@ def write_tasks_csv(fieldnames, data):
         writer = csv.DictWriter(f, fieldnames=fieldnames)
         writer.writeheader()
         writer.writerows(data)
-        
-        
+
+
 def get_json_data(json_data, taskset):
     """Return the task data generated from JSON input data."""
     tasks = taskset['tasks']
-    
+
     # Get permutations of each image and associated region
-    input_data = [{'image_ark': row['info']['image_ark'], 
+    input_data = [{'image_ark': row['info']['image_ark'],
                    'aleph_sys_no': row['info']['aleph_sys_no'],
                    'parent_task_id': row['task_id'],
                    'region': region}
@@ -97,7 +97,7 @@ def get_json_data(json_data, taskset):
     data = [dict(row[0].items() + row[1].items()) for row in product]
     headers = set(itertools.chain(*[row.keys() for row in data]))
     return headers, data
-                
+
 
 def get_ark_aleph_data(csv_path, taskset, aleph_sysno):
     """Return the task data generated from the input csv file."""
@@ -113,7 +113,7 @@ def get_ark_aleph_data(csv_path, taskset, aleph_sysno):
             data[sys_no] = data.get(sys_no, []) + row
         return [headers] + data[aleph_sysno]
 
-        
+
 def make_gen_dir():
     """Ensure that an empty gen directory exists."""
     here = os.path.dirname(__file__)
@@ -140,28 +140,25 @@ def get_record_title(aleph_sysno):
             return rows[i + 1][0]
     raise ValueError('No title for that system number could not be found')
 
-    
+
 def generate():
     description = '''Generate a project-playbills-mark project.'''
     parser = argparse.ArgumentParser(description=description)
     parser.add_argument('taskset', help="A task set.")
     group = parser.add_mutually_exclusive_group(required=True)
-    group.add_argument('--sysno', help="An Aleph system number.")    
-    group.add_argument('--id', help="A project ID.")
+    group.add_argument('--sysno', help="An Aleph system number.")
     group.add_argument('--json', help="A JSON file.")
     args = parser.parse_args()
-    
+
     here = os.path.dirname(__file__)
     tasks_path = os.path.join(here, 'tasks.json')
     tasks_json = json.load(open(tasks_path, 'rb'))
     taskset = tasks_json[args.taskset]
     project_json_path = os.path.join(here, 'project.json')
     old_project_json = json.load(open(project_json_path, 'rb'))
-    
+
     # Get the task data
-    if args.id:
-        pass
-    elif args.json:
+    if args.json:
         json_input = json.load(open(args.json, 'rb'))
         (headers, data) = get_json_data(json_input, taskset)
         sysno = data[1]['aleph_sys_no']
@@ -169,8 +166,7 @@ def generate():
         arks_path = os.path.join(here, 'input', 'arks_and_aleph_sys_nos.csv')
         sysno = args.sysno
         (headers, data) = get_ark_aleph_data(arks_path, taskset, args.sysno)
-    
-    print headers, data
+
     verify_arks(data)
     make_gen_dir()
     write_tasks_csv(headers, data)
@@ -179,7 +175,6 @@ def generate():
     copy_project_files()
     update_shortname(old_project_json, new_project_json)
 
-    
+
 if __name__ == '__main__':
     generate()
-    
