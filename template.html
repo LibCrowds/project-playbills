@@ -23,8 +23,8 @@
      * Add the question and answer sidebar to the viewer.
      */
     function buildTaskSidebar(task) {
-        let elem = $(`<h3 class="lead text-center">${task.info.question}</h3>
-                      <p>${task.info.help}</p>
+        let elem = $(`<h3 class="lead">${task.info.question}</h3>
+                      <p>${task.info.guidance}</p>
                       <div class="text-center mb-2">
                           <a href="../tutorial" class="btn btn-outline-info mt-2" role="button">Tutorial</a>
     			          <button class="btn btn-outline-success btn-answer mt-2" role="button">
@@ -39,12 +39,27 @@
      */
     function buildProgressSidebar() {
         let elem = $('<p></p>');
+        
+        pybossa.userProgress('project-playbills-mark').done(function(data){
+           let pct = Math.round((data.done*100)/data.total);
+               elem = $(`<div class="progress">
+                             <div class="progress-bar" data-toggle="tooltip" title="${pct.toString()}% complete" 
+                                  style="width: ${pct.toString()}%;"></div>
+                         </div>
+                         <p>You have contributed to ${data.done} of ${data.total} tasks.</p>`);
+           lcViewerInterface.loadSidebar('Progress', elem);
+       });
+           
+        pybossa.userProgress('project-playbills-mark').done(function(data){
+            
+        });
         getUserRankAndScore().done(function(data) {
             if (data) {
-                elem.append(`<p><span class="fa fa-trophy mr-2"></span>Rank ${data.rank}</p>
-                             <p class="mb-0"><span class="fa fa-tasks mr-2"></span>${data.score} contributions</p>`);
+                elem.append(`<div class="progress progress-striped">
+            <div id="progress" rel="tooltip" title="#" class="progress-bar" style="width: 0%;" role="progressbar"></div>
+        </div>`);
             } else {
-                elem.append('<small><a href="../../account/signin">Sign in</a> to see your rank and score</small>');
+                elem.append('<a href="../../account/signin">Sign in</a> to track your progress');
             }
             lcViewerInterface.loadSidebar('Progress', elem);
         });
