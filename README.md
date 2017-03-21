@@ -25,7 +25,8 @@ in a playbill, then in a child task identify all of the actors associated with
 that performance. This should simplify the final data analysis process, avoiding 
 issues that might otherwise be raised by overlapping regions etc.
 
-To generate a new project using the inputs provided above and push it to the server:
+To generate a new project using the inputs provided above and push it to the server 
+install and configure [pbs](https://github.com/Scifabric/pbs), then:
 
 ```
 python generate_project.py <task set> [--sysno=<sysno> or --json=<path>]
