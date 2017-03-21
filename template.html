@@ -41,8 +41,7 @@
         pybossa.userProgress('project-playbills-mark').done(function(data){
            let pct = Math.round((data.done*100)/data.total);
                elem = $(`<div class="progress" style="border: 1px solid #fff; background-color: transparent;">
-                             <div class="progress-bar" role="progress-bar" data-toggle="tooltip" title="${pct.toString()}% complete" 
-                                  style="width: ${pct.toString()}%; background-color: #fff;"></div>
+                             <div class="progress-bar" role="progress-bar" style="width: ${pct.toString()}%; background-color: #fff;"></div>
                          </div>
                          <p class="text-center">You have contributed to ${data.done} of ${data.total} tasks.</p>`);
            lcViewerInterface.loadSidebar('Progress', elem);
@@ -61,16 +60,22 @@
      */
     pybossa.presentTask(function(task, deferred) {
         if (!$.isEmptyObject(task)) {
-            lcViewerInterface.loadImage(task.info.image_ark);
-            lcViewerInterface.removeSidebars();
+			lcViewerInterface.viewer.addHandler('open', function() {
+				if(typeof task.info.region !== 'undefined') {
+					lcViewerInterface.highlight(task.info.region);
+				}
+			});
+			lcViewerInterface.loadImage(task.info.image_ark);
+			lcViewerInterface.removeSidebars();
             buildTaskSidebar(task);
             buildProgressSidebar();
-
+			
             $('.btn-answer').off('click').on('click', function() {
                 task.answer = {
                     category: task.info.category,
                     image_ark: task.info.image_ark,
                     aleph_sys_no: task.info.aleph_sys_no,
+					parent_task_id: task.info.parent_task_id,
                     regions: lcViewerInterface.getOverlaysAsImageRectangles()
                 };
                 console.log(JSON.stringify(task.answer, null, 2));
