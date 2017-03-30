@@ -11,15 +11,15 @@
 			}
 		]
 	},
-	"actors": {
-		"nameSuffix": "Identify Actors and Roles",
-		"shortNameSuffix": "mark_actors",
-		"description": "Identify actors and roles in historic playbills",
+	"people": {
+		"nameSuffix": "Identify People",
+		"shortNameSuffix": "mark_people",
+		"description": "Identify people in historic playbills",
 		"tasks": [
 			{
-				"category": "actors",
-				"question": "Identify each actor and role",
-				"guidance": "Draw a rectangle around each actor (with the same rectangle encapsulating the associated role, if present)."
+				"category": "people",
+				"question": "Identify each person and their position (actor, director etc.)",
+				"guidance": "Draw a rectangle around each person (encapsulating any assoicated details, such as their position or role)."
 			}
 		]
 	}
