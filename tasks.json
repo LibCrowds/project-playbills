@@ -1,13 +1,13 @@
-{	
-	"performances": {
-		"nameSuffix": "Identify Performances",
-		"shortNameSuffix": "mark_performances",
-		"description": "Identify performances in historic playbills",
+{
+	"events": {
+		"nameSuffix": "Identify Events",
+		"shortNameSuffix": "mark_events",
+		"description": "Identify events in historic playbills",
 		"tasks": [
 			{
-				"category": "performance",
-				"question": "Identify each performance",
-				"guidance": "Alongside the main performance, the playbills often contain details of additional performances. a rectangle should be drawn around each. Any notes about upcoming or past performances can be ignored."
+				"category": "events",
+				"question": "Identify the title of each event",
+				"guidance": "The playbills often contain details of multiple events that occurring on the same date, a rectangle should be drawn around the titles of each of htese. Any notes about upcoming or past events can be ignored."
 			}
 		]
 	},
@@ -17,7 +17,7 @@
 		"description": "Identify actors and roles in historic playbills",
 		"tasks": [
 			{
-				"category": "actor",
+				"category": "actors",
 				"question": "Identify each actor and role",
 				"guidance": "Draw a rectangle around each actor (with the same rectangle encapsulating the associated role, if present)."
 			}
