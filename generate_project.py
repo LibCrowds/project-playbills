@@ -107,9 +107,12 @@ def get_ark_aleph_data(csv_path, taskset, aleph_sysno):
     with open(csv_path, 'rb') as f:
         reader = csv.reader(f)
         l = list(reader)
-        headers = l[0] + sorted(tasks[0])
-        data = [{'image_ark': r[0], 'aleph_sys_no': r[1]} 
-                for r in l[1:] if r[1] == aleph_sysno]
+        input_data = [{'image_ark': r[0], 'aleph_sys_no': r[1]} 
+                       for r in l[1:] if r[1] == aleph_sysno]
+        
+        product = list(itertools.product(tasks, input_data))
+        data = [dict(row[0].items() + row[1].items()) for row in product]
+        headers = set(itertools.chain(*[row.keys() for row in data]))
         return headers, data
 
 
