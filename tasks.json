@@ -1,25 +1,71 @@
 {
 	"events": {
 		"nameSuffix": "Identify Events",
-		"shortNameSuffix": "mark_events",
 		"description": "Identify events in historic playbills",
 		"tasks": [
 			{
 				"category": "events",
-				"question": "Identify the title of each event",
-				"guidance": "The playbills often contain details of multiple events that occurring on the same date, a rectangle should be drawn around the titles of each of htese. Any notes about upcoming or past events can be ignored."
+				"question": "Identify each event",
+				"guidance": "Alongside the main event, the playbills often contain details of additional events occurring on the same date. A rectangle should be drawn around the full details of each. Any notes about upcoming or past events can be ignored."
+			}
+		]
+	},
+	"titles": {
+		"nameSuffix": "Identify Titles",
+		"description": "Identify titles in historic playbills",
+		"tasks": [
+			{
+				"category": "titles",
+				"question": "Identify each title",
+				"guidance": "Draw a rectangle around the title of each event. Any notes about upcoming or past events can be ignored."
 			}
 		]
 	},
 	"people": {
 		"nameSuffix": "Identify People",
-		"shortNameSuffix": "mark_people",
 		"description": "Identify people in historic playbills",
 		"tasks": [
 			{
 				"category": "people",
-				"question": "Identify each person and their position (actor, director etc.)",
+				"question": "Identify each person",
 				"guidance": "Draw a rectangle around each person (encapsulating any assoicated details, such as their position or role)."
+			}
+		]
+	},
+	"dates": {
+		"nameSuffix": "Identify Dates",
+		"description": "Identify dates in historic playbills",
+		"tasks": [
+			{
+				"category": "dates",
+				"question": "Identify each date",
+				"guidance": "Draw a rectangle around each date. Any notes about upcoming or past events can be ignored."
+			}
+		]
+	},
+	"kitchensink": {
+		"nameSuffix": "Identify",
+		"description": "Identify data in historic playbills",
+		"tasks": [
+			{
+				"category": "titles",
+				"question": "Identify each title",
+				"guidance": "Draw a rectangle around the title of each event. Any notes about upcoming or past events can be ignored."
+			},
+			{
+				"category": "people",
+				"question": "Identify each person",
+				"guidance": "Draw a rectangle around each person (encapsulating any assoicated details, such as their position or role)."
+			},
+			{
+				"category": "dates",
+				"question": "Identify each date",
+				"guidance": "Draw a rectangle around the date of each event. Any notes about upcoming or past events can be ignored."
+			},
+			{
+				"category": "subjects",
+				"question": "Identify each subject",
+				"guidance": "Draw a rectangle around each subject or genre. Any notes about upcoming or past events can be ignored."
 			}
 		]
 	}
