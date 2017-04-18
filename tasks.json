@@ -17,7 +17,7 @@
 			{
 				"category": "titles",
 				"question": "Identify each title",
-				"guidance": "Draw a rectangle around the title of each event. Any notes about upcoming or past events can be ignored."
+				"guidance": "Any titles mentioned in notes about upcoming or past events can be ignored."
 			}
 		]
 	},

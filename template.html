@@ -6,8 +6,12 @@
     .openseadragon-message {
         color: #FFF;
     }
+    .navbar {
+        background-color: rgba(0, 0, 0, 0.75)
+        z-index: 99
+    }
 </style>
-<div id="project-content" class="bg-faded d-flex flex-column h-100">
+<div id="project-content" class="d-flex flex-column h-100">
     <div class="w-100 h-100">
         <div id="openseadragon">
         </div>
@@ -23,8 +27,8 @@
         let elem = $(`<h3 class="lead">${task.info.question}</h3>
                       <p>${task.info.guidance}</p>
                       <div class="text-center mb-2">
-    			          <button class="btn btn-outline-success btn-answer mt-2" role="button">
-                              <span class="fa fa-floppy-o mr-1"></span>Save
+    			          <button class="btn btn-success btn-block btn-answer mt-2" role="button">
+                              Done
                           </button>
                       </div>`);
         lcViewerInterface.loadSidebar('Task', elem);
@@ -34,7 +38,7 @@
      * Add the user progress sidebar to the viewer.
      */
     function buildProgressSidebar() {
-        pybossa.userProgress('project-playbills-mark').done(function(data){
+        pybossa.userProgress('{{ short_name }}').done(function(data){
            let pct = Math.round((data.done*100)/data.total);
                elem = $(`<div class="progress" style="border: 1px solid #fff; background-color: transparent;">
                              <div class="progress-bar" role="progress-bar" style="width: ${pct.toString()}%; background-color: #fff;"></div>
@@ -87,5 +91,5 @@
           notify('Congratulations! You have contributed to all available tasks!', 'success');
         }
     });
-    pybossa.run('project-playbills-mark');
+    pybossa.run('{{ short_name }}');
 </script>

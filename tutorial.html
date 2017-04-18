@@ -1,11 +1,102 @@
-<ol class="lead display-6">
-    <li>Click 
-        <span class="fa-stack">
-          <i class="fa fa-circle fa-stack-2x"></i>
-          <i class="fa fa-toggle-off fa-stack-1x fa-inverse"></i>
-        </span>
-        to toggle area selection
-    </li>
-    <li>Click and drag to select an area of the image</li>
-    <li>Once all relevant areas are identified, click Save</li>
-</ol>
+<style>
+    #openseadragon {
+        font-size: 0.9rem;
+        height: 100%;
+    }
+    .openseadragon-message {
+        color: #fff;
+    }
+</style>
+<div id="project-content" class="d-flex flex-column h-100">
+    <div class="w-100 h-100">
+        <div id="openseadragon" />
+    </div>
+</div>
+<script>
+    let lcViewerInterface = new LibCrowdsViewerInterface({ id: 'openseadragon', confirmBeforeLeaving: false, selectionEnabled: true });
+    
+    /**
+     * Add the question and answer sidebar to the viewer.
+     */
+    function buildTaskSidebar() {
+        let elem = $(`<h3 id="question" class="lead">Identify Titles</h3>
+                      <p id="guidance">Any titles mentioned in notes about upcoming or past events can be ignored.</p>
+                      <div class="text-center mb-2">
+                          <button id="done" class="btn btn-success btn-block btn-answer mt-2" role="button">
+                              Done
+                          </button>
+                      </div>`);
+        lcViewerInterface.loadSidebar('Task', elem);
+    }
+
+    // Highlight any task regions and show tutorial after image loads
+    lcViewerInterface.viewer.addHandler('open', function() {
+        var intro = introJs(),
+            opts  = {
+                doneLabel: "OK",
+                exitOnOverlayClick: false,
+                steps: [
+                    {
+                        intro: "The purpose of this project is to identify specific fields in historic playbills."
+                    },
+                    {
+                        element: "#question",
+                        intro: "This is the field that needs to be identified.",
+                        position: "left"
+                    },
+                    {
+                        element: "#guidance",
+                        intro: "Any additional guidance is shown here.",
+                        position: "left"
+                    },
+                    {
+                        element: "#toggle-selection",
+                        intro: "Click this button to toggle selection.",
+                        position: "right"
+                    },
+                    {
+                        element: "#selection",
+                        intro: "Select an area of the image.",
+                        position: "left"
+                    },
+                    {
+                        element: "#done",
+                        intro: "When all fields have been identified, click Done.",
+                        position: "left"
+                    }
+                ]
+            };
+        
+        var elt = $('<div></div>');
+        elt.attr("id", "selection");
+        elt.css({ 
+            'border': '2px solid rgb(65, 144, 194)', 
+            'background-color': 'rgba(65, 144, 194, 0.1)', 
+            'opacity': '.6' 
+        });
+        lcViewerInterface.viewer.addOverlay({
+            element: elt[0],
+            location: new OpenSeadragon.Rect(0.09, 0.63, 0.80, 0.09)
+        });
+        
+        intro.setOptions(opts);
+        intro.start();
+        
+        intro.oncomplete(function() {
+            window.location.pathname = 'project/{{ short_name }}/newtask';
+        });
+        
+        intro.onexit(function() {
+            window.location.pathname = 'project/{{ short_name }}/newtask';
+        });
+        
+        $('#toggle-selection').on('click', function() {
+            if(intro._currentStep === 3) {
+                intro.goToStep(5);
+            }
+        });
+    });
+    
+    lcViewerInterface.loadImage('ark:/81055/vdc_100022589157.0x000016');
+    buildTaskSidebar();
+</script>

@@ -1,8 +1,8 @@
 The British Library holds a considerable collection of Playbills dating from the 
 1730s to the 1950s. These are single-sheet items which list entertainments at 
-theatres, fairs, pleasure gardens and other such venues. Small ‘handbills’ 
+theatres, fairs, pleasure gardens and other such venues. Small 'handbills' 
 circulated amongst theatre-goers enjoying the performance and larger 
-‘great bills’ used for posting on walls and windows are assembled in over 1000 
+'great bills' used for posting on walls and windows are assembled in over 1000 
 bound volumes, comprising an estimated 234,000 playbills. 
 
 Given the ephemeral nature of Playbills (fires always needed lighting!) we are 
@@ -16,9 +16,7 @@ plays.
 
 These promising rich details have been so near yet so far from our fingertips 
 because past constraints have left this mass of historical print largely 
-uncatalogued. Some volumes are listed on [Explore](http://explore.bl.uk) but the 
-entries do not expand beyond naming a location (town), particular theatre(s), 
-and giving an indication of approximate date(s).
+uncatalogued. Some volumes are listed on [Explore](http://explore.bl.uk) but the entries do not expand beyond naming a location (town), particular theatre(s), and giving an indication of approximate date(s).
 
 Current catalogue searching cannot uncover the level of detail important to 
 researchers: no titles; no names of actors, dramatis personae; no dates of 
