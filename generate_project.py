@@ -149,9 +149,6 @@ def generate():
         url = 'http://api.bl.uk/metadata/iiif/{0}'.format(ark)
         manifest = requests.get(url).json()
         (headers, task_data) = get_task_data_from_manifest(taskset, manifest)
-        
-        (headers, task_data) = get_task_data_from_json(json_input, taskset)
-        manifest = requests.get(task_data[0]['manifest_id']).json()
 
     make_gen_dir()
     write_tasks_csv(headers, task_data)
