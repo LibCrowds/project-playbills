@@ -24,13 +24,12 @@
      * Add the question and answer sidebar to the viewer.
      */
     function buildTaskSidebar(task) {
-        let elem = $(`<h3 class="lead">${task.info.question}</h3>
-                      <p>${task.info.guidance}</p>
-                      <div class="text-center mb-2">
-    			          <button class="btn btn-success btn-block btn-answer mt-2" role="button">
-                              Done
-                          </button>
-                      </div>`);
+        let elem = $(`
+            <h3 class="lead">${task.info.objective}</h3>
+            <p>${task.info.guidance}</p>
+            <button class="btn btn-success btn-block btn-answer mt-2" role="button">Done</button>
+            <div id="favourite"></div>
+        `);
         lcViewerInterface.loadSidebar('Task', elem);
     }
     
@@ -69,16 +68,22 @@
 			lcViewerInterface.removeSidebars();
             buildTaskSidebar(task);
             buildProgressSidebar();
+            getFavouritesButton(task.id).then(function(btn) {
+                btn.addClass('btn-block');
+                $('#favourite').append(btn);
+            });
 			
             $('.btn-answer').off('click').on('click', function() {
                 task.answer = {
                     category: task.info.category,
                     image_ark: task.info.image_ark,
-                    aleph_sys_no: task.info.aleph_sys_no,
+                    manifest_id: task.info.manifest_id,
 					parent_task_id: task.info.parent_task_id,
                     regions: lcViewerInterface.getOverlaysAsImageRectangles()
                 };
+                
                 console.log(JSON.stringify(task.answer, null, 2));
+                
                 pybossa.saveTask(task.id, task.answer).done(function() {
                     deferred.resolve();
                     notify('Answer saved, thanks!', 'success');
