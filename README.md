@@ -6,9 +6,9 @@ Playbills marking projects for LibCrowds, designed for use with the
 
 ## Creating a new project
 
-Choose a set of tasks from [tasks.json](tasks/tasks.json) (e.g. `"titles"`) 
+Choose a set of tasks from [tasks.json](input/tasks.json) (e.g. `"titles"`) 
 and either an Aleph system number from the file 
-[arks_and_sysnos.csv](tasks/arks_and_sysnos.csv), the ID of a previous marking
+[arks_and_sysnos.csv](input/arks_and_sysnos.csv), the ID of a previous marking
 project or a JSON file where the info field contains the keys *aleph_sys_no*, 
 *image_ark* and *regions*.
 

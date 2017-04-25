@@ -135,7 +135,8 @@ def generate():
     args = parser.parse_args()
 
     here = os.path.dirname(__file__)
-    tasks_json = json.load(open(os.path.join(here, 'tasks.json'), 'rb'))
+    tasks_file = open(os.path.join(here, 'input', 'tasks.json'), 'rb')
+    tasks_json = json.load(tasks_file)
     taskset = tasks_json[args.taskset]
 
     # Get the task data
