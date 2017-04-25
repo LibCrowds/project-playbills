@@ -38,7 +38,11 @@
             '<p id="guidance"></p>' +
             '<button class="btn btn-success btn-block btn-answer my-4" role="button">Save</button>' + 
             '<div id="favourite"></div>' + 
-            '<a href="../tutorial" class="btn btn-outline-white btn-block" role="button">View Tutorial</a>');
+            '<a href="../tutorial" class="btn btn-outline-white btn-block" role="button">View Tutorial</a>' +
+            '<a href="#comment" class="btn btn-outline-white btn-block" role="button" data-toggle="collapse">Add Comment</a>' +
+            '<div class="collapse" id="comment">' +
+            '<textarea class="form-control margin-bottom-xs" rows="3" id="comment-input" placeholder="Add a comment..."></textarea>' +
+            '</div>');
         lcViewerInterface.loadSidebar('Task', elem);
     }
     
@@ -69,6 +73,11 @@
             '</div>');
         lcViewerInterface.loadSidebar('Up Next', elem);
     }
+    
+    // Focus on comment input when shown
+    $('#comment').on('shown.bs.collapse', function () {
+        $('#comment-input').focus();
+    });
 
     /**
      * Load the task.
@@ -92,10 +101,11 @@
 					lcViewerInterface.highlight(task.info.region);
 				}
 			});
-            console.log(task.info.manifest_id)
 			lcViewerInterface.loadImage(task.info.image_ark);
             $('#objective').html(task.info.objective);
             $('#guidance').html(task.info.guidance);
+            $('#comment').collapse('hide');
+            $('#comment-input').val('');
             getFavouritesButton(task.id).then(function(btn) {
                 btn.addClass('btn-block btn-outline-white');
                 btn.removeClass('btn-info');
@@ -105,9 +115,9 @@
             $('.btn-answer').off('click').on('click', function() {
                 task.answer = {
                     category: task.info.category,
+                    comment: $('#comment-input').val(),
                     image_ark: task.info.image_ark,
                     manifest_id: task.info.manifest_id,
-					parent_task_id: task.info.parent_task_id,
                     regions: lcViewerInterface.getOverlaysAsImageRectangles()
                 };
                 
