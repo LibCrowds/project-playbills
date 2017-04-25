@@ -14,20 +14,17 @@ project or a JSON file where the info field contains the keys *aleph_sys_no*,
 
 When generating tasks from an Aleph system number a new task will be created
 for each permutation of image and task in the chosen set. When generating
-tasks from a project ID (which should be that of a previous marking task) 
-a new task will be created for each result in that project, each region 
-now associated with the image referenced by that result and each task in the 
-chosen task set. The idea here being that we can chain tasks to highlight 
-increasingly more specific regions in the text (e.g. all actors associated with 
-a title). The option to generate tasks from a JSON file is included primarily 
-for testing purposes but works the same as when generating tasks from a project 
-ID.
+tasks from a JSON file (which should contain the results of a previous marking 
+task) a new task will be created for each result in that project, each region 
+now associated with the image and each task in the chosen task set. The idea 
+here being that we can chain tasks to highlight increasingly more specific 
+regions in the text (e.g. all actors associated with a title). 
 
 To generate a new project and push it to the server 
 install and configure [pbs](https://github.com/Scifabric/pbs), then:
 
 ```
-python generate_project.py <task set> [--sysno=<sysno> or --json=<path>, --id=<project_id>]
+python generate_project.py <task set> [--sysno=<sysno> or --json=<path>]
 cd gen
 pbs create_project
 pbs add_tasks --tasks-file=tasks.csv

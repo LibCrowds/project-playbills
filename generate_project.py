@@ -109,8 +109,8 @@ def get_task_data_from_manifest(taskset, manifest):
     data = [dict(row[0].items() + row[1].items()) for row in product]
     headers = set(itertools.chain(*[row.keys() for row in data]))
     return headers, data
-
-
+    
+    
 def make_gen_dir():
     """Ensure that an empty gen directory exists."""
     here = os.path.dirname(__file__)
@@ -132,7 +132,6 @@ def generate():
     group = parser.add_mutually_exclusive_group(required=True)
     group.add_argument('--sysno', help="An Aleph system number.")
     group.add_argument('--json', help="A JSON file.")
-    group.add_argument('--id', help="A project ID.")
     args = parser.parse_args()
 
     here = os.path.dirname(__file__)
@@ -150,6 +149,9 @@ def generate():
         url = 'http://api.bl.uk/metadata/iiif/{0}'.format(ark)
         manifest = requests.get(url).json()
         (headers, task_data) = get_task_data_from_manifest(taskset, manifest)
+        
+        (headers, task_data) = get_task_data_from_json(json_input, taskset)
+        manifest = requests.get(task_data[0]['manifest_id']).json()
 
     make_gen_dir()
     write_tasks_csv(headers, task_data)
