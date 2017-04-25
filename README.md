@@ -37,3 +37,26 @@ pbs update_project
 
 Now visit the project settings page and update the category, webhook and 
 thumbnail. The project is now ready to be published.
+
+
+## Defining task sets
+
+Task sets are defined in tasks.json according to the following structure:
+
+```json
+"taskset_title": {
+    "nameSuffix": "Appended to the title of the catalogue record to create the project title",
+    "description": "A one line description of the project",
+    "tasks": [
+        {
+            "category": "some_category",
+            "objective": "The objective of the task",
+            "guidance": "Additional guidance"
+        }
+    ]
+}
+```
+
+Note that if `guidance` is set to `null` and the task set is being generated from
+the results of a previous makring project then the guidance will be generated automatically
+in the form "Identify each <category> associated with the highlighted <parent task category>.".

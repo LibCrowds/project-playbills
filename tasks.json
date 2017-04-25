@@ -2,10 +2,10 @@
 	"titles": {
 		"nameSuffix": "Identify Titles",
 		"description": "Identify the titles of plays in historic playbills",
-		"tasks": [
+        "tasks": [
 			{
 				"category": "title",
-				"question": "Identify each title",
+				"objective": "Identify each title",
 				"guidance": "Only the titles of plays need to be included and any mentioned in notes about upcoming or past events can be ignored."
 			}
 		]
@@ -13,12 +13,11 @@
 	"people": {
 		"nameSuffix": "Identify People",
 		"description": "Identify people in historic playbills",
-        "parent": "title",
 		"tasks": [
 			{
 				"category": "person",
-				"question": "Identify each person",
-				"guidance": "Identify each person associated with the highlighted title."
+				"objective": "Identify each person",
+				"guidance": null
 			}
 		]
 	}

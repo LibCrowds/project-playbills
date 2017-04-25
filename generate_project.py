@@ -59,23 +59,27 @@ def write_tasks_csv(fieldnames, data):
         writer.writerows(data)
 
 
-def get_json_data(json_data, taskset):
+def get_task_data_from_json(json_data, taskset):
     """Return the task data generated from JSON input data."""
-    tasks = taskset['tasks']
-
-    # Get permutations of each image and associated region
+    task_data = taskset['tasks']
     input_data = [{'image_ark': row['info']['image_ark'],
-                   'aleph_sys_no': row['info']['aleph_sys_no'],
+                   'manifest_id': row['info']['manifest_id'],
+                   'parent_category': row['info']['category'],
                    'parent_task_id': row['task_id'],
                    'region': json.dumps(region)}
                    for row in json_data 
                    for region in row['info']['regions']]
     
-    product = list(itertools.product(tasks, input_data))
+    product = list(itertools.product(task_data, input_data))
     data = [dict(row[0].items() + row[1].items()) for row in product]
-    input_rows = [r for r in data if r.get('inputs')]
-    for row in input_rows:
-        row['inputs'] = json.dumps(row['inputs'])
+    
+    # Set default guidance
+    for d in data:
+        if not d['guidance']:
+            d['guidance'] = ("Identify each {0} associated with the "
+                             "highlighted {1}.").format(d['category'], 
+                                                        d['parent_category'])
+    
     headers = set(itertools.chain(*[row.keys() for row in data]))
     return headers, data
 
@@ -89,12 +93,6 @@ def get_ark(csv_path, sysno):
             raise ValueError('{0} not found in {1}'.format(sysno, csv_path))
         ark = rows[0][0]
         return ark
-
-        
-def get_manifest(ark):
-    """Return the manifest associated with an ark."""
-    url = 'http://api.bl.uk/metadata/iiif/{0}'.format(ark)
-    return requests.get(url).json()
 
 
 def get_task_data_from_manifest(taskset, manifest):
@@ -144,12 +142,13 @@ def generate():
     # Get the task data
     if args.json:
         json_input = json.load(open(args.json, 'rb'))
-        (headers, data) = get_json_data(json_input, taskset)
-        sysno = data[1]['aleph_sys_no']
+        (headers, task_data) = get_task_data_from_json(json_input, taskset)
+        manifest = requests.get(task_data[0]['manifest_id']).json()
     elif args.sysno:
         csv_path = os.path.join(here, 'input', 'arks_and_sysnos.csv')
         ark = get_ark(csv_path, args.sysno)
-        manifest = get_manifest(ark)
+        url = 'http://api.bl.uk/metadata/iiif/{0}'.format(ark)
+        manifest = requests.get(url).json()
         (headers, task_data) = get_task_data_from_manifest(taskset, manifest)
 
     make_gen_dir()
@@ -162,5 +161,6 @@ def generate():
     msg = '\n"{0}" created with {1} tasks'
     print(msg.format(context['name'], len(task_data)))
 
+    
 if __name__ == '__main__':
     generate()
