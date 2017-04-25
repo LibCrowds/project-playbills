@@ -93,7 +93,7 @@
                     notify('Answer saved, thanks!', 'success');
                 }).fail(function(xhr, status, error) {
                     notify(status, 'error')
-                    raise new Error(error);
+                    throw new Error(error);
                 });
             });
         } else {
