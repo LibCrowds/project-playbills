@@ -92,7 +92,8 @@
                     deferred.resolve();
                     notify('Answer saved, thanks!', 'success');
                 }).fail(function(xhr, status, error) {
-                    logError(new Error(error));
+                    notify(status, 'error')
+                    raise new Error(error);
                 });
             });
         } else {
