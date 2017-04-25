@@ -10,6 +10,9 @@
         background-color: rgba(0, 0, 0, 0.75)
         z-index: 99
     }
+    #next-task {
+        height: 200px;
+    }
 </style>
 <div id="project-content" class="d-flex flex-column h-100">
     <div class="w-100 h-100">
@@ -22,15 +25,20 @@
         id: 'openseadragon', selectionEnabled: true 
     });
     
+    buildTaskSidebar();
+    buildProgressSidebar();
+    buildNextTaskSidebar();
+    
     /**
      * Add the question and answer sidebar to the viewer.
      */
-    function buildTaskSidebar(task) {
+    function buildTaskSidebar() {
         var elem = $(
-            '<h3 class="lead">' + task.info.objective + '</h3>' +
-            '<p>' + task.info.guidance + '</p>' +
-            '<button class="btn btn-success btn-block btn-answer mt-2" role="button">Done</button>' +
-            '<div id="favourite"></div>');
+            '<h3 id="objective" class="lead"></h3>' +
+            '<p id="guidance"></p>' +
+            '<button class="btn btn-success btn-block btn-answer my-4" role="button">Save</button>' + 
+            '<div id="favourite"></div>' + 
+            '<a href="../tutorial" class="btn btn-outline-white btn-block" role="button">View Tutorial</a>');
         lcViewerInterface.loadSidebar('Task', elem);
     }
     
@@ -50,12 +58,28 @@
            lcViewerInterface.loadSidebar('Progress', elem);
        });
     }
+    
+    /**
+     * Add the next task sidebar to the viewer.
+     */
+    function buildNextTaskSidebar() {
+        var elem = $(
+            '<div class="text-center">' + 
+            '<img class="img-fluid" id="next-task" />' +
+            '</div>');
+        lcViewerInterface.loadSidebar('Up Next', elem);
+    }
 
-   /**
-    * Load the task.
-    */
+    /**
+     * Load the task.
+     */
     pybossa.taskLoaded(function(task, deferred) {
         deferred.resolve(task);
+        
+        // Load next task thumbnail
+        var baseUrl   = 'http://api.bl.uk/image/iiif/',
+            thumbnail = baseUrl + task.info.image_ark + '/full/120,/0/default.jpg';
+        $('#next-task').attr('src', thumbnail);
     });
 
     /**
@@ -68,13 +92,14 @@
 					lcViewerInterface.highlight(task.info.region);
 				}
 			});
+            console.log(task.info.manifest_id)
 			lcViewerInterface.loadImage(task.info.image_ark);
-			lcViewerInterface.removeSidebars();
-            buildTaskSidebar(task);
-            buildProgressSidebar();
+            $('#objective').html(task.info.objective);
+            $('#guidance').html(task.info.guidance);
             getFavouritesButton(task.id).then(function(btn) {
-                btn.addClass('btn-block');
-                $('#favourite').append(btn);
+                btn.addClass('btn-block btn-outline-white');
+                btn.removeClass('btn-info');
+                $('#favourite').html(btn);
             });
 			
             $('.btn-answer').off('click').on('click', function() {
@@ -89,6 +114,8 @@
                 console.log(JSON.stringify(task.answer, null, 2));
                 
                 pybossa.saveTask(task.id, task.answer).done(function() {
+                    lcViewerInterface.viewer.close();
+                    $('#next-task').removeAttr('src');
                     deferred.resolve();
                     notify('Answer saved, thanks!', 'success');
                 }).fail(function(xhr, status, error) {
