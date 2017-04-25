@@ -6,19 +6,19 @@ Playbills marking projects for LibCrowds, designed for use with the
 
 ## Creating a new project
 
-Choose a set of tasks from [tasks.json](tasks/tasks.json) (e.g. `"events"`) 
+Choose a set of tasks from [tasks.json](tasks/tasks.json) (e.g. `"titles"`) 
 and either an Aleph system number from the file 
-[ark_and_aleph_system_numbers.csv](tasks/ark_and_aleph_system_numbers.csv) or a 
-JSON file where the info field contains the keys *aleph_sys_no*, *image_ark* 
-and *regions*.
+[arks_and_sysnos.csv](tasks/arks_and_sysnos.csv), the ID of a previous marking
+project or a JSON file where the info field contains the keys *aleph_sys_no*, 
+*image_ark* and *regions*.
 
 When generating tasks from an Aleph system number a new task will be created
-for each permutation of image and test in the chosen set. When generating
-tasks from a JSON file (which will probably be the result of a previous marking
-task) a new task will be created for all permutations of an image, each region 
-now associated  with that image and each task in the chosen task set. The idea 
-being that we can chain tasks to highlight increasingly more specific regions 
-in the text.
+for each permutation of image and task in the chosen set. When generating
+tasks from a JSON file (which should contain the results of a previous marking 
+task) a new task will be created for each result in that project, each region 
+now associated with the image and each task in the chosen task set. The idea 
+here being that we can chain tasks to highlight increasingly more specific 
+regions in the text (e.g. all actors associated with a title). 
 
 To generate a new project and push it to the server 
 install and configure [pbs](https://github.com/Scifabric/pbs), then:
@@ -36,12 +36,24 @@ Now visit the project settings page and update the category, webhook and
 thumbnail. The project is now ready to be published.
 
 
-## Bad Ark Identifiers
+## Defining task sets
 
-Some of the ark identifiers in 
-[ark_and_aleph_system_numbers.csv](tasks/ark_and_aleph_system_numbers.csv) do 
-not point to images that can be retreived via the BL IIIF API. For now, these
-rows are being moved to [bad_arks.csv](tasks/bad_arks.csv). If you receive an 
-error message stating that a bad ark has been find while generating the project
-just copy that row over to [bad_arks.csv](tasks/bad_arks.csv) and run the script
-again. We'll deal with these later!
+Task sets are defined in tasks.json according to the following structure:
+
+```json
+"taskset_title": {
+    "nameSuffix": "Appended to the title of the catalogue record to create the project title",
+    "description": "A one line description of the project",
+    "tasks": [
+        {
+            "category": "some_category",
+            "objective": "The objective of the task",
+            "guidance": "Additional guidance"
+        }
+    ]
+}
+```
+
+Note that if `guidance` is set to `null` and the task set is being generated from
+the results of a previous makring project then the guidance will be generated automatically
+in the form "Identify each <category> associated with the highlighted <parent task category>.".

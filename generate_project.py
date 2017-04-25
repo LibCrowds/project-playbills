@@ -11,7 +11,6 @@ import requests
 import argparse
 import shutil
 import itertools
-from BeautifulSoup import BeautifulSoup
 from jinja2 import Environment, FileSystemLoader
 
 
@@ -22,17 +21,6 @@ TEMPLATE_ENVIRONMENT = Environment(
 )
 
 
-def verify_arks(data):
-    """Identify any arks that don't point to images via the BL IIIF api."""
-    for row in data:
-        ark = row['image_ark']
-        url = 'http://api.bl.uk/image/iiif/{}/info.json'.format(ark)
-        r = requests.get(url)
-        info = r.json()
-        if not info.get('tiles'):
-            raise ValueError('Bad Ark: {}'.format(ark))
-
-
 def render_template(template_filename, context):
     """Render a Jinja2 template."""
     path = os.path.join(os.path.dirname(__file__), 'gen', template_filename)
@@ -41,12 +29,12 @@ def render_template(template_filename, context):
         f.write(tmpl)
 
 
-def generate_project_context(rec_title, taskset):
+def generate_project_context(manifest, taskset):
     """Write and return the project.json file."""
-    prefix = 'A collection of playbills from '
-    title = rec_title.replace(prefix, '').strip().rstrip('.').replace('"', '')
-    name_suffix = taskset['nameSuffix']
-    name = "{0}: {1}".format(title, name_suffix)
+    prefix = manifest['label'].replace('A collection of playbills from ', '')
+    prefix = prefix.strip().rstrip('.').replace('"', '')
+    suffix = taskset['nameSuffix']
+    name = "{0}: {1}".format(prefix, suffix)
     invalidchars = r"([$#%·:,.~!¡?\"¿'=)(!&\/|]+)"
     shortname = re.sub(invalidchars, '', name.lower().strip()).replace(' ', '_')
     context = {
@@ -71,50 +59,58 @@ def write_tasks_csv(fieldnames, data):
         writer.writerows(data)
 
 
-def get_json_data(json_data, taskset):
+def get_task_data_from_json(json_data, taskset):
     """Return the task data generated from JSON input data."""
-    tasks = taskset['tasks']
-
-    # Get permutations of each image and associated region
+    task_data = taskset['tasks']
     input_data = [{'image_ark': row['info']['image_ark'],
-                   'aleph_sys_no': row['info']['aleph_sys_no'],
+                   'manifest_id': row['info']['manifest_id'],
+                   'parent_category': row['info']['category'],
                    'parent_task_id': row['task_id'],
                    'region': json.dumps(region)}
                    for row in json_data 
                    for region in row['info']['regions']]
     
-    product = list(itertools.product(tasks, input_data))
+    product = list(itertools.product(task_data, input_data))
     data = [dict(row[0].items() + row[1].items()) for row in product]
-    input_rows = [r for r in data if r.get('inputs')]
-    for row in input_rows:
-        row['inputs'] = json.dumps(row['inputs'])
+    
+    # Set default guidance
+    for d in data:
+        if not d['guidance']:
+            d['guidance'] = ("Identify each {0} associated with the "
+                             "highlighted {1}.").format(d['category'], 
+                                                        d['parent_category'])
+    
     headers = set(itertools.chain(*[row.keys() for row in data]))
     return headers, data
 
-
-def get_ark_aleph_data(csv_path, taskset, aleph_sysno):
-    """Return the task data generated from the input csv file."""
-    tasks = taskset['tasks']
+    
+def get_ark(csv_path, sysno):
+    """Return the ark associated with a system number."""
     with open(csv_path, 'rb') as f:
         reader = csv.reader(f)
-        l = list(reader)
-        input_data = [{'image_ark': r[0], 'aleph_sys_no': r[1]} 
-                       for r in l[1:] if r[1] == aleph_sysno]
-        
-        if not input_data:
-            msg = 'No CSV data found for system number {}'.format(aleph_sysno)
-            raise ValueError(msg)
-
-        product = list(itertools.product(tasks, input_data))
-        data = [dict(row[0].items() + row[1].items()) for row in product]
-        input_rows = [r for r in data if r.get('inputs')]
-        for row in input_rows:
-            row['inputs'] = json.dumps(row['inputs'])
-
-        headers = set(itertools.chain(*[row.keys() for row in data]))
-        return headers, data
+        rows = [r for r in list(reader) if r[1] == str(sysno)]
+        if not rows:
+            raise ValueError('{0} not found in {1}'.format(sysno, csv_path))
+        ark = rows[0][0]
+        return ark
 
 
+def get_task_data_from_manifest(taskset, manifest):
+    """Return the task data generated from a manifest."""
+    canvases = manifest['sequences'][0]['canvases']
+    images = [c['images'] for c in canvases]
+    image_arks = [img[0]['resource']['service']['@id'].split('iiif/')[1] 
+                  for img in images]
+    
+    image_data = [{'image_ark': img_ark, 'manifest_id': manifest['@id']} 
+                  for img_ark in image_arks]
+    task_data = taskset['tasks']
+    product = list(itertools.product(task_data, image_data))
+    data = [dict(row[0].items() + row[1].items()) for row in product]
+    headers = set(itertools.chain(*[row.keys() for row in data]))
+    return headers, data
+    
+    
 def make_gen_dir():
     """Ensure that an empty gen directory exists."""
     here = os.path.dirname(__file__)
@@ -129,20 +125,6 @@ def make_gen_dir():
             raise
 
 
-def get_record_title(aleph_sysno):
-    """Attempt to retreive the title of the record from ALEPH."""
-    base_url = "http://primocat.bl.uk/F/"
-    url = "{0}?func=direct&local_base=PRIMO&doc_number={1}".format(base_url,
-                                                                   aleph_sysno)
-    resp = requests.get(url)
-    html = BeautifulSoup(resp.text)
-    rows = data = [td.findChildren(text=True) for td in html.findAll("td")]
-    for i, td in enumerate(rows):
-        if td and 'Title &nbsp;' in td[0]:
-            return rows[i + 1][0]
-    raise ValueError('System number {0} could not be found'.format(aleph_sysno))
-
-
 def generate():
     description = '''Generate a project-playbills-mark project.'''
     parser = argparse.ArgumentParser(description=description)
@@ -153,32 +135,31 @@ def generate():
     args = parser.parse_args()
 
     here = os.path.dirname(__file__)
-    tasks_path = os.path.join(here, 'tasks.json')
-    tasks_json = json.load(open(tasks_path, 'rb'))
+    tasks_json = json.load(open(os.path.join(here, 'tasks.json'), 'rb'))
     taskset = tasks_json[args.taskset]
 
     # Get the task data
     if args.json:
         json_input = json.load(open(args.json, 'rb'))
-        (headers, data) = get_json_data(json_input, taskset)
-        sysno = data[1]['aleph_sys_no']
+        (headers, task_data) = get_task_data_from_json(json_input, taskset)
+        manifest = requests.get(task_data[0]['manifest_id']).json()
     elif args.sysno:
-        arks_path = os.path.join(here, 'input', 'arks_and_aleph_sys_nos.csv')
-        sysno = args.sysno
-        (headers, data) = get_ark_aleph_data(arks_path, taskset, args.sysno)
+        csv_path = os.path.join(here, 'input', 'arks_and_sysnos.csv')
+        ark = get_ark(csv_path, args.sysno)
+        url = 'http://api.bl.uk/metadata/iiif/{0}'.format(ark)
+        manifest = requests.get(url).json()
+        (headers, task_data) = get_task_data_from_manifest(taskset, manifest)
 
-    verify_arks(data)
     make_gen_dir()
-    write_tasks_csv(headers, data)
-    title = get_record_title(sysno)
-    context = generate_project_context(title, taskset)
-    
+    write_tasks_csv(headers, task_data)
+    context = generate_project_context(manifest, taskset)
     render_template('tutorial.html', context)
     render_template('template.html', context)
     render_template('results.html', context)
     render_template('long_description.md', context)
     msg = '\n"{0}" created with {1} tasks'
-    print(msg.format(context['name'], len(data)))
+    print(msg.format(context['name'], len(task_data)))
 
+    
 if __name__ == '__main__':
     generate()
