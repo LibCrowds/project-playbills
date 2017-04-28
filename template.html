@@ -1,82 +1,13 @@
-<style>
-    #openseadragon {
-        font-size: 0.9rem;
-        height: 100%;
-    }
-    .openseadragon-message {
-        color: #FFF;
-    }
-    .navbar {
-        background-color: rgba(0, 0, 0, 0.75)
-        z-index: 99
-    }
-    #next-task {
-        height: 200px;
-    }
-</style>
 <div id="project-content" class="d-flex flex-column h-100">
-    <div class="w-100 h-100">
-        <div id="openseadragon">
+    <div class="viewer-container">
+        <div id="viewer" class="h-100">
         </div>
     </div>
 </div>
 <script>
     var lcViewerInterface = new LibCrowdsViewerInterface({ 
-        id: 'openseadragon', selectionEnabled: true 
-    });
-    
-    buildTaskSidebar();
-    buildProgressSidebar();
-    buildNextTaskSidebar();
-    
-    /**
-     * Add the question and answer sidebar to the viewer.
-     */
-    function buildTaskSidebar() {
-        var elem = $(
-            '<h3 id="objective" class="lead"></h3>' +
-            '<p id="guidance"></p>' +
-            '<button class="btn btn-success btn-block btn-answer my-4" role="button">Save</button>' + 
-            '<div id="favourite"></div>' + 
-            '<a href="../tutorial" class="btn btn-outline-white btn-block" role="button">View Tutorial</a>' +
-            '<a href="#comment" class="btn btn-outline-white btn-block" role="button" data-toggle="collapse">Add Comment</a>' +
-            '<div class="collapse" id="comment">' +
-            '<textarea class="form-control margin-bottom-xs" rows="3" id="comment-input" placeholder="Add a comment..."></textarea>' +
-            '</div>');
-        lcViewerInterface.loadSidebar('Task', elem);
-    }
-    
-    /**
-     * Add the user progress sidebar to the viewer.
-     */
-    function buildProgressSidebar() {
-        pybossa.userProgress('{{ short_name }}').done(function(data){
-           var pct = Math.round((data.done*100)/data.total);
-               elem = $(
-                   '<div class="progress" style="border: 1px solid #fff; background-color: transparent;">' +
-                   '<div class="progress-bar" role="progress-bar" style="width: ' + 
-                   pct.toString() + '%; background-color: #fff;"></div>' +
-                   '</div>' +
-                   '<p class="text-center">You have contributed to ' + data.done + 
-                   ' of ' + data.total + ' tasks.</p>');
-           lcViewerInterface.loadSidebar('Progress', elem);
-       });
-    }
-    
-    /**
-     * Add the next task sidebar to the viewer.
-     */
-    function buildNextTaskSidebar() {
-        var elem = $(
-            '<div class="text-center">' + 
-            '<img class="img-fluid" id="next-task" />' +
-            '</div>');
-        lcViewerInterface.loadSidebar('Up Next', elem);
-    }
-    
-    // Focus on comment input when shown
-    $('#comment').on('shown.bs.collapse', function () {
-        $('#comment-input').focus();
+        id: 'viewer', 
+        selectionEnabled: true 
     });
 
     /**
@@ -84,11 +15,7 @@
      */
     pybossa.taskLoaded(function(task, deferred) {
         deferred.resolve(task);
-        
-        // Load next task thumbnail
-        var baseUrl   = 'http://api.bl.uk/image/iiif/',
-            thumbnail = baseUrl + task.info.image_ark + '/full/120,/0/default.jpg';
-        $('#next-task').attr('src', thumbnail);
+        lcViewerInterface.updatePreview(task.info.image_ark);
     });
 
     /**
@@ -96,26 +23,23 @@
      */
     pybossa.presentTask(function(task, deferred) {
         if (!$.isEmptyObject(task)) {
-			lcViewerInterface.viewer.addHandler('open', function() {
+            
+            pybossa.userProgress('{{ short_name }}').done(function(data){
+                lcViewerInterface.updateUserProgress(data);
+            });
+			
+            lcViewerInterface.viewer.addHandler('open', function() {
 				if(typeof task.info.region !== 'undefined') {
 					lcViewerInterface.highlight(task.info.region);
 				}
 			});
-			lcViewerInterface.loadImage(task.info.image_ark);
-            $('#objective').html(task.info.objective);
-            $('#guidance').html(task.info.guidance);
-            $('#comment').collapse('hide');
-            $('#comment-input').val('');
-            getFavouritesButton(task.id).then(function(btn) {
-                btn.addClass('btn-block btn-outline-white');
-                btn.removeClass('btn-info');
-                $('#favourite').html(btn);
-            });
+            
+			lcViewerInterface.loadTask(task.info.image_ark, task.info.objective, task.info.guidance);
 			
             $('.btn-answer').off('click').on('click', function() {
                 task.answer = {
                     category: task.info.category,
-                    comment: $('#comment-input').val(),
+                    comment: lcViewerInterface.getComments(),
                     image_ark: task.info.image_ark,
                     manifest_id: task.info.manifest_id,
                     regions: lcViewerInterface.getOverlaysAsImageRectangles()
@@ -124,10 +48,9 @@
                 console.log(JSON.stringify(task.answer, null, 2));
                 
                 pybossa.saveTask(task.id, task.answer).done(function() {
-                    lcViewerInterface.viewer.close();
-                    $('#next-task').removeAttr('src');
                     deferred.resolve();
                     notify('Answer saved, thanks!', 'success');
+                    lcViewerInterface.clearTask();
                 }).fail(function(xhr, status, error) {
                     notify(status, 'error')
                     throw new Error(error);
