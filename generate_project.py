@@ -63,8 +63,7 @@ def get_task_data_from_json(json_data, taskset):
     """Return the task data generated from JSON input data."""
     task_data = taskset['tasks']
     input_data = [{'image_ark': row['info']['image_ark'],
-                   'manifest_id': row['info']['manifest_id'],
-                   'parent_category': row['info']['category'],
+                   'manifest_url': row['info']['manifest_url'],
                    'parent_task_id': row['task_id'],
                    'region': json.dumps(region)}
                    for row in json_data 
@@ -102,7 +101,7 @@ def get_task_data_from_manifest(taskset, manifest):
     image_arks = [img[0]['resource']['service']['@id'].split('iiif/')[1] 
                   for img in images]
     
-    image_data = [{'image_ark': img_ark, 'manifest_id': manifest['@id']} 
+    image_data = [{'image_ark': img_ark, 'manifest_url': manifest['@id']} 
                   for img_ark in image_arks]
     task_data = taskset['tasks']
     product = list(itertools.product(task_data, image_data))
@@ -143,7 +142,7 @@ def generate():
     if args.json:
         json_input = json.load(open(args.json, 'rb'))
         (headers, task_data) = get_task_data_from_json(json_input, taskset)
-        manifest = requests.get(task_data[0]['manifest_id']).json()
+        manifest = requests.get(task_data[0]['manifest_url']).json()
     elif args.sysno:
         csv_path = os.path.join(here, 'input', 'arks_and_sysnos.csv')
         ark = get_ark(csv_path, args.sysno)
