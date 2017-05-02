@@ -34,7 +34,7 @@
 				}
 			});
             
-			lcViewerInterface.loadTask(task.info.image_ark, task.info.objective, task.info.guidance);
+			lcViewerInterface.loadTask(task);
 			
             $('.btn-answer').off('click').on('click', function() {
                 task.answer = {
@@ -42,7 +42,7 @@
                     comment: lcViewerInterface.getComments(),
                     image_ark: task.info.image_ark,
                     manifest_id: task.info.manifest_id,
-                    regions: lcViewerInterface.getOverlaysAsImageRectangles()
+                    regions: lcViewerInterface.getSelections()
                 };
                 
                 console.log(JSON.stringify(task.answer, null, 2));
