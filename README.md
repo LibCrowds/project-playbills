@@ -35,6 +35,9 @@ pbs update_project
 Now visit the project settings page and update the category, webhook and 
 thumbnail. The project is now ready to be published.
 
+**Important:** The category name should always start with `Playbills:` and webhooks 
+ should all be sent to `http://analyse.libcrowds.com/playbills`.
+
 
 ## Defining task sets
 
