@@ -1,33 +1,36 @@
-<style>
-    #openseadragon {
-        font-size: 0.9rem;
-        height: 100%;
-    }
-    .openseadragon-message {
-        color: #fff;
-    }
-</style>
 <div id="project-content" class="d-flex flex-column h-100">
-    <div class="w-100 h-100">
-        <div id="openseadragon" />
+    <div class="viewer-container">
+        <div id="viewer" class="h-100">
+        </div>
     </div>
 </div>
 <script>
-    let lcViewerInterface = new LibCrowdsViewerInterface({ id: 'openseadragon', confirmBeforeLeaving: false, selectionEnabled: true });
+    let lcViewerInterface = new LibCrowdsViewerInterface({ 
+        id: 'viewer', 
+        selectionEnabled: true,
+        confirmBeforeLeaving: false,
+        taskInputConfig: {
+            title: 'Task',
+            answerButtonText: 'Get Started',
+            showProgress: false,
+            showFavourites: false,
+            showTutorial: false,
+            showComments: false,
+            showPreview: false
+        }
+    });
     
-    /**
-     * Add the question and answer sidebar to the viewer.
-     */
-    function buildTaskSidebar() {
-        let elem = $(`<h3 id="question" class="lead">Identify Titles</h3>
-                      <p id="guidance">Any titles mentioned in notes about upcoming or past events can be ignored.</p>
-                      <div class="text-center mb-2">
-                          <button id="done" class="btn btn-success btn-block btn-answer mt-2" role="button">
-                              Done
-                          </button>
-                      </div>`);
-        lcViewerInterface.loadSidebar('Task', elem);
+    let task = {
+        id: 1,
+        info: {
+            objective: 'Identify each title',
+            guidance: 'Draw a rectangle around the title of each play.',
+            image_ark: 'ark:/81055/vdc_100022589157.0x000016',
+            manifest_url: 'http://api.bl.uk/metadata/iiif/ark:/81055/vdc_100022589158.0x000002/manifest.json'
+        }
     }
+    
+    lcViewerInterface.loadTask(task);
 
     // Highlight any task regions and show tutorial after image loads
     lcViewerInterface.viewer.addHandler('open', function() {
@@ -37,21 +40,8 @@
                 exitOnOverlayClick: false,
                 steps: [
                     {
-                        intro: "The purpose of this project is to identify specific fields in historic playbills."
-                    },
-                    {
-                        element: "#question",
-                        intro: "This is the field that needs to be identified.",
-                        position: "left"
-                    },
-                    {
-                        element: "#guidance",
-                        intro: "Any additional guidance is shown here.",
-                        position: "left"
-                    },
-                    {
                         element: "#toggle-selection",
-                        intro: "Click this button to toggle selection.",
+                        intro: "Click this button to toggle area selection.",
                         position: "right"
                     },
                     {
@@ -86,17 +76,10 @@
             window.location.pathname = 'project/{{ short_name }}/newtask';
         });
         
-        intro.onexit(function() {
-            window.location.pathname = 'project/{{ short_name }}/newtask';
-        });
-        
         $('#toggle-selection').on('click', function() {
             if(intro._currentStep === 3) {
                 intro.goToStep(5);
             }
         });
     });
-    
-    lcViewerInterface.loadImage('ark:/81055/vdc_100022589157.0x000016');
-    buildTaskSidebar();
 </script>
