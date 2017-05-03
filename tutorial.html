@@ -5,7 +5,8 @@
     </div>
 </div>
 <script>
-    let lcViewerInterface = new LibCrowdsViewerInterface({ 
+    // Setup the viewer
+    var lcViewerInterface = new LibCrowdsViewerInterface({ 
         id: 'viewer', 
         selectionEnabled: true,
         confirmBeforeLeaving: false,
@@ -20,7 +21,9 @@
         }
     });
     
-    let task = {
+    
+    // Load an example task
+    lcViewerInterface.loadTask({
         id: 1,
         info: {
             objective: 'Identify each title',
@@ -28,58 +31,95 @@
             image_ark: 'ark:/81055/vdc_100022589157.0x000016',
             manifest_url: 'http://api.bl.uk/metadata/iiif/ark:/81055/vdc_100022589158.0x000002/manifest.json'
         }
-    }
+    });
     
-    lcViewerInterface.loadTask(task);
-
-    // Highlight any task regions and show tutorial after image loads
-    lcViewerInterface.viewer.addHandler('open', function() {
-        var intro = introJs(),
-            opts  = {
-                doneLabel: "OK",
-                exitOnOverlayClick: false,
-                steps: [
-                    {
-                        element: "#toggle-selection",
-                        intro: "Click this button to toggle area selection.",
-                        position: "right"
-                    },
-                    {
-                        element: "#selection",
-                        intro: "Select an area of the image.",
-                        position: "left"
-                    },
-                    {
-                        element: "#done",
-                        intro: "When all fields have been identified, click Done.",
-                        position: "left"
-                    }
-                ]
-            };
-        
-        var elt = $('<div></div>');
-        elt.attr("id", "selection");
-        elt.css({ 
-            'border': '2px solid rgb(65, 144, 194)', 
-            'background-color': 'rgba(65, 144, 194, 0.1)', 
-            'opacity': '.6' 
-        });
-        lcViewerInterface.viewer.addOverlay({
-            element: elt[0],
-            location: new OpenSeadragon.Rect(0.09, 0.63, 0.80, 0.09)
-        });
-        
-        intro.setOptions(opts);
-        intro.start();
-        
-        intro.oncomplete(function() {
-            window.location.pathname = 'project/{{ short_name }}/newtask';
-        });
-        
-        $('#toggle-selection').on('click', function() {
-            if(intro._currentStep === 3) {
-                intro.goToStep(5);
+    
+    // Define the tour
+    var tour = new Shepherd.Tour({
+        defaults: {
+            classes: 'shepherd-theme-arrows'
+        }
+    });
+    
+    tour.addStep('toggle', {
+        title: 'Toggle Selection',
+        text: 'Click this button to toggle area selection.',
+        attachTo: {
+            element: '#toggle-selection',
+            on: 'right'
+        },
+        buttons: [
+            {
+                text: 'Next',
+                action: function() {
+                    tour.next();
+                    lcViewerInterface.selector.enable();
+                }
             }
-        });
+        ]
+    });
+    
+    tour.addStep('draw', {
+        title: 'Select an Area',
+        text: 'Select an area of the image.',
+        buttons: [
+            {
+                text: 'Try it',
+                action: tour.hide
+            }
+        ]
+    });
+    
+    tour.addStep('edit', {
+        title: 'Edit a Selection',
+        text: 'Click on a previously selected area to edit it.',
+        attachTo: {
+            element: '.selection-overlay',
+            on: 'left'
+        },
+        buttons: [
+            {
+                text: 'Try it',
+                action: tour.hide
+            }
+        ]
+    });
+    
+    tour.addStep('start', {
+        title: 'Start',
+        text: "When you're ready, click here to get started.",
+        attachTo: {
+            element: '.btn-answer',
+            on: 'bottom'
+        },
+        buttons: null
+    });
+    
+    lcViewerInterface.viewer.addHandler('selection_toggle', function(evt) {
+        if (evt.enabled && tour.getCurrentStep().id === 'toggle') {
+            tour.next();
+        }
+    });
+    
+    lcViewerInterface.viewer.addHandler('selection', function(evt) {
+        if (tour.getCurrentStep().id === 'draw') {
+            tour.next();
+        }
+    });
+    
+    $(document).on("DOMNodeRemoved", function (evt) {
+        if ($(evt.target).hasClass('selection-overlay') && tour.getCurrentStep().id === 'edit') {
+            lcViewerInterface.viewer.addHandler('selection', tour.next);
+            lcViewerInterface.viewer.addHandler('selection_cancel', tour.next);
+        }
+    });
+    
+    // Start tour after the image loads
+    lcViewerInterface.viewer.addHandler('open', function() {
+        tour.start();
+    });
+    
+    $('.btn-answer').off('click').on('click', function() {
+        window.location.pathname = 'project/{{ short_name }}/newtask';
     });
 </script>
