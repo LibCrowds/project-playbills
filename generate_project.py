@@ -146,7 +146,7 @@ def generate():
     elif args.sysno:
         csv_path = os.path.join(here, 'input', 'arks_and_sysnos.csv')
         ark = get_ark(csv_path, args.sysno)
-        url = 'http://api.bl.uk/metadata/iiif/{0}'.format(ark)
+        url = 'http://api.bl.uk/metadata/iiif/{0}/manifest.json'.format(ark)
         manifest = requests.get(url).json()
         (headers, task_data) = get_task_data_from_manifest(taskset, manifest)
 
@@ -157,7 +157,7 @@ def generate():
     render_template('template.html', context)
     render_template('results.html', context)
     render_template('long_description.md', context)
-    msg = '\n"{0}" created with {1} tasks'
+    msg = '\n"{0}" created in /gen with {1} tasks\n'
     print(msg.format(context['name'], len(task_data)))
 
     
