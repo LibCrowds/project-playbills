@@ -6,7 +6,8 @@
   "license": "MIT",
   "private": true,
   "scripts": {
-    "build": "webpack --config webpack.config.js"
+    "bundle": "webpack --progress --colors",
+    "dev": "webpack --progress --colors --watch"
   },
   "devDependencies": {
     "babel-core": "^6.25.0",

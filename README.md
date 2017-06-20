@@ -22,7 +22,7 @@ regions in the text (e.g. all actors associated with a title).
 Install [Node.js](https://nodejs.org/en/) and 
 [Python](https://www.python.org/downloads/), then:
 
-``` bash
+```
 # install python dependencies
 pip install -r requirements.txt
 
@@ -32,17 +32,21 @@ npm install
 
 ## Building
 
-``` bash
-## bundle JavaScript
+```
+# bundle JavaScript
 npm run bundle
 
-## generate remaining project files
-python bin/generate.py
+# generate project files
+python bin/generate.py <task set> [--sysno=<sysno> or --json=<path>]
 ```
 
 ## Deploying
 
-``` bash
+If you haven't already done so, see the 
+[pbs documentation](https://github.com/Scifabric/pbs#configuring-pbs) 
+for configuration details, then:
+
+```
 # deploy to the server
 cd dist
 pbs create_project
@@ -54,7 +58,17 @@ pbs update_project
 Once you have updated any additional settings on the server (category, 
 thumbnail, webhooks etc.), the project is ready to be published.
 
-## Defining new task sets
+## Developing
+
+```
+# watch for JavaScript changes
+npm run dev
+
+# auto-update on the server
+pbs update_project --watch
+```
+
+### Defining new task sets
 
 Task sets are defined in [src/data/tasks.json](src/data/tasks.json) using the 
 following structure:
