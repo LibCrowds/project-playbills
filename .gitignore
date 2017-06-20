@@ -1,3 +1,4 @@
 env/*
 gen/*
-sample.json
+dist/*
+node_modules/*
