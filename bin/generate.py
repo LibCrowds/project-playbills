@@ -118,7 +118,6 @@ def render_templates(context):
     """Render templates."""
     here = os.path.dirname(__file__)
     src_dir = os.path.abspath(os.path.join(os.path.dirname(here), 'src'))
-    print src_dir
     render_template('template.html', context)
     render_template('tutorial.html', context)
     render_template('long_description.md', context)
@@ -144,7 +143,6 @@ def generate():
         csv = open(os.path.join(SRC_DIR, 'data', 'arks_and_sysnos.csv'), 'rb')
         ark = get_ark(csv, args.sysno)
         url = 'http://api.bl.uk/metadata/iiif/{0}/manifest.json'.format(ark)
-        print url
         manifest = requests.get(url).json()
         (headers, task_data) = get_task_data_from_manifest(taskset, manifest)
 
