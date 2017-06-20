@@ -42,9 +42,8 @@ python bin/generate.py <task set> [--sysno=<sysno> or --json=<path>]
 
 ## Deploying
 
-If you haven't already done so, see the 
-[pbs documentation](https://github.com/Scifabric/pbs#configuring-pbs) 
-for configuration details, then:
+If you haven't already done so, configure pbs according to the 
+[documentation](https://github.com/Scifabric/pbs#configuring-pbs), then:
 
 ```
 # deploy to the server
