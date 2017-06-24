@@ -31,8 +31,7 @@ def render_template(template_fn, context):
 
 def generate_project_context(manifest, taskset):
     """Write and return the project.json file."""
-    prefix = manifest['label'].replace('A collection of playbills from ', '')
-    prefix = prefix.strip().rstrip('.').replace('"', '')
+    prefix = manifest['label']
     suffix = taskset['nameSuffix']
     name = "{0}: {1}".format(prefix, suffix)
     bad_chars = r"([$#%·:,.~!¡?\"¿'=)(!&\/|]+)"
@@ -112,8 +111,8 @@ def get_taskset(name):
     tasks_file = open(os.path.join(SRC_DIR, 'data', 'tasks.json'), 'rb')
     tasks_json = json.load(tasks_file)
     return tasks_json[name]
- 
- 
+
+
 def render_templates(context):
     """Render templates."""
     here = os.path.dirname(__file__)
@@ -147,7 +146,7 @@ def generate():
         (headers, task_data) = get_task_data_from_manifest(taskset, manifest)
 
     write_tasks_csv(headers, task_data)
-    
+
     context = generate_project_context(manifest, taskset)
     render_templates(context)
     msg = '\n"{0}" created in /dist with {1} tasks\n'
