@@ -31,7 +31,8 @@ def render_template(template_fn, context):
 
 def generate_project_context(manifest, taskset):
     """Write and return the project.json file."""
-    prefix = manifest['label']
+    prefix = manifest['label'].replace('A collection of playbills from ', '')
+    prefix = prefix.strip().rstrip('.').replace('"', '')
     suffix = taskset['nameSuffix']
     name = "{0}: {1}".format(prefix, suffix)
     bad_chars = r"([$#%·:,.~!¡?\"¿'=)(!&\/|]+)"
