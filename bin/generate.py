@@ -120,6 +120,7 @@ def render_templates(context):
     src_dir = os.path.abspath(os.path.join(os.path.dirname(here), 'src'))
     render_template('template.html', context)
     render_template('tutorial.html', context)
+    render_template('results.html', context)
     render_template('long_description.md', context)
 
 
