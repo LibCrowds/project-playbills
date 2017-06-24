@@ -1,5 +1,5 @@
-var lcViewerInterface = new LibCrowdsViewerInterface({ 
-  id: 'viewer', 
+var lcViewerInterface = new LibCrowdsViewerInterface({
+  id: 'viewer',
   selectionEnabled: true
 });
 
@@ -16,19 +16,19 @@ pybossa.taskLoaded(function(task, deferred) {
  */
 pybossa.presentTask(function(task, deferred) {
     if (!$.isEmptyObject(task)) {
-        
+
         pybossa.userProgress('{{ short_name }}').done(function(data){
             lcViewerInterface.updateUserProgress(data);
         });
-  
+
         lcViewerInterface.viewer.addHandler('open', function() {
     if(typeof task.info.region !== 'undefined') {
       lcViewerInterface.highlight(task.info.region);
     }
   });
-        
+
   lcViewerInterface.loadTask(task);
-  
+
         $('.btn-answer').off('click').on('click', function() {
             task.answer = {
                 category: task.info.category,
@@ -37,9 +37,9 @@ pybossa.presentTask(function(task, deferred) {
                 manifest_id: task.info.manifest_id,
                 regions: lcViewerInterface.getSelections()
             };
-            
+
             console.log(JSON.stringify(task.answer, null, 2));
-            
+
             pybossa.saveTask(task.id, task.answer).done(function() {
                 deferred.resolve();
                 notify('Answer saved, thanks!', 'success');
