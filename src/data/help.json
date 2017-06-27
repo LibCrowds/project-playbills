@@ -6,7 +6,7 @@
         "text": "Select an area of the image",
         "buttons": [
           {
-            "text": "Try it"
+            "text": "Try it",
             "action": "hide"
           }
         ]
@@ -16,7 +16,7 @@
         "text": "Click on a previously selected area to edit",
         "buttons": [
           {
-            "text": "Try it"
+            "text": "Try it",
             "action": "hide"
           }
         ]
