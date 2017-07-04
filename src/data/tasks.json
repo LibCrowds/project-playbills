@@ -6,7 +6,7 @@
       {
         "category": "title",
         "objective": "Identify each title",
-        "guidance": "Only the titles of plays need to be included and any mentioned in notes about upcoming or past events can be ignored."
+        "guidance": "Draw rectangles around the titles of plays featured in the next performance. Please include subtitles where they exist. You don't need to include the genre ('farce' etc). You can ignore any past or future performances mentioned on this page."
       }
     ]
   },
@@ -17,7 +17,7 @@
       {
         "category": "person",
         "objective": "Identify each person",
-        "guidance": null
+        "guidance": "Draw rectangles around the names of people mentioned in the next performance. You can ignore any past or future performances mentioned on this page."
       }
     ]
   }
