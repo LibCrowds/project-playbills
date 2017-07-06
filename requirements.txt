@@ -1,5 +1,0 @@
---index-url https://pypi.python.org/simple/
-
-jinja2
-requests
-pybossa-pbs>=2.4.2

@@ -23,9 +23,6 @@ Install [Node.js](https://nodejs.org/en/) and
 [Python](https://www.python.org/downloads/), then:
 
 ```
-# install python dependencies
-pip install -r requirements.txt
-
 # install JavaScript dependencies
 npm install
 ```
@@ -34,7 +31,7 @@ npm install
 
 ```
 # bundle JavaScript
-npm run bundle
+npm run build
 
 # generate project files
 python bin/generate.py <task set> [--sysno=<sysno> or --json=<path>]

@@ -1,5 +1,5 @@
 <template>
-  <div id="project-content">
+  <div id="project">
     <libcrowds-viewer
       confirm-before-unload
       show-note
@@ -15,6 +15,8 @@
 
 <script>
 import LibCrowdsViewer from 'libcrowds-viewer'
+
+console.log('module loaded')
 
 export default {
   data: function () {
@@ -32,11 +34,17 @@ export default {
 
   methods: {
     fetchNewTask () {
-      
+      // TODO: fetch a new task for the user
     },
     handleResponse () {
       // TODO: handle response
+      this.fetchNewTask()
     }
+  },
+
+  mounted () {
+    console.log('mounted')
+    this.fetchNewTask()
   }
 }
 </script>

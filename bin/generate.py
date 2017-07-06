@@ -6,27 +6,13 @@ import re
 import os
 import csv
 import json
-import requests
+import urllib2
 import argparse
 import itertools
-from jinja2 import Environment, FileSystemLoader
 
 
 SRC_DIR = os.path.join(os.path.dirname(os.path.dirname(__file__)), 'src')
 DIST_DIR = os.path.join(os.path.dirname(os.path.dirname(__file__)), 'dist')
-TEMPLATE_ENVIRONMENT = Environment(
-    autoescape=False,
-    loader=FileSystemLoader(os.path.join(SRC_DIR, 'templates')),
-    trim_blocks=False
-)
-
-
-def render_template(template_fn, context):
-    """Render a Jinja2 template."""
-    path = os.path.join(DIST_DIR, template_fn)
-    tmpl = TEMPLATE_ENVIRONMENT.get_template(template_fn).render(context)
-    with open(path, 'wb') as f:
-        f.write(tmpl)
 
 
 def generate_project_context(manifest, taskset):
@@ -114,16 +100,6 @@ def get_taskset(name):
     return tasks_json[name]
 
 
-def render_templates(context):
-    """Render templates."""
-    here = os.path.dirname(__file__)
-    src_dir = os.path.abspath(os.path.join(os.path.dirname(here), 'src'))
-    render_template('template.html', context)
-    render_template('tutorial.html', context)
-    render_template('results.html', context)
-    render_template('long_description.md', context)
-
-
 def generate():
     description = '''Generate a project-playbills-mark project.'''
     parser = argparse.ArgumentParser(description=description)
@@ -139,18 +115,19 @@ def generate():
     if args.json:
         json_input = json.load(open(args.json, 'rb'))
         (headers, task_data) = get_task_data_from_json(json_input, taskset)
-        manifest = requests.get(task_data[0]['manifest_url']).json()
+        url = task_data[0]['manifest_url']
+        manifest = json.load(urllib2.urlopen(url))
+        print json.load(response)
     elif args.sysno:
         csv = open(os.path.join(SRC_DIR, 'data', 'arks_and_sysnos.csv'), 'rb')
         ark = get_ark(csv, args.sysno)
         url = 'http://api.bl.uk/metadata/iiif/{0}/manifest.json'.format(ark)
-        manifest = requests.get(url).json()
+        manifest = json.load(urllib2.urlopen(url))
         (headers, task_data) = get_task_data_from_manifest(taskset, manifest)
 
     write_tasks_csv(headers, task_data)
 
     context = generate_project_context(manifest, taskset)
-    render_templates(context)
     msg = '\n"{0}" created in /dist with {1} tasks\n'
     print(msg.format(context['name'], len(task_data)))
 

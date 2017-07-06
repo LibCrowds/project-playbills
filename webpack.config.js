@@ -1,15 +1,16 @@
 var path = require('path')
 var webpack = require('webpack')
 var HthmlWebpackPlugin = require('html-webpack-plugin')
+var HtmlWebpackInlineSourcePlugin = require('html-webpack-inline-source-plugin')
 
 module.exports = {
-  entry: './src/js/main.js',
+  entry: './src/template.js',
   output: {
     path: path.resolve(__dirname, './dist'),
     publicPath: process.env.NODE_ENV === 'production'
                   ? './'
                   : '/',
-    filename: 'bundle.js'
+    filename: '[name].js'
   },
   module: {
     rules: [
@@ -39,10 +40,11 @@ module.exports = {
   },
   plugins: [
     new HthmlWebpackPlugin({
-      inject: false,
+      inlineSource: '.js',
       filename: 'template.html',
-      template: './src/templates/template.html'
-    })
+      template: './src/template.html'
+    }),
+    new HtmlWebpackInlineSourcePlugin()
   ]
 }
 
