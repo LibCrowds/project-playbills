@@ -26,6 +26,7 @@
     "webpack": "^2.2.0"
   },
   "dependencies": {
+    "axios": "^0.16.2",
     "libcrowds-viewer": "^1.0.4"
   }
 }
