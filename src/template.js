@@ -7,6 +7,6 @@ Vue.component('libcrowds-viewer', LibcrowdsViewer)
 
 /* eslint-disable no-new */
 new Vue({
-  el: '#project',
+  el: '#project-iiif-mark-template',
   // render: h => h(App)
 })

@@ -1,20 +1,18 @@
 <template>
-  <div id="project">
-    <libcrowds-viewer
-      confirm-before-unload
-      show-note
-      :scheme="scheme"
-      :server="server"
-      :image-api-prefix="imageApiPrefix"
-      :presentation-api-prefix="presentationApiPrefix"
-      :image-id="imageId"
-      @submit="handleResponse">
-    </libcrowds-viewer>
-  </div>
+  <libcrowds-viewer
+    confirm-before-unload
+    show-note
+    :scheme="scheme"
+    :server="server"
+    :image-api-prefix="imageApiPrefix"
+    :presentation-api-prefix="presentationApiPrefix"
+    :image-id="imageId"
+    @submit="handleResponse">
+  </libcrowds-viewer>
 </template>
 
 <script>
-import context from 
+import context from
 import LibCrowdsViewer from 'libcrowds-viewer'
 
 console.log('module loaded')
