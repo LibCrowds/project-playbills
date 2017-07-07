@@ -2,9 +2,7 @@
 """
 A script for generating the tasks for a project-playbills-mark project.
 """
-import re
 import os
-import csv
 import json
 import urllib2
 import argparse
@@ -13,13 +11,11 @@ from helpers import get_taskset, get_csv_field, mkdist
 from helpers import DIST_DIR
 
 
-def write_tasks_csv(fieldnames, data):
-    """Write the tasks.csv file."""
-    path = os.path.join(DIST_DIR, 'tasks.csv')
+def write_tasks_json(task_data):
+    """Write the tasks.json file."""
+    path = os.path.join(DIST_DIR, 'tasks.json')
     with open(path, 'wb') as f:
-        writer = csv.DictWriter(f, fieldnames=fieldnames)
-        writer.writeheader()
-        writer.writerows(data)
+        json.dump(task_data, f, indent=2)
 
 
 def get_task_data_from_json(json_data, taskset):
@@ -41,9 +37,7 @@ def get_task_data_from_json(json_data, taskset):
             d['guidance'] = ("Identify each {0} associated with the "
                              "highlighted {1}.").format(d['category'],
                                                         d['parent_category'])
-
-    headers = set(itertools.chain(*[row.keys() for row in data]))
-    return headers, data
+    return data
 
 
 def get_task_data_from_manifest(taskset, manifest):
@@ -58,8 +52,7 @@ def get_task_data_from_manifest(taskset, manifest):
     task_data = taskset['tasks']
     product = list(itertools.product(task_data, image_data))
     data = [dict(row[0].items() + row[1].items()) for row in product]
-    headers = set(itertools.chain(*[row.keys() for row in data]))
-    return headers, data
+    return data
 
 
 def generate():
@@ -81,10 +74,10 @@ def generate():
     # Generate the task data
     if args.results:
         results_json = json.load(open(args.results, 'rb'))
-        (headers, task_data) = get_task_data_from_json(results_json, taskset)
+        task_data = get_task_data_from_json(results_json, taskset)
     else:
-        (headers, task_data) = get_task_data_from_manifest(taskset, manifest)
-    write_tasks_csv(headers, task_data)
+        task_data = get_task_data_from_manifest(taskset, manifest)
+    write_tasks_json(task_data)
 
     msg = '\n{0} tasks created'.format(len(task_data))
     print(msg)
