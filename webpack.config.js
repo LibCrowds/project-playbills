@@ -1,6 +1,6 @@
 var path = require('path')
 var webpack = require('webpack')
-var HthmlWebpackPlugin = require('html-webpack-plugin')
+var HtmlWebpackPlugin = require('html-webpack-plugin')
 var HtmlWebpackInlineSourcePlugin = require('html-webpack-inline-source-plugin')
 var CopyWebpackPlugin = require('copy-webpack-plugin')
 
@@ -40,7 +40,7 @@ module.exports = {
     }
   },
   plugins: [
-    new HthmlWebpackPlugin({
+    new HtmlWebpackPlugin({
       inlineSource: '.js',
       filename: 'template.html',
       template: './src/template.html'

@@ -8,5 +8,5 @@ Vue.component('libcrowds-viewer', LibcrowdsViewer)
 /* eslint-disable no-new */
 new Vue({
   el: '#project',
-  render: h => h(App)
+  // render: h => h(App)
 })
