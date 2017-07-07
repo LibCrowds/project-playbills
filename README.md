@@ -32,7 +32,16 @@ Install [Node.js](https://nodejs.org/en/),
 # install
 npm install
 
-# build
+# clean
+npm run clean
+
+# generate project.json
+npm run generate:context -- <task category> <manifest id>
+
+# generate tasks
+npm run generate:tasks -- <task category> <manifest id>
+
+# build project
 npm run build
 
 # deploy
