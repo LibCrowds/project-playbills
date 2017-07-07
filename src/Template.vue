@@ -14,6 +14,7 @@
 </template>
 
 <script>
+import context from 
 import LibCrowdsViewer from 'libcrowds-viewer'
 
 console.log('module loaded')

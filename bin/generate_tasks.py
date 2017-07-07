@@ -7,13 +7,21 @@ import json
 import urllib2
 import argparse
 import itertools
-from helpers import get_taskset, get_csv_field, mkdist
+from helpers import get_task, get_csv_field, mkdist, get_config_dir, load_json
+from helpers import get_manifest
 from helpers import DIST_DIR
 
 
-def write_tasks_json(task_data):
+def write_tasks_json(config_dir, task_data, manifest_id):
     """Write the tasks.json file."""
     path = os.path.join(DIST_DIR, 'tasks.json')
+
+    # Add iiif config for all tasks
+    iiif_json = load_json(config_dir, 'iiif.json')
+    print iiif_json
+    for obj in task_data:
+      obj.update(iiif_json)
+
     with open(path, 'wb') as f:
         json.dump(task_data, f, indent=2)
 
@@ -21,7 +29,7 @@ def write_tasks_json(task_data):
 def get_task_data_from_json(json_data, taskset):
     """Return the task data generated from JSON input data."""
     task_data = taskset['tasks']
-    input_data = [{'image_ark': row['info']['image_ark'],
+    input_data = [{'image_id': row['info']['image_id'],
                    'manifest_url': row['info']['manifest_url'],
                    'parent_task_id': row['task_id'],
                    'region': json.dumps(region)}
@@ -40,44 +48,42 @@ def get_task_data_from_json(json_data, taskset):
     return data
 
 
-def get_task_data_from_manifest(taskset, manifest):
+def get_task_data_from_manifest(config_dir, category, manifest):
     """Return the task data generated from a manifest."""
+    task = get_task(config_dir, category)
     canvases = manifest['sequences'][0]['canvases']
     images = [c['images'] for c in canvases]
     image_arks = [img[0]['resource']['service']['@id'].split('iiif/')[1]
                   for img in images]
-
-    image_data = [{'image_ark': img_ark, 'manifest_url': manifest['@id']}
-                  for img_ark in image_arks]
-    task_data = taskset['tasks']
-    product = list(itertools.product(task_data, image_data))
-    data = [dict(row[0].items() + row[1].items()) for row in product]
+    data = [{
+      'image_id': img_ark,
+      'category': category,
+      'objective': task['objective'],
+      'guidance': task['guidance']
+    } for img_ark in image_arks]
     return data
 
 
 def generate():
     description = '''Generate the tasks for a project-playbills-mark project.'''
     parser = argparse.ArgumentParser(description=description)
-    parser.add_argument('taskset', help="A task set.")
-    parser.add_argument('sysno', help="An Aleph system number.")
-    parser.add_argument('--results', help="A JSON file.")
+    parser.add_argument('category', help="A task category in tasks.json.")
+    parser.add_argument('manifestid', help="IIIF manifest ID.")
+    parser.add_argument('--config', help="Project configuration.")
+    parser.add_argument('--results', help="JSON results file.")
     args = parser.parse_args()
 
     mkdist()
-    taskset = get_taskset(args.taskset)
-
-    ark = get_csv_field(args.sysno, 'ark')
-    url = 'http://api.bl.uk/metadata/iiif/{0}/manifest.json'.format(ark)
-    print url
-    manifest = json.load(urllib2.urlopen(url))
+    config_dir = get_config_dir(args.config)
 
     # Generate the task data
     if args.results:
         results_json = json.load(open(args.results, 'rb'))
-        task_data = get_task_data_from_json(results_json, taskset)
+        task_data = get_task_data_from_json(results_json, category)
     else:
-        task_data = get_task_data_from_manifest(taskset, manifest)
-    write_tasks_json(task_data)
+        manifest = get_manifest(config_dir, args.manifestid)
+        task_data = get_task_data_from_manifest(config_dir, args.category, manifest)
+    write_tasks_json(config_dir, task_data, args.manifestid)
 
     msg = '\n{0} tasks created'.format(len(task_data))
     print(msg)

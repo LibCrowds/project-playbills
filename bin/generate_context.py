@@ -6,18 +6,18 @@ import re
 import os
 import json
 import argparse
-from helpers import get_taskset, get_csv_field, mkdist
+from helpers import get_task, get_csv_field, mkdist, get_config_dir
 from helpers import DIST_DIR
 
 
-def generate_project_context(name_prefix, taskset):
+def generate_project_context(taskset, suffix):
     """Write and return the project.json file."""
-    suffix = taskset['nameSuffix']
-    name = "{0}: {1}".format(name_prefix, suffix)
-    bad_chars = r"([$#%·:,.~!¡?\"¿'=)(!&\/|]+)"
-    shortname = re.sub(bad_chars, '', name.lower().strip()).replace(' ', '_')
+    name = taskset['name']
+    fullname = "{0}: {1}".format(name, suffix)
+    badchars = r"([$#%·:,.~!¡?\"¿'=)(!&\/|]+)"
+    shortname = re.sub(badchars, '', fullname.lower().strip()).replace(' ', '_')
     context = {
-        "name": name,
+        "name": fullname,
         "short_name": shortname,
         "description": taskset['description']
     }
@@ -30,14 +30,16 @@ def generate_project_context(name_prefix, taskset):
 def generate():
     description = '''Generate the project.json file.'''
     parser = argparse.ArgumentParser(description=description)
-    parser.add_argument('taskset', help="A task set.")
-    parser.add_argument('sysno', help="An Aleph system number.")
+    parser.add_argument('task', help="A task listed in tasks.json.")
+    parser.add_argument('manifestid', help="IIIF manifest ID.")
+    parser.add_argument('--config', help="Project configuration.")
     args = parser.parse_args()
-    
+
     mkdist()
-    taskset = get_taskset(args.taskset)
-    name_prefix = get_csv_field(args.sysno, 'name')
-    context = generate_project_context(name_prefix, taskset)
+    config_dir = get_config_dir(args.config)
+    task = get_task(config_dir, args.task)
+    name_suffix = get_csv_field(config_dir, args.manifestid, 'name')
+    context = generate_project_context(task, name_suffix)
     msg = '\n"{0}": project.json created'
     print(msg.format(context['name']))
 

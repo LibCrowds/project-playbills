@@ -1,0 +1,14 @@
+{
+  "title": {
+    "name": "Identify Titles",
+    "description": "Identify the titles of plays in historic playbills",
+    "objective": "Identify each title",
+    "guidance": "Draw rectangles around the titles of plays featured in the next performance. Please include subtitles where they exist. You don't need to include the genre ('farce' etc). You can ignore any past or future performances mentioned on this page."
+  },
+  "person": {
+    "name": "Identify People",
+    "description": "Identify people in historic playbills",
+    "objective": "Identify each person",
+    "guidance": "Draw rectangles around the names of people mentioned in the next performance. You can ignore any past or future performances mentioned on this page."
+  }
+}
