@@ -2,6 +2,7 @@ var path = require('path')
 var webpack = require('webpack')
 var HthmlWebpackPlugin = require('html-webpack-plugin')
 var HtmlWebpackInlineSourcePlugin = require('html-webpack-inline-source-plugin')
+var CopyWebpackPlugin = require('copy-webpack-plugin')
 
 module.exports = {
   entry: './src/template.js',
@@ -44,7 +45,10 @@ module.exports = {
       filename: 'template.html',
       template: './src/template.html'
     }),
-    new HtmlWebpackInlineSourcePlugin()
+    new HtmlWebpackInlineSourcePlugin(),
+    new CopyWebpackPlugin([
+        { from: 'config/long_description.md' }
+    ])
   ]
 }
 
