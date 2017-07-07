@@ -6,7 +6,7 @@ import re
 import os
 import json
 import argparse
-from helpers import get_task, get_csv_field, mkdist, get_config_dir
+from helpers import get_task, get_csv_field, mkdist, set_config_dir
 from helpers import DIST_DIR
 
 
@@ -36,9 +36,10 @@ def generate():
     args = parser.parse_args()
 
     mkdist()
-    config_dir = get_config_dir(args.config)
-    task = get_task(config_dir, args.task)
-    name_suffix = get_csv_field(config_dir, args.manifestid, 'name')
+    set_config_dir(args.config)
+
+    task = get_task(args.task)
+    name_suffix = get_csv_field(args.manifestid, 'name')
     context = generate_project_context(task, name_suffix)
     msg = '\n"{0}": project.json created'
     print(msg.format(context['name']))

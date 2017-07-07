@@ -7,17 +7,17 @@ import json
 import urllib2
 import argparse
 import itertools
-from helpers import get_task, get_csv_field, mkdist, get_config_dir, load_json
+from helpers import get_task, get_csv_field, mkdist, set_config_dir, load_json
 from helpers import get_manifest
 from helpers import DIST_DIR
 
 
-def write_tasks_json(config_dir, task_data, manifest_id):
+def write_tasks_json(task_data, manifest_id):
     """Write the tasks.json file."""
     path = os.path.join(DIST_DIR, 'tasks.json')
 
     # Add iiif config for all tasks
-    iiif_json = load_json(config_dir, 'iiif.json')
+    iiif_json = load_json('iiif.json')
     print iiif_json
     for obj in task_data:
       obj.update(iiif_json)
@@ -48,9 +48,9 @@ def get_task_data_from_json(json_data, taskset):
     return data
 
 
-def get_task_data_from_manifest(config_dir, category, manifest):
+def get_task_data_from_manifest(category, manifest):
     """Return the task data generated from a manifest."""
-    task = get_task(config_dir, category)
+    task = get_task(category)
     canvases = manifest['sequences'][0]['canvases']
     images = [c['images'] for c in canvases]
     image_arks = [img[0]['resource']['service']['@id'].split('iiif/')[1]
@@ -74,16 +74,16 @@ def generate():
     args = parser.parse_args()
 
     mkdist()
-    config_dir = get_config_dir(args.config)
+    set_config_dir(args.config)
 
     # Generate the task data
     if args.results:
         results_json = json.load(open(args.results, 'rb'))
         task_data = get_task_data_from_json(results_json, category)
     else:
-        manifest = get_manifest(config_dir, args.manifestid)
-        task_data = get_task_data_from_manifest(config_dir, args.category, manifest)
-    write_tasks_json(config_dir, task_data, args.manifestid)
+        manifest = get_manifest(args.manifestid)
+        task_data = get_task_data_from_manifest(args.category, manifest)
+    write_tasks_json(task_data, args.manifestid)
 
     msg = '\n{0} tasks created'.format(len(task_data))
     print(msg)
