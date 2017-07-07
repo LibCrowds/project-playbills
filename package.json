@@ -1,7 +1,7 @@
 {
-  "name": "project-playbills-mark",
+  "name": "project-iiif-mark",
   "version": "0.0.1",
-  "description": "An IIIF base image marking project for PyBossa.",
+  "description": "IIIF based image marking project for PyBossa.",
   "author": "Alex Mendes <alex.mendes@bl.uk>",
   "license": "MIT",
   "private": true,

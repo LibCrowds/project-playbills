@@ -1,6 +1,6 @@
 #-*- coding: utf8 -*-
 """
-Helper functions for project-playbills-mark scripts.
+Helper functions for project-iiif-mark scripts.
 """
 import os
 import csv

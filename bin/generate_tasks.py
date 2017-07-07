@@ -1,6 +1,6 @@
 #-*- coding: utf8 -*-
 """
-A script for generating the tasks for a project-playbills-mark project.
+A script for generating the tasks for a project-iiif-mark project.
 """
 import os
 import json
@@ -65,7 +65,7 @@ def get_task_data_from_manifest(config_dir, category, manifest):
 
 
 def generate():
-    description = '''Generate the tasks for a project-playbills-mark project.'''
+    description = '''Generate the tasks for a project-iiif-mark project.'''
     parser = argparse.ArgumentParser(description=description)
     parser.add_argument('category', help="A task category in tasks.json.")
     parser.add_argument('manifestid', help="IIIF manifest ID.")
