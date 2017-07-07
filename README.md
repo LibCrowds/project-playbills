@@ -28,7 +28,7 @@ Install [Node.js](https://nodejs.org/en/),
 [Python](https://www.python.org/downloads/), and
 [pbs](https://github.com/Scifabric/pbs), then:
 
-```
+```bash
 # install
 npm install
 
