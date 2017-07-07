@@ -9,7 +9,7 @@
     "clean": "rimraf ./dist",
     "generate:context": "python bin/generate_context.py",
     "generate:tasks": "python bin/generate_tasks.py",
-    "build": "npm run clean && webpack --progress --colors",
+    "build": "webpack --progress --colors",
     "dev": "webpack --progress --colors --watch"
   },
   "devDependencies": {
