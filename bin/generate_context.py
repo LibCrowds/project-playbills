@@ -4,13 +4,10 @@ A script for generating the project-playbills-mark project.json file.
 """
 import re
 import os
-import csv
 import json
 import argparse
-
-
-SRC_DIR = os.path.join(os.path.dirname(os.path.dirname(__file__)), 'src')
-DIST_DIR = os.path.join(os.path.dirname(os.path.dirname(__file__)), 'dist')
+from helpers import get_taskset, get_csv_field, mkdist
+from helpers import DIST_DIR
 
 
 def generate_project_context(name_prefix, taskset):
@@ -30,32 +27,16 @@ def generate_project_context(name_prefix, taskset):
     return context
 
 
-def get_name_prefix(sysno):
-    """Return name prefix associated with a system number."""
-    f = open(os.path.join(SRC_DIR, 'data', 'arks_and_sysnos.csv'), 'rb')
-    reader = csv.reader(f)
-    rows = [r for r in list(reader) if r[1] == str(sysno)]
-    if not rows:
-        raise ValueError('{0} not found'.format(sysno))
-    name_prefix = rows[0][2]
-    return name_prefix
-
-
-def get_taskset(name):
-    """Return the chosen taskset."""
-    tasks_file = open(os.path.join(SRC_DIR, 'data', 'tasks.json'), 'rb')
-    tasks_json = json.load(tasks_file)
-    return tasks_json[name]
-
-
 def generate():
     description = '''Generate the project.json file.'''
     parser = argparse.ArgumentParser(description=description)
     parser.add_argument('taskset', help="A task set.")
     parser.add_argument('sysno', help="An Aleph system number.")
     args = parser.parse_args()
+    
+    mkdist()
     taskset = get_taskset(args.taskset)
-    name_prefix = get_name_prefix(args.sysno)
+    name_prefix = get_csv_field(args.sysno, 'name')
     context = generate_project_context(name_prefix, taskset)
     msg = '\n"{0}": project.json created'
     print(msg.format(context['name']))
