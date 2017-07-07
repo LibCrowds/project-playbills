@@ -45,6 +45,16 @@ module.exports = {
       filename: 'template.html',
       template: './src/template.html'
     }),
+    new HtmlWebpackPlugin({
+      inlineSource: '.js',
+      filename: 'results.html',
+      template: './src/results.html'
+    }),
+    new HtmlWebpackPlugin({
+      inlineSource: '.js',
+      filename: 'tutorial.html',
+      template: './src/tutorial.html'
+    }),
     new HtmlWebpackInlineSourcePlugin(),
     new CopyWebpackPlugin([
         { from: 'config/long_description.md' }
