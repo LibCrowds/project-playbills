@@ -5,7 +5,7 @@ var HtmlWebpackInlineSourcePlugin = require('html-webpack-inline-source-plugin')
 var CopyWebpackPlugin = require('copy-webpack-plugin')
 
 module.exports = {
-  entry: './src/template.js',
+  entry: './src/main.js',
   output: {
     path: path.resolve(__dirname, './dist'),
     publicPath: process.env.NODE_ENV === 'production'

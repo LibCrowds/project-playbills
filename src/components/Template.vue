@@ -12,10 +12,9 @@
 </template>
 
 <script>
-import context from
 import LibCrowdsViewer from 'libcrowds-viewer'
 
-console.log('module loaded')
+console.log(LibCrowdsViewer)
 
 export default {
   data: function () {
@@ -23,7 +22,8 @@ export default {
       scheme: "https",
       server: "api.bl.uk",
       imageApiPrefix: "image/iiif",
-      presentationApiPrefix: "metadata/iiif"
+      presentationApiPrefix: "metadata/iiif",
+      imageId: null
     }
   },
 
@@ -39,6 +39,10 @@ export default {
       // TODO: handle response
       this.fetchNewTask()
     }
+  },
+
+  created () {
+    console.log('created')
   },
 
   mounted () {
