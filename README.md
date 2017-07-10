@@ -56,6 +56,8 @@ thumbnail, redundancy, webhooks etc.), the project is ready to be published.
 
 ## Developing
 
+Build the project as above, then run the following:
+
 ```bash
 # watch for JavaScript changes
 npm run dev

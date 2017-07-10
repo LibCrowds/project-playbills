@@ -7,6 +7,7 @@
     :image-api-prefix="imageApiPrefix"
     :presentation-api-prefix="presentationApiPrefix"
     :image-id="imageId"
+    :manifest-id="manifestId"
     @submit="handleResponse">
   </libcrowds-viewer>
 </template>
@@ -19,11 +20,22 @@ export default {
       server: "api.bl.uk",
       imageApiPrefix: "image/iiif",
       presentationApiPrefix: "metadata/iiif",
-      imageId: null
+      imageId: '',
+      manifestId: ''
     }
   },
 
   methods: {
+    fetchProject () {
+      console.log(process.env.CONTEXT)
+      const shortname = 'process.env.CONTEXT.shortname'
+      const url = `/project/${shortname}/`
+      pybossaApi.get(url).then(r => {
+        console.log(r)
+      }).catch(error => {
+        console.log(error)
+      })
+    },
     fetchNewTask () {
       // TODO: fetch a new task for the user
     },
@@ -39,7 +51,7 @@ export default {
 
   mounted () {
     console.log('mounted')
-    this.fetchNewTask()
+    this.fetchProject()
   }
 }
 </script>

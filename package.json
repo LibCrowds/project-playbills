@@ -9,8 +9,8 @@
     "clean": "rimraf ./dist",
     "generate:context": "python bin/generate_context.py",
     "generate:tasks": "python bin/generate_tasks.py",
-    "build": "webpack --progress --colors",
-    "dev": "webpack --progress --colors --watch"
+    "build": "cross-env NODE_ENV=production webpack --progress --colors",
+    "dev": "cross-env NODE_ENV=development webpack --progress --colors --watch"
   },
   "devDependencies": {
     "babel-core": "^6.25.0",
