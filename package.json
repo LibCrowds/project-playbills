@@ -34,6 +34,7 @@
   },
   "dependencies": {
     "axios": "^0.16.2",
-    "libcrowds-viewer": "^1.1.4"
+    "libcrowds-viewer": "^1.1.4",
+    "vue": "^2.3.4"
   }
 }
