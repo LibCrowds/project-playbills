@@ -12,10 +12,6 @@
 </template>
 
 <script>
-import LibCrowdsViewer from 'libcrowds-viewer'
-
-console.log(LibCrowdsViewer)
-
 export default {
   data: function () {
     return {
@@ -25,10 +21,6 @@ export default {
       presentationApiPrefix: "metadata/iiif",
       imageId: null
     }
-  },
-
-  components: {
-    LibCrowdsViewer
   },
 
   methods: {
