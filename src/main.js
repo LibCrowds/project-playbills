@@ -10,5 +10,5 @@ Vue.config.ignoredElements = [
 ]
 
 Vue.use(VueCustomElement)
-vue.use(LibCrowdsViewer)
+Vue.use(LibCrowdsViewer)
 Vue.customElement('project-iiif-mark-template', Template)
