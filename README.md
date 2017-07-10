@@ -56,7 +56,7 @@ thumbnail, redundancy, webhooks etc.), the project is ready to be published.
 
 ## Developing
 
-```
+```bash
 # watch for JavaScript changes
 npm run dev
 
@@ -70,7 +70,7 @@ pbs update_project --watch
 Task sets are defined in [config/tasks.json](config/tasks.json) using the
 following structure:
 
-``` json
+```json
 "category": {
   "name": "Appended to the catalogue title to create the project title",
   "description": "A one line description of the project",
