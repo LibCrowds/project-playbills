@@ -3,18 +3,8 @@
 A script for generating the project-iiif-mark project.json file.
 """
 import re
-import os
-import json
 import argparse
-from helpers import get_task, get_csv_field, mkdist, set_config_dir
-from helpers import DIST_DIR
-
-
-def write_project_context(context):
-    """Return the project.json file."""
-    path = os.path.join(DIST_DIR, 'project.json')
-    with open(path, 'wb') as f:
-        json.dump(context, f, indent=2)
+from helpers import get_task, get_csv_field, mkdist, set_config_dir, write_json
 
 
 def generate_project_context(taskset, suffix):
@@ -38,7 +28,7 @@ def generate(task, manifestid, config=None):
     task = get_task(task)
     name_suffix = get_csv_field(manifestid, 'name')
     context = generate_project_context(task, name_suffix)
-    write_project_context(context)
+    write_json('project.json', context)
     return context
 
 

@@ -2,7 +2,6 @@
 """
 Helper functions for project-iiif-mark scripts.
 """
-import os
 import csv
 import json
 import os
@@ -69,3 +68,10 @@ def set_config_dir(path):
       config_dir = os.path.join(os.path.dirname(here), 'config')
       return
     config_dir = path
+
+
+def write_json(filename, data):
+    """Write a JSON file to the dist directory."""
+    path = os.path.join(DIST_DIR, filename)
+    with open(path, 'wb') as json_file:
+        json.dump(data, json_file, indent=2)

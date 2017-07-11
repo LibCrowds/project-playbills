@@ -2,13 +2,11 @@
 """
 A script for generating the tasks for a project-iiif-mark project.
 """
-import os
 import json
 import argparse
 import itertools
-from helpers import get_task, mkdist, set_config_dir, load_json
+from helpers import get_task, mkdist, set_config_dir, load_json, write_json
 from helpers import get_manifest
-from helpers import DIST_DIR
 
 
 def add_iiif_config(task_data):
@@ -16,13 +14,6 @@ def add_iiif_config(task_data):
     iiif_json = load_json('iiif.json')
     for obj in task_data:
         obj.update(iiif_json)
-
-
-def write_tasks_json(task_data):
-    """Write task data to the tasks.json file."""
-    path = os.path.join(DIST_DIR, 'tasks.json')
-    with open(path, 'wb') as f:
-        json.dump(task_data, f, indent=2)
 
 
 def get_task_data_from_json(json_data, taskset):
@@ -74,7 +65,7 @@ def generate(category, manifest_id, config=None, results=None):
         manifest = get_manifest(manifest_id)
         task_data = get_task_data_from_manifest(category, manifest)
     add_iiif_config(task_data)
-    write_tasks_json(task_data)
+    write_json('tasks.json', task_data)
     return task_data
 
 
