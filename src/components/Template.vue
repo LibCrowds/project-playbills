@@ -27,8 +27,8 @@ export default {
 
   methods: {
     fetchProject () {
-      console.log(process.env.CONTEXT)
-      const shortname = 'process.env.CONTEXT.shortname'
+      const shortname = `${process.env.SHORT_NAME}`
+      console.log(shortname)
       const url = `/project/${shortname}/`
       pybossaApi.get(url).then(r => {
         console.log(r)

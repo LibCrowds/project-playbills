@@ -58,15 +58,19 @@ module.exports = {
     new HtmlWebpackInlineSourcePlugin(),
     new CopyWebpackPlugin([
         { from: 'config/long_description.md' }
-    ])
+    ]),
+
   ]
 }
+
+console.log(JSON.stringify(require('./dist/project.json').short_name))
 
 if (process.env.NODE_ENV === 'development') {
   module.exports.plugins = (module.exports.plugins || []).concat([
     new webpack.DefinePlugin({
       'process.env': {
-        NODE_ENV: '"development"'
+        NODE_ENV: '"development"',
+        SHORT_NAME: JSON.stringify(require('./dist/project.json').short_name)
       }
     })
   ])
@@ -77,7 +81,8 @@ if (process.env.NODE_ENV === 'production') {
   module.exports.plugins = (module.exports.plugins || []).concat([
     new webpack.DefinePlugin({
       'process.env': {
-        NODE_ENV: '"production"'
+        NODE_ENV: '"production"',
+        SHORT_NAME: JSON.stringify(require('./dist/project.json').short_name)
       }
     }),
     new webpack.optimize.UglifyJsPlugin({
