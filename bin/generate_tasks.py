@@ -4,10 +4,9 @@ A script for generating the tasks for a project-iiif-mark project.
 """
 import os
 import json
-import urllib2
 import argparse
 import itertools
-from helpers import get_task, get_csv_field, mkdist, set_config_dir, load_json
+from helpers import get_task, mkdist, set_config_dir, load_json
 from helpers import get_manifest
 from helpers import DIST_DIR
 
