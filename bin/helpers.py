@@ -14,11 +14,11 @@ __all__ = ['SRC_DIR', 'DIST_DIR', 'get_task', 'get_csv_field', 'mkdist',
 DIST_DIR = os.path.join(os.path.dirname(os.path.dirname(__file__)), 'dist')
 
 
-def load_json(fn):
+def load_json(filename):
     """Return the contents of a JSON config file."""
-    path = os.path.join(config_dir, fn)
-    f = open(path, 'rb')
-    return json.load(f)
+    path = os.path.join(config_dir, filename)
+    json_file = open(path, 'rb')
+    return json.load(json_file)
 
 
 def get_task(name):
@@ -30,20 +30,20 @@ def get_task(name):
 def get_csv_field(manifest_id, field):
     """Return the CSV metadata value adjacent to a manifest ID."""
     path = os.path.join(config_dir, 'metadata.csv')
-    f = open(path, 'rb')
-    reader = csv.reader(f)
+    csv_file = open(path, 'rb')
+    reader = csv.reader(csv_file)
     rows = [r for r in list(reader) if r[0] == str(manifest_id)]
     if not rows:
         raise ValueError('{0} not found in metadata.csv'.format(manifest_id))
     if field == 'name':
-      return rows[0][1]
+        return rows[0][1]
     raise ValueError('Invalid field requested from CSV file')
 
 
 def mkdist():
     """Create an empty dist folder if one doesn't already exist."""
     try:
-      os.makedirs(DIST_DIR)
+        os.makedirs(DIST_DIR)
     except OSError as e:
         if e.errno != errno.EEXIST:
             raise
@@ -64,9 +64,9 @@ def set_config_dir(path):
     """Return project config dir."""
     global config_dir
     if not path:
-      here = os.path.dirname(__file__)
-      config_dir = os.path.join(os.path.dirname(here), 'config')
-      return
+        here = os.path.dirname(__file__)
+        config_dir = os.path.join(os.path.dirname(here), 'config')
+        return
     config_dir = path
 
 
