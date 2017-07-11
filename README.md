@@ -19,8 +19,10 @@ will be created for each image.
 
 ## Configuring
 
-By default, the project is configured for the LibCrowds playbills site. However, alternative configurations can easily be created by making a copy of the
-[config](config) folder, editing the files contained within and providing the location of this custom config directory when running the scripts below.
+By default, the project is configured for the LibCrowds playbills site. However,
+alternative configurations can easily be created by making a copy of the
+[config](config) folder, editing the files contained within and providing the
+location of this custom config directory when running the scripts below.
 
 ## Build setup
 
@@ -36,10 +38,10 @@ npm install
 npm run clean
 
 # generate project.json
-npm run generate:context -- <task category> <manifest id>
+npm run generate:context -- <task category> <manifest id> [--config=/path/to/config]
 
 # generate tasks
-npm run generate:tasks -- <task category> <manifest id>
+npm run generate:tasks -- <task category> <manifest id> [--config=/path/to/config]
 
 # build project
 npm run build
