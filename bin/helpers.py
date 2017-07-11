@@ -45,8 +45,8 @@ def mkdist():
     """Create an empty dist folder if one doesn't already exist."""
     try:
         os.makedirs(DIST_DIR)
-    except OSError as e:
-        if e.errno != errno.EEXIST:
+    except OSError as err:
+        if err.errno != errno.EEXIST:
             raise
 
 
