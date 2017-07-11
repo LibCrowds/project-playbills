@@ -13,6 +13,8 @@
 </template>
 
 <script>
+import axios from 'axios'
+
 export default {
   data: function () {
     return {
@@ -28,9 +30,9 @@ export default {
   methods: {
     fetchProject () {
       const shortname = `${process.env.SHORT_NAME}`
-      console.log(shortname)
       const url = `/project/${shortname}/`
-      pybossaApi.get(url).then(r => {
+
+      axios.get(url).then(r => {
         console.log(r)
       }).catch(error => {
         console.log(error)
@@ -46,11 +48,6 @@ export default {
   },
 
   created () {
-    console.log('created')
-  },
-
-  mounted () {
-    console.log('mounted')
     this.fetchProject()
   }
 }
