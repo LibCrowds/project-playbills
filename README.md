@@ -37,11 +37,8 @@ npm install
 # clean
 npm run clean
 
-# generate project.json
-npm run generate:context -- <task category> <manifest id> [--config=/path/to/config]
-
-# generate tasks
-npm run generate:tasks -- <task category> <manifest id> [--config=/path/to/config]
+# generate the project
+npm run generate -- <task category> <manifest id> [--config=/path/to/config] [--results=/path/to/results]
 
 # build project
 npm run build
