@@ -7,9 +7,10 @@ import json
 import os
 import errno
 import urllib2
+import shutil
 
 __all__ = ['get_task', 'get_csv_field', 'mkdist', 'get_manifest',
-           'set_config_dir', 'load_json']
+           'set_config_dir', 'load_json', 'copy_config_file']
 
 DIST_DIR = os.path.join(os.path.dirname(os.path.dirname(__file__)), 'dist')
 
@@ -75,3 +76,10 @@ def write_json(filename, data):
     path = os.path.join(DIST_DIR, filename)
     with open(path, 'wb') as json_file:
         json.dump(data, json_file, indent=2)
+
+
+def copy_config_file(filename):
+    """Copy a config file to the dist folder."""
+    src_path = os.path.join(config_dir, filename)
+    dist_path = os.path.join(DIST_DIR, filename)
+    shutil.copyfile(src_path, dist_path)

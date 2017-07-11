@@ -2,7 +2,6 @@ var path = require('path')
 var webpack = require('webpack')
 var HtmlWebpackPlugin = require('html-webpack-plugin')
 var HtmlWebpackInlineSourcePlugin = require('html-webpack-inline-source-plugin')
-var CopyWebpackPlugin = require('copy-webpack-plugin')
 
 module.exports = {
   entry: './src/main.js',
@@ -55,11 +54,7 @@ module.exports = {
       filename: 'tutorial.html',
       template: './src/tutorial.html'
     }),
-    new HtmlWebpackInlineSourcePlugin(),
-    new CopyWebpackPlugin([
-        { from: 'config/long_description.md' }
-    ]),
-
+    new HtmlWebpackInlineSourcePlugin()
   ]
 }
 
@@ -70,7 +65,8 @@ if (process.env.NODE_ENV === 'development') {
     new webpack.DefinePlugin({
       'process.env': {
         NODE_ENV: '"development"',
-        SHORT_NAME: JSON.stringify(require('./dist/project.json').short_name)
+        SHORT_NAME: JSON.stringify(require('./dist/project.json').short_name),
+        API: JSON.stringify(require('./dist/api.json')['development'])
       }
     })
   ])
@@ -82,7 +78,8 @@ if (process.env.NODE_ENV === 'production') {
     new webpack.DefinePlugin({
       'process.env': {
         NODE_ENV: '"production"',
-        SHORT_NAME: JSON.stringify(require('./dist/project.json').short_name)
+        SHORT_NAME: JSON.stringify(require('./dist/project.json').short_name),
+        API: JSON.stringify(require('./dist/api.json')['production'])
       }
     }),
     new webpack.optimize.UglifyJsPlugin({

@@ -5,6 +5,7 @@ A script for generating a project-iiif-mark project.
 import argparse
 import generate_context
 import generate_tasks
+import copy_files
 
 
 if __name__ == '__main__':
@@ -18,4 +19,5 @@ if __name__ == '__main__':
                                         ARGS.config)
     TASKS = generate_tasks.generate(ARGS.category, ARGS.manifestid, ARGS.config,
                                     ARGS.results)
+    copy_files.copy(ARGS.config)
     print '\n"{0}" created with {1} tasks'.format(CONTEXT['name'], len(TASKS))
