@@ -8,8 +8,8 @@ import os
 import errno
 import urllib2
 
-__all__ = ['SRC_DIR', 'DIST_DIR', 'get_task', 'get_csv_field', 'mkdist',
-           'get_manifest', 'set_config_dir', 'load_josn']
+__all__ = ['get_task', 'get_csv_field', 'mkdist', 'get_manifest',
+           'set_config_dir', 'load_json']
 
 DIST_DIR = os.path.join(os.path.dirname(os.path.dirname(__file__)), 'dist')
 
