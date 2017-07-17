@@ -1,6 +1,0 @@
-{
-  "scheme": "https",
-  "server": "api.bl.uk",
-  "image_api_prefix": "image/iiif",
-  "presentation_api_prefix": "metadata/iiif"
-}
