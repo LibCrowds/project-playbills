@@ -70,18 +70,6 @@ pbs update_project --watch
 ### Defining new task sets
 
 Task sets are defined in [config/tasks.json](config/tasks.json) using the
-following structure:
-
-```json
-"category": {
-  "name": "Appended to the catalogue title to create the project title",
-  "description": "A one line description of the project",
-  "objective": "The objective of the task",
-  "guidance": "Additional guidance"
-}
-```
-
-Note that if `guidance` is set to `null` and the task is being generated
-from the results of a previous project then the guidance will be generated automatically in the form "Identify each *category* associated with
-the highlighted *parent task category*.". So, category names should be
-written in singular rather than plural form.
+structure specified by
+[libcrowds-viewer](https://github.com/LibCrowds/libcrowds-viewer) (see the
+documentation for more details).
