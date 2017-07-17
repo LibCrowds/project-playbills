@@ -39,7 +39,7 @@ npm install
 npm run clean
 
 # generate the project
-npm run generate -- <task category> <manifest id> [--config=/path/to/config] [--results=/path/to/results]
+npm run generate -- <taskset> <image-info-uri> [--manifest=uri] [--results=/path/to/results] [--config=/path/to/config]
 
 # build project
 npm run build
