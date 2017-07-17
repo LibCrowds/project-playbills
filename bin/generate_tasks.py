@@ -9,17 +9,10 @@ from helpers import get_task, mkdist, set_config_dir, load_json, write_json
 from helpers import get_manifest
 
 
-def add_iiif_config(task_data):
-    """Add IIIF config to task data."""
-    iiif_json = load_json('iiif.json')
-    for obj in task_data:
-        obj.update(iiif_json)
-
-
 def get_task_data_from_json(json_data, taskset):
     """Return the task data generated from JSON input data."""
     task_data = taskset['tasks']
-    input_data = [{'image_id': row['info']['image_id'],
+    input_data = [{'img_info_uri': row['info']['img_info_uri'],
                    'manifest_url': row['info']['manifest_url'],
                    'parent_task_id': row['task_id'],
                    'region': json.dumps(region)}
@@ -43,14 +36,13 @@ def get_task_data_from_manifest(category, manifest):
     task = get_task(category)
     canvases = manifest['sequences'][0]['canvases']
     images = [c['images'] for c in canvases]
-    image_arks = [img[0]['resource']['service']['@id'].split('iiif/')[1]
-                  for img in images]
-    data = [{
-        'image_id': img_ark,
-        'category': category,
-        'objective': task['objective'],
-        'guidance': task['guidance']
-    } for img_ark in image_arks]
+    img_uris = [img[0]['resource']['service']['@id'] + '/info.json'
+                for img in images]
+    data = []
+    for uri in img_uris:
+        row = {'img_info_uri': uri}
+        row.update(task['task'])
+        data.append(row)
     return data
 
 
@@ -64,7 +56,6 @@ def generate(category, manifest_id, config=None, results=None):
     else:
         manifest = get_manifest(manifest_id)
         task_data = get_task_data_from_manifest(category, manifest)
-    add_iiif_config(task_data)
     write_json('tasks.json', task_data)
     return task_data
 

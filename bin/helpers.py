@@ -37,7 +37,7 @@ def get_csv_field(manifest_id, field):
     if not rows:
         raise ValueError('{0} not found in metadata.csv'.format(manifest_id))
     if field == 'name':
-        return rows[0][1]
+        return rows[0][2]
     raise ValueError('Invalid field requested from CSV file')
 
 
@@ -50,15 +50,10 @@ def mkdist():
             raise
 
 
-def get_manifest(manifest_id):
+def get_manifest(manifest_uri):
     """Return a manifest."""
-    iiif_json = load_json('iiif.json')
-    base = '{0}://{1}/{2}/{3}/manifest.json'
-    url = base.format(iiif_json['scheme'], iiif_json['server'],
-                      iiif_json['presentation_api_prefix'], manifest_id)
-    resp = urllib2.urlopen(url)
-    manifest = json.load(resp)
-    return manifest
+    resp = urllib2.urlopen(manifest_uri)
+    return json.load(resp)
 
 
 def set_config_dir(path):
