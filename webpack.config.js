@@ -58,15 +58,13 @@ module.exports = {
   ]
 }
 
-console.log(JSON.stringify(require('./dist/project.json').short_name))
-
 if (process.env.NODE_ENV === 'development') {
   module.exports.plugins = (module.exports.plugins || []).concat([
     new webpack.DefinePlugin({
       'process.env': {
         NODE_ENV: '"development"',
         SHORT_NAME: JSON.stringify(require('./dist/project.json').short_name),
-        API: JSON.stringify(require('./dist/api.json')['development'])
+        API_URL: JSON.stringify(require('./dist/api.json')['development'])
       }
     })
   ])
@@ -79,7 +77,7 @@ if (process.env.NODE_ENV === 'production') {
       'process.env': {
         NODE_ENV: '"production"',
         SHORT_NAME: JSON.stringify(require('./dist/project.json').short_name),
-        API: JSON.stringify(require('./dist/api.json')['production'])
+        API_URL: JSON.stringify(require('./dist/api.json')['production'])
       }
     }),
     new webpack.optimize.UglifyJsPlugin({
