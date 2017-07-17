@@ -4,11 +4,11 @@ import LibCrowdsViewer from 'libcrowds-viewer'
 import Template from '@/components/Template'
 
 Vue.config.ignoredElements = [
-  'project-iiif-mark-template',
-  'project-iiif-mark-tutorial',
-  'project-iiif-mark-results'
+  'project-iiif-annotate-template',
+  'project-iiif-annotate-tutorial',
+  'project-iiif-annotate-results'
 ]
 
 Vue.use(VueCustomElement)
 Vue.use(LibCrowdsViewer)
-Vue.customElement('project-iiif-mark-template', Template)
+Vue.customElement('project-iiif-annotate-template', Template)

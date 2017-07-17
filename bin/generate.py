@@ -1,6 +1,6 @@
 #-*- coding: utf8 -*-
 """
-A script for generating a project-iiif-mark project.
+A script for generating a project-iiif-annotate project.
 """
 import argparse
 import generate_context

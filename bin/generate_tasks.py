@@ -1,6 +1,6 @@
 #-*- coding: utf8 -*-
 """
-A script for generating the tasks for a project-iiif-mark project.
+A script for generating the project-iiif-annotate tasks.
 """
 import json
 import argparse

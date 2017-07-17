@@ -1,6 +1,6 @@
 #-*- coding: utf8 -*-
 """
-Helper functions for project-iiif-mark scripts.
+Helper functions for project-iiif-annotate scripts.
 """
 import csv
 import json

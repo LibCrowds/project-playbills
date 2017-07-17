@@ -1,6 +1,6 @@
 #-*- coding: utf8 -*-
 """
-A script for generating the project-iiif-mark project.json file.
+A script for generating the project-iiif-annotate project.json file.
 """
 import re
 import argparse
