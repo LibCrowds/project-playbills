@@ -69,7 +69,8 @@ pbs update_project --watch
 
 ### Defining new task sets
 
-Task sets are defined in [config/tasks.json](config/tasks.json) using the
-structure specified by
-[libcrowds-viewer](https://github.com/LibCrowds/libcrowds-viewer) (see the
-documentation for more details).
+Tasks are generated according to the
+[libcrowds-viewer](https://github.com/LibCrowds/libcrowds-viewer)
+specifications using the configurations defined in
+[config/tasks.json](config/tasks.json). See the current configuration for
+examples.
