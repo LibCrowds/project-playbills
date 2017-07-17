@@ -1,7 +1,7 @@
 {
-  "name": "project-iiif-mark",
+  "name": "project-iiif-annotate",
   "version": "0.0.1",
-  "description": "IIIF based image marking project for PyBossa.",
+  "description": "A PyBossa project for generating Web Annotations from a IIIF-compatible image viewer.",
   "author": "Alex Mendes <alex.mendes@bl.uk>",
   "license": "MIT",
   "private": true,
