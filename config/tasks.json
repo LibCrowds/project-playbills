@@ -1,18 +1,27 @@
 {
   "titles": {
-    "mode": "select",
-    "tag": "title",
-    "namePrefix": "Identify Titles",
-    "description": "Identify the titles of plays in historic playbills",
-    "objective": "Identify each title",
-    "guidance": "Draw rectangles around the titles of plays featured in the next performance. Please include subtitles where they exist. You don't need to include the genre ('farce' etc). You can ignore any past or future performances mentioned on this page."
+    "project": {
+      "namePrefix": "Identify Titles",
+      "description": "Identify the titles of plays in historic playbills"
+    },
+    "task": {
+      "mode": "select",
+      "tag": "title",
+      "objective": "Identify each title",
+      "guidance": "Draw rectangles around the titles of plays featured in the next performance. Please include subtitles where they exist. You don't need to include the genre ('farce' etc). You can ignore any past or future performances mentioned on this page."
+    }
   },
+
   "people": {
-    "mode": "select",
-    "tag": "person",
-    "namePrefix": "Identify People",
-    "description": "Identify people in historic playbills",
-    "objective": "Identify each person",
-    "guidance": "Draw rectangles around the names of people mentioned in the next performance. You can ignore any past or future performances mentioned on this page."
+    "project": {
+      "mode": "select",
+      "tag": "person"
+    },
+    "task": {
+      "namePrefix": "Identify People",
+      "description": "Identify people in historic playbills",
+      "objective": "Identify each person",
+      "guidance": "Draw rectangles around the names of people mentioned in the next performance. You can ignore any past or future performances mentioned on this page."
+    }
   }
 }
