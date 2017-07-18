@@ -13,16 +13,21 @@ export default {
   data: function () {
     return {
       project: {},
-      tasks: []
+      tasks: [],
+      user: null
     }
   },
 
   computed: {
     taskOpts: function () {
       const generator = this.getGenerator(this.project)
+      const creator = this.user ? this.getCreator(this.user) : null
       const opts = this.tasks.map(function (task) {
         let opts = task.info
         opts.generator = generator
+        if (creator) {
+          opts.creator = creator
+        }
         return opts
       })
       console.log(opts)
@@ -34,10 +39,23 @@ export default {
     getGenerator (project) {
       return {
         id: `${process.env.PYBOSSA_URL}/api/project/${project.id}`,
-        type: "Software",
+        type: 'Software',
         name: project.name,
         homepage: `${process.env.PYBOSSA_URL}/project/${project.short_name}`
       }
+    },
+
+    getCreator (user) {
+      return {
+        id: `${process.env.PYBOSSA_URL}/api/user/${user.id}`,
+        type: 'Person',
+        name: user.fullname,
+        nickname: user.name
+      }
+    },
+
+    fetchCurrentUser () {
+      return api.get(`/account/profile`)
     },
 
     fetchProject () {
@@ -55,7 +73,11 @@ export default {
   },
 
   created () {
-    this.fetchProject().then(r => {
+    this.fetchCurrentUser().then(r => {
+      console.log(r)
+      user = r.data
+      return this.fetchProject()
+    }).then(r => {
       this.project = r.data[0]
       return this.fetchNewTasks()
     }).then(r => {
