@@ -1,6 +1,5 @@
 <template>
   <libcrowds-viewer
-    v-if="taskOpts.length"
     :taskOpts="taskOpts"
     @submit="handleResponse">
   </libcrowds-viewer>
@@ -22,7 +21,7 @@ export default {
     taskOpts: function () {
       const generator = this.getGenerator(this.project)
       const creator = this.user ? this.getCreator(this.user) : null
-      const opts = this.tasks.map(function (task) {
+      return this.tasks.map(function (task) {
         let opts = task.info
         opts.generator = generator
         if (creator) {
@@ -30,8 +29,6 @@ export default {
         }
         return opts
       })
-      console.log(opts)
-      return opts
     }
   },
 
