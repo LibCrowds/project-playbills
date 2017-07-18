@@ -42,7 +42,7 @@ def get_task_data_from_manifest(category, manifest):
     for uri in img_uris:
         row = {
             'imgInfoUri': uri,
-            'manifestUri' manifest['@id']
+            'manifestUri': manifest['@id']
         }
         row.update(task['task'])
         data.append(row)
