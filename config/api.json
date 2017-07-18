@@ -1,4 +1,4 @@
 {
-  "development": "http://127.0.0.1:5000",
-  "production": "https://playbills-backend.libcrowds.com"
+  "development": "http://127.0.0.1:5000/api",
+  "production": "https://playbills-backend.libcrowds.com/api"
 }

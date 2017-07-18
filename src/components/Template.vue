@@ -1,6 +1,6 @@
 <template>
   <libcrowds-viewer
-    v-if="taskOpts"
+    v-if="taskOpts.length"
     :taskOpts="taskOpts"
     @submit="handleResponse">
   </libcrowds-viewer>
@@ -30,6 +30,7 @@ export default {
       const shortname = `${process.env.SHORT_NAME}`
       const api = `${process.env.API_URL}`
       const url = `${api}/project?short_name=${shortname}`
+      console.log('fetching project')
       axios.get(url, {
         withCredentials: true,
         headers: {
@@ -37,6 +38,7 @@ export default {
         },
         data: {}
       }).then(r => {
+        console.log(r.data)
         this.project = r.data
       }).catch(error => {
         console.log(error)
@@ -46,6 +48,7 @@ export default {
     fetchNewTasks () {
       const api = `${process.env.API_URL}`
       const url = `${api}/project/${this.project.id}/newtask?limit=100`
+      console.log('fetching tasks')
       axios.get(url, {
         withCredentials: true,
         headers: {
@@ -54,6 +57,7 @@ export default {
         data: {}
       }).then(r => {
         this.tasks = r.data
+        console.log(r.data)
       }).catch(error => {
         console.log(error)
       })
