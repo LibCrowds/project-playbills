@@ -33,9 +33,12 @@ be ignored.
 Defines the configuration used to generate the project context and tasks.
 
 All key value pairs under `task` are fed directly into the task info field in
-additional to the image info URI extracted from the manifest. This info field
-is in turn used to generate the task options that are fed into an instance of
+additional to the manifest URI and the image info URI extracted from the
+manifest. This info field is in turn used to generate the task options that
+are fed into an instance of
 [libcrowds-viewer](https://github.com/LibCrowds/libcrowds-viewer)
-(see the libcrowds-viewer docs for more details of the available options).
+(see the libcrowds-viewer docs for more details of the available task options).
+These task options are updated at runtime with properties such as `id`,
+`creator` and `generator`.
 
 The keys under `project` are used to create the project title and description.
