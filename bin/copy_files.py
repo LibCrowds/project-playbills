@@ -10,7 +10,7 @@ def copy(config=None):
     """Copy files to the dist folder."""
     set_config_dir(config)
     copy_config_file('long_description.md')
-    copy_config_file('api.json')
+    copy_config_file('pybossa.json')
 
 
 if __name__ == '__main__':

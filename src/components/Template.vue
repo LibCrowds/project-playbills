@@ -19,10 +19,11 @@ export default {
 
   computed: {
     taskOpts: function () {
-      const generator = this.getGenerator(project)
+      const generator = this.getGenerator(this.project)
       const opts = this.tasks.map(function (task) {
         let opts = task.info
         opts.generator = generator
+        return opts
       })
       console.log(opts)
       return opts
@@ -32,14 +33,11 @@ export default {
   methods: {
     getGenerator (project) {
       return {
-        id: `${api.baseUrl}/project/${project.id}`,
+        id: `${process.env.PYBOSSA_URL}/api/project/${project.id}`,
         type: "Software",
         name: project.name,
-        homepage: `${api.baseUrl}/project/${project.short_name}`
+        homepage: `${process.env.PYBOSSA_URL}/project/${project.short_name}`
       }
-    },
-
-      https://playbills-backend.libcrowds.com/api/project/1
     },
 
     fetchProject () {

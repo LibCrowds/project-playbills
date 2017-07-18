@@ -2,10 +2,6 @@
 
 This folder contains the following configuration files.
 
-### api.json
-
-The PyBossa API endpoints for development and production.
-
 ### help.json
 
 The file used to create the interactive tutorial shown to users on the
@@ -27,6 +23,10 @@ the label being too long).
 The manifest URI should always be listed in the first column with the name
 suffix in the second. Additional columns can be added for reference and will
 be ignored.
+
+### pybossa.json
+
+The PyBossa servers for development and production.
 
 ### tasks.json
 

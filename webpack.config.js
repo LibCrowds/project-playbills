@@ -64,7 +64,7 @@ if (process.env.NODE_ENV === 'development') {
       'process.env': {
         NODE_ENV: '"development"',
         SHORT_NAME: JSON.stringify(require('./dist/project.json').short_name),
-        API_URL: JSON.stringify(require('./dist/api.json')['development'])
+        PYBOSSA_URL: JSON.stringify(require('./dist/pybossa.json')['development'])
       }
     })
   ])
@@ -77,7 +77,7 @@ if (process.env.NODE_ENV === 'production') {
       'process.env': {
         NODE_ENV: '"production"',
         SHORT_NAME: JSON.stringify(require('./dist/project.json').short_name),
-        API_URL: JSON.stringify(require('./dist/api.json')['production'])
+        PYBOSSA_URL: JSON.stringify(require('./dist/pybossa.json')['production'])
       }
     }),
     new webpack.optimize.UglifyJsPlugin({
