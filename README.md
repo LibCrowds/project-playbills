@@ -26,6 +26,8 @@ alternative configurations can easily be created by making a copy of the
 [config](config) folder, editing the files contained within and providing the
 location of this custom config directory when running the scripts below.
 
+See [config/README.md](config/README.md) for more details about the various configuration files.
+
 ## Build setup
 
 Install [Node.js](https://nodejs.org/en/),
@@ -67,11 +69,3 @@ npm run dev
 cd dist
 pbs update_project --watch
 ```
-
-### Defining new task sets
-
-Tasks are generated according to the
-[libcrowds-viewer](https://github.com/LibCrowds/libcrowds-viewer)
-specifications using the configurations defined in
-[config/tasks.json](config/tasks.json). See the current configuration for
-examples.
