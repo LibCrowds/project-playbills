@@ -1,7 +1,7 @@
 import axios from 'axios'
 
 export const api = axios.create({
-  baseURL: `${process.env.PYBOSSA_URL}/api`,
+  baseURL: `${process.env.PYBOSSA_URL}`,
   withCredentials: true,
   headers: {
     'Content-Type': 'application/json'

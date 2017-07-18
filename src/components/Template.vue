@@ -59,11 +59,11 @@ export default {
     },
 
     fetchProject () {
-      return api.get(`/project?short_name=${process.env.SHORT_NAME}`)
+      return api.get(`/api/project?short_name=${process.env.SHORT_NAME}`)
     },
 
     fetchNewTasks () {
-      return api.get(`project/${this.project.id}/newtask?limit=100`)
+      return api.get(`/api/project/${this.project.id}/newtask?limit=100`)
     },
 
     handleResponse () {
@@ -74,8 +74,7 @@ export default {
 
   created () {
     this.fetchCurrentUser().then(r => {
-      console.log(r)
-      user = r.data
+      this.user = 'user' in r.data ? r.data.user : null
       return this.fetchProject()
     }).then(r => {
       this.project = r.data[0]
