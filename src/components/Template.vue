@@ -1,13 +1,7 @@
 <template>
   <libcrowds-viewer
-    confirm-before-unload
-    show-note
-    :scheme="scheme"
-    :server="server"
-    :image-api-prefix="imageApiPrefix"
-    :presentation-api-prefix="presentationApiPrefix"
-    :image-id="imageId"
-    :manifest-id="manifestId"
+    v-if="taskOpts"
+    :taskOpts="taskOpts"
     @submit="handleResponse">
   </libcrowds-viewer>
 </template>
@@ -18,32 +12,62 @@ import axios from 'axios'
 export default {
   data: function () {
     return {
-      scheme: "https",
-      server: "api.bl.uk",
-      imageApiPrefix: "image/iiif",
-      presentationApiPrefix: "metadata/iiif",
-      imageId: '',
-      manifestId: ''
+      project: {},
+      tasks: []
+    }
+  },
+
+  computed: {
+    taskOpts: function () {
+      return this.tasks.map(function (task) {
+        return task.info
+      })
     }
   },
 
   methods: {
     fetchProject () {
       const shortname = `${process.env.SHORT_NAME}`
-      const url = `/project/${shortname}/`
-
-      axios.get(url).then(r => {
-        console.log(r)
+      const api = `${process.env.API_URL}`
+      const url = `${api}/project?short_name=${shortname}`
+      axios.get(url, {
+        withCredentials: true,
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        data: {}
+      }).then(r => {
+        this.project = r.data
       }).catch(error => {
         console.log(error)
       })
     },
-    fetchNewTask () {
-      // TODO: fetch a new task for the user
+
+    fetchNewTasks () {
+      const api = `${process.env.API_URL}`
+      const url = `${api}/project/${this.project.id}/newtask?limit=100`
+      axios.get(url, {
+        withCredentials: true,
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        data: {}
+      }).then(r => {
+        this.tasks = r.data
+      }).catch(error => {
+        console.log(error)
+      })
     },
+
     handleResponse () {
+      // TODO: refresh the page to fetch the next 100 tasks
       // TODO: handle response
-      this.fetchNewTask()
+    }
+  },
+
+  watch: {
+    project: function () {
+      this.fetchNewTasks()
     }
   },
 
