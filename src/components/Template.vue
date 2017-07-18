@@ -7,7 +7,7 @@
 </template>
 
 <script>
-import axios from 'axios'
+import { api } from '../api'
 
 export default {
   data: function () {
@@ -27,40 +27,11 @@ export default {
 
   methods: {
     fetchProject () {
-      const shortname = `${process.env.SHORT_NAME}`
-      const api = `${process.env.API_URL}`
-      const url = `${api}/project?short_name=${shortname}`
-      console.log('fetching project')
-      axios.get(url, {
-        withCredentials: true,
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        data: {}
-      }).then(r => {
-        console.log(r.data)
-        this.project = r.data
-      }).catch(error => {
-        console.log(error)
-      })
+      return api.get(`/project?short_name=${process.env.SHORT_NAME}`)
     },
 
     fetchNewTasks () {
-      const api = `${process.env.API_URL}`
-      const url = `${api}/project/${this.project.id}/newtask?limit=100`
-      console.log('fetching tasks')
-      axios.get(url, {
-        withCredentials: true,
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        data: {}
-      }).then(r => {
-        this.tasks = r.data
-        console.log(r.data)
-      }).catch(error => {
-        console.log(error)
-      })
+      return api.get(`project/${this.project.id}/newtask?limit=100`)
     },
 
     handleResponse () {
@@ -69,14 +40,15 @@ export default {
     }
   },
 
-  watch: {
-    project: function () {
-      this.fetchNewTasks()
-    }
-  },
-
   created () {
-    this.fetchProject()
+    this.fetchProject().then(r => {
+      this.project = r.data[0]
+      return this.fetchNewTasks()
+    }).then(r => {
+      this.tasks = r.data
+    }).catch(error => {
+      console.log(error)
+    })
   }
 }
 </script>
