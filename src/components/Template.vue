@@ -19,13 +19,29 @@ export default {
 
   computed: {
     taskOpts: function () {
-      return this.tasks.map(function (task) {
-        return task.info
+      const generator = this.getGenerator(project)
+      const opts = this.tasks.map(function (task) {
+        let opts = task.info
+        opts.generator = generator
       })
+      console.log(opts)
+      return opts
     }
   },
 
   methods: {
+    getGenerator (project) {
+      return {
+        id: `${api.baseUrl}/project/${project.id}`,
+        type: "Software",
+        name: project.name,
+        homepage: `${api.baseUrl}/project/${project.short_name}`
+      }
+    },
+
+      https://playbills-backend.libcrowds.com/api/project/1
+    },
+
     fetchProject () {
       return api.get(`/project?short_name=${process.env.SHORT_NAME}`)
     },
