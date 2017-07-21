@@ -1,5 +1,5 @@
 {
-  "titles": {
+  "mark_titles": {
     "project": {
       "namePrefix": "Identify Titles",
       "description": "Identify the titles of plays in historic playbills"
@@ -22,6 +22,38 @@
       "description": "Identify people in historic playbills",
       "objective": "Identify each person",
       "guidance": "Draw rectangles around the names of people mentioned in the next performance. You can ignore any past or future performances mentioned on this page."
+    }
+  },
+  "transcribe_titles": {
+    "project": {
+      "mode": "transcribe",
+      "tag": "title"
+    },
+    "task": {
+      "namePrefix": "Transcribe Titles",
+      "description": "Transcribe the titles in historic playbills",
+      "objective": "Transcribe the title",
+      "guidance": "Transcribe the title exactly as displayed on the page, including subtitles, where they exist."
+      "form": {
+        "model": {
+          "title": ""
+        },
+        "classification": {
+          "title": "http://purl.org/dc/terms/title"
+        },
+        "schema": {
+          "fields": [
+            {
+              "type": "input",
+              "inputType": "text",
+              "label": "Title",
+              "model": "title",
+              "placeholder": "Transcribe the title",
+              "required": true
+            }
+          ]
+        }
+      }
     }
   }
 }
