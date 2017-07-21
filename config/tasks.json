@@ -33,7 +33,7 @@
       "namePrefix": "Transcribe Titles",
       "description": "Transcribe the titles in historic playbills",
       "objective": "Transcribe the title",
-      "guidance": "Transcribe the title exactly as displayed on the page, including subtitles, where they exist."
+      "guidance": "Transcribe the title exactly as displayed on the page, including subtitles, where they exist.",
       "form": {
         "model": {
           "title": ""
