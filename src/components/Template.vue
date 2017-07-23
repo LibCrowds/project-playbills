@@ -1,6 +1,8 @@
 <template>
   <libcrowds-viewer
     :taskOpts="taskOpts"
+    :creator="creator"
+    :generator="generator"
     @submit="handleResponse">
   </libcrowds-viewer>
 </template>
@@ -19,8 +21,6 @@ export default {
 
   computed: {
     taskOpts: function () {
-      const generator = this.getGenerator(this.project)
-      const creator = this.user ? this.getCreator(this.user) : null
       return this.tasks.map(function (task) {
         let opts = task.info
         opts.generator = generator
@@ -29,6 +29,12 @@ export default {
         }
         return opts
       })
+    },
+    creator: function () {
+      return this.user ? this.getCreator(this.user) : null
+    },
+    generator: function () {
+      return this.getGenerator(this.project)
     }
   },
 
