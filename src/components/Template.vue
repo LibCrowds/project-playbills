@@ -23,10 +23,7 @@ export default {
     taskOpts: function () {
       return this.tasks.map(function (task) {
         let opts = task.info
-        opts.generator = generator
-        if (creator) {
-          opts.creator = creator
-        }
+        console.log(opts)
         return opts
       })
     },
