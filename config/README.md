@@ -24,10 +24,6 @@ The manifest URI should always be listed in the first column with the name
 suffix in the second. Additional columns can be added for reference and will
 be ignored.
 
-### pybossa.json
-
-The PyBossa servers for development and production.
-
 ### tasks.json
 
 Defines the configuration used to generate the project context and tasks.
@@ -42,3 +38,7 @@ These task options are updated at runtime with properties such as `id`,
 `creator` and `generator`.
 
 The keys under `project` are used to create the project title and description.
+
+### template.html
+
+Placeholder template, which is required for the PyBossa project be published.

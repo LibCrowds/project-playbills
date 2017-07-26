@@ -2,7 +2,7 @@
 
 > Task generator for PyBossa projects implementing libcrowds-viewer
 
-:exclamation: This project does not currently provide task presenter, results
+This project does not currently provide task presenter, results
 or tutorial files. It merely generates the tasks.json and project.json files for
 projects implementing
 [LibCrowds Viewer](https://github.com/LibCrowds/libcrowds-viewer), such as
