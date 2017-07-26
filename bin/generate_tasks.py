@@ -49,7 +49,7 @@ def get_task_data_from_manifest(category, manifest):
     return data
 
 
-def generate(category, manifest_id, config=None, results=None):
+def generate(category, manifest_id, config=None, results=None, skip=None):
     """Generate and return the tasks file."""
     mkdist()
     set_config_dir(config)
@@ -59,6 +59,8 @@ def generate(category, manifest_id, config=None, results=None):
     else:
         manifest = get_manifest(manifest_id)
         task_data = get_task_data_from_manifest(category, manifest)
+    if skip:
+        task_data = task_data[int(skip):]
     write_json('tasks.json', task_data)
     return task_data
 
@@ -69,6 +71,8 @@ if __name__ == '__main__':
     PARSER.add_argument('manifestid', help="IIIF manifest ID.")
     PARSER.add_argument('--config', help="Project configuration.")
     PARSER.add_argument('--results', help="JSON results file.")
+    PARSER.add_argument('--skip', help="Skip the first n tasks.")
     ARGS = PARSER.parse_args()
-    DATA = generate(ARGS.category, ARGS.manifestid, ARGS.config, ARGS.results)
+    DATA = generate(ARGS.category, ARGS.manifestid, ARGS.config, ARGS.results,
+                    ARGS.skip)
     print'\n{0} tasks created'.format(len(DATA))
