@@ -23,7 +23,7 @@
       "namePrefix": "Transcribe Titles",
       "description": "Transcribe the titles of plays in historic playbills",
       "objective": "Transcribe the title",
-      "guidance": "Transcribe the title exactly as displayed on the page, including subtitles, where they exist.",
+      "guidance": "Transcribe the title exactly as displayed on the page, including any subtitles.",
       "form": {
         "model": {
           "title": ""
@@ -54,7 +54,7 @@
       "namePrefix": "Identify People",
       "description": "Identify people in historic playbills",
       "objective": "Identify people",
-      "guidance": "Draw rectangles around the names of people associated with the highlighted title. These will mostly be actors but could also be directors, producers, stage managers etc."
+      "guidance": "Draw rectangles around the names of people associated with the highlighted title. As well as actors, they might be directors, producers, authors, stage managers etc."
     }
   },
 
