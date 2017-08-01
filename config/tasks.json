@@ -9,7 +9,7 @@
       "mode": "select",
       "tag": "title",
       "objective": "Identify titles",
-      "guidance": "Draw rectangles around the titles of plays featured in the next performance. Please include subtitles where they exist. You can ignore any past or future performances mentioned on this page."
+      "guidance": "Draw rectangles around the titles of plays featured on the next performance date. Please include subtitles where they exist. Ignore any past or future performances mentioned on this page."
     }
   },
 
