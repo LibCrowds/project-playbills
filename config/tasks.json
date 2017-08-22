@@ -9,7 +9,7 @@
       "mode": "select",
       "tag": "title",
       "objective": "Identify titles",
-      "guidance": "Draw rectangles around the titles of plays featured on the next performance date. Please include subtitles where they exist. Ignore any past or future performances mentioned on this page."
+      "guidance": "Draw rectangles around the titles of plays featured on the next upcoming performance date. When you're happy with the outline, choose the green tick to save it. Please include subtitles where they exist. Ignore any past or future performances mentioned on this page."
     }
   },
 
@@ -23,7 +23,7 @@
       "namePrefix": "Transcribe Titles",
       "description": "Transcribe the titles of plays in historic playbills",
       "objective": "Transcribe the title",
-      "guidance": "Transcribe the title exactly as displayed on the page, including any subtitles.",
+      "guidance": "Type in the title exactly as displayed on the page, including any subtitles. You don't need to include the genre.",
       "form": {
         "model": {
           "title": ""
