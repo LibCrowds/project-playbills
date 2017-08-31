@@ -5,7 +5,6 @@ A script for generating a project-iiif-annotate project.
 import argparse
 import generate_context
 import generate_tasks
-import copy_files
 
 
 if __name__ == '__main__':
