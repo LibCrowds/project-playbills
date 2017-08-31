@@ -77,6 +77,10 @@ def generate(category, manifest_id, config=None, results=None, skip=None):
         task_data = get_task_data_from_manifest(category, manifest)
     if skip:
         task_data = task_data[int(skip):]
+
+    # to overcode LibCrowds Viewer's info field
+    task_data = [{'info': task} for task in task_data]
+
     write_json('tasks.json', task_data)
     return task_data
 
