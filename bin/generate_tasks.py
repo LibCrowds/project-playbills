@@ -8,6 +8,19 @@ import itertools
 from helpers import get_task, mkdist, set_config_dir, load_json, write_json
 from helpers import get_manifest
 
+def get_share_url(manifest_url, canvas_index):
+    """Return the BL Universal Viewer URL"""
+    share_url_base = manifest_url.replace(
+        'api.bl.uk/metadata/iiif',
+        'access.bl.uk/item/viewer'
+    )
+    share_url_base = share_url_base.replace(
+        'https://',
+        'http://'
+    )
+    query = '#?cv={}'.format(canvas_index)
+    return share_url_base.replace('/manifest.json', query)
+
 
 def get_task_data_from_json(json_data, taskset):
     """Return the task data generated from JSON input data."""
@@ -34,15 +47,18 @@ def get_task_data_from_json(json_data, taskset):
 def get_task_data_from_manifest(category, manifest):
     """Return the task data generated from a manifest."""
     task = get_task(category)
+    manifest_url = manifest['@id']
     canvases = manifest['sequences'][0]['canvases']
-    images = [c['images'] for c in canvases]
-    img_uris = [img[0]['resource']['service']['@id'] + '/info.json'
-                for img in images]
+    images = [c['images'][0]['resource']['service']['@id'] for c in canvases]
+
     data = []
-    for uri in img_uris:
+    for i, img in enumerate(images):
         row = {
-            'imgInfoUri': uri,
-            'manifestUri': manifest['@id']
+            'tileSource': img + '/info.json',
+            'target': canvases[i]['@id'],
+            'metadata': manifest_url,
+            'thumbnailUrl': img + '/full/256,/0/default.jpg',
+            'shareUrl': get_share_url(manifest_url, i)
         }
         row.update(task['task'])
         data.append(row)

@@ -10,7 +10,6 @@ def copy(config=None):
     """Copy files to the dist folder."""
     set_config_dir(config)
     copy_config_file('long_description.md')
-    copy_config_file('template.html')
 
 
 if __name__ == '__main__':
