@@ -42,7 +42,6 @@ python bin/generate.py <taskset> <manifest_uri> [--results] [--config] [--skip]
 cd dist
 pbs create_project
 pbs add_tasks --tasks-file=tasks.json
-pbs update_project
 ```
 
 Once you have updated any additional settings on the server (category,
