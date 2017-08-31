@@ -56,7 +56,7 @@ def get_task_data_from_manifest(category, manifest):
         row = {
             'tileSource': img + '/info.json',
             'target': canvases[i]['@id'],
-            'metadata': manifest_url,
+            'info': manifest_url,
             'thumbnailUrl': img + '/full/256,/0/default.jpg',
             'shareUrl': get_share_url(manifest_url, i)
         }
