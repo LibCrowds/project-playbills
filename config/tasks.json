@@ -2,7 +2,8 @@
   "mark_titles": {
     "project": {
       "namePrefix": "Identify Titles",
-      "description": "Identify the titles of plays in historic playbills"
+      "description": "Identify the titles of plays in historic playbills",
+      "parent": null
     },
     "task": {
       "mode": "select",
@@ -13,34 +14,20 @@
     }
   },
 
-  "people": {
-    "project": {
-      "mode": "select",
-      "tag": "person"
-    },
-    "task": {
-      "namePrefix": "Identify People",
-      "description": "Identify people in historic playbills",
-      "objective": "Identify each person",
-      "guidance": "Draw rectangles around the names of people mentioned in the next performance. You can ignore any past or future performances mentioned on this page."
-    }
-  },
   "transcribe_titles": {
     "project": {
       "mode": "transcribe",
-      "tag": "title"
+      "tag": "title",
+      "parent": "mark_titles"
     },
     "task": {
       "namePrefix": "Transcribe Titles",
-      "description": "Transcribe the titles in historic playbills",
+      "description": "Transcribe the titles of plays in historic playbills",
       "objective": "Transcribe the title",
-      "guidance": "Transcribe the title exactly as displayed on the page, including subtitles, where they exist.",
+      "guidance": "Type in the title exactly as displayed on the page, including any subtitles. You don't need to include the genre.",
       "form": {
         "model": {
           "title": ""
-        },
-        "classification": {
-          "title": "http://purl.org/dc/terms/title"
         },
         "schema": {
           "fields": [
@@ -50,6 +37,114 @@
               "label": "Title",
               "model": "title",
               "placeholder": "Transcribe the title",
+              "required": true
+            }
+          ]
+        }
+      }
+    }
+  },
+
+  "mark_people": {
+    "project": {
+      "mode": "select",
+      "tag": "person",
+      "parent": "mark_titles"
+    },
+    "task": {
+      "namePrefix": "Identify People",
+      "description": "Identify people in historic playbills",
+      "objective": "Identify people",
+      "guidance": "Draw rectangles around the names of people associated with the highlighted title. As well as actors, they might be directors, producers, authors, stage managers etc."
+    }
+  },
+
+  "transcribe_people": {
+    "project": {
+      "mode": "transcribe",
+      "tag": "person",
+      "parent": "mark_people"
+    },
+    "task": {
+      "namePrefix": "Transcribe Names",
+      "description": "Transcribe the names of people in historic playbills",
+      "objective": "Transcribe the name",
+      "guidance": "Transcribe the name exactly as it appears on the page. Fields where the information is not available (e.g. First name) can be left blank.",
+      "form": {
+        "model": {
+          "title": "",
+          "givenName": "",
+          "familyName": ""
+        },
+        "schema": {
+          "fields": [
+            {
+              "type": "input",
+              "inputType": "text",
+              "label": "Title",
+              "model": "title",
+              "placeholder": "Transcribe the title",
+              "required": false
+            },
+            {
+              "type": "input",
+              "inputType": "text",
+              "label": "First name",
+              "model": "givenName",
+              "placeholder": "Transcribe the first name",
+              "required": false
+            },
+            {
+              "type": "input",
+              "inputType": "text",
+              "label": "Surname",
+              "model": "familyName",
+              "placeholder": "Transcribe the surname",
+              "required": false
+            }
+          ]
+        }
+      }
+    }
+  },
+
+  "mark_dates": {
+    "project": {
+      "mode": "select",
+      "tag": "date",
+      "parent": "mark_titles"
+    },
+    "task": {
+      "namePrefix": "Identify Dates",
+      "description": "Identify dates in historic playbills",
+      "objective": "Identify dates",
+      "guidance": "Draw a rectangles around the dates associated with the highlighted title. If there is only one date present it should be entered as both the start and end date."
+    }
+  },
+
+  "transcribe_dates": {
+    "project": {
+      "mode": "transcribe",
+      "tag": "date",
+      "parent": "mark_dates"
+    },
+    "task": {
+      "namePrefix": "Transcribe Dates",
+      "description": "Transcribe the dates of plays in historic playbills",
+      "objective": "Transcribe the date",
+      "guidance": "Transcribe the date.",
+      "form": {
+        "model": {
+          "date": ""
+        },
+        "schema": {
+          "fields": [
+            {
+              "type": "input",
+              "inputType": "date",
+              "label": "Date",
+              "model": "date",
+              "placeholder": "Transcribe the date",
               "required": true
             }
           ]

@@ -36,7 +36,7 @@ Install [Python](https://www.python.org/downloads/), and
 
 ```bash
 # generate project files
-python bin/generate.py <taskset> <manifest_uri> [--results=/path/to/results.json] [--config=/path/to/config]
+python bin/generate.py <taskset> <manifest_uri> [--results] [--config] [--skip]
 
 # deploy
 cd dist

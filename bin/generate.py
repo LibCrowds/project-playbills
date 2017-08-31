@@ -14,6 +14,7 @@ if __name__ == '__main__':
     PARSER.add_argument('manifestid', help="IIIF manifest ID.")
     PARSER.add_argument('--config', help="Project configuration.")
     PARSER.add_argument('--results', help="JSON results file.")
+    PARSER.add_argument('--skip', help="Skip the first n tasks.")
     ARGS = PARSER.parse_args()
     CONTEXT = generate_context.generate(ARGS.category, ARGS.manifestid,
                                         ARGS.config)
