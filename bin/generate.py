@@ -19,5 +19,4 @@ if __name__ == '__main__':
                                         ARGS.config)
     TASKS = generate_tasks.generate(ARGS.category, ARGS.manifestid, ARGS.config,
                                     ARGS.results)
-    copy_files.copy(ARGS.config)
     print '\n"{0}" created with {1} tasks'.format(CONTEXT['name'], len(TASKS))
