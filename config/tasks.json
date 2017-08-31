@@ -55,7 +55,8 @@
       "namePrefix": "Identify People",
       "description": "Identify people in historic playbills",
       "objective": "Identify people",
-      "guidance": "Draw rectangles around the names of people associated with the highlighted title. As well as actors, they might be directors, producers, authors, stage managers etc."
+      "guidance": "Draw rectangles around the names of people associated with the highlighted title. As well as actors, they might be directors, producers, authors, stage managers etc.",
+      "classification": "http://xmlns.com/foaf/0.1/Person"
     }
   },
 
