@@ -5,7 +5,6 @@ A script for generating a project-iiif-annotate project.
 import argparse
 import generate_context
 import generate_tasks
-import copy_files
 
 
 if __name__ == '__main__':
@@ -19,6 +18,5 @@ if __name__ == '__main__':
     CONTEXT = generate_context.generate(ARGS.category, ARGS.manifestid,
                                         ARGS.config)
     TASKS = generate_tasks.generate(ARGS.category, ARGS.manifestid, ARGS.config,
-                                    ARGS.results, ARGS.skip)
-    copy_files.copy(ARGS.config)
+                                    ARGS.results)
     print '\n"{0}" created with {1} tasks'.format(CONTEXT['name'], len(TASKS))
