@@ -1,15 +1,15 @@
 {
   "mark_titles": {
     "project": {
-      "namePrefix": "Identify Titles",
-      "description": "Identify the titles of plays in historic playbills",
+      "namePrefix": "Mark Titles",
+      "description": "Mark out the titles of plays in historic playbills",
       "parent": null
     },
     "task": {
       "mode": "select",
       "tag": "title",
-      "objective": "Identify titles",
-      "guidance": "Draw rectangles around the titles of plays featured on the next upcoming performance date. When you're happy with the outline, choose the green tick to save it. Please include subtitles where they exist. Ignore any past or future performances mentioned on this page. You don't need to include descriptions or song titles."
+      "objective": "Mark titles",
+      "guidance": "Draw rectangles around the titles of plays featured on the next performance date. When you're happy with the outline, choose the green tick to save it. Please include subtitles where they exist. Ignore any past or future performances mentioned on this page. You don't need to include descriptions or song titles."
     }
   },
 
