@@ -1,6 +1,6 @@
 #-*- coding: utf8 -*-
 """
-Helper functions for project-iiif-annotate scripts.
+Helper functions for project-playbills scripts.
 """
 import csv
 import json

@@ -1,6 +1,6 @@
 #-*- coding: utf8 -*-
 """
-A script for generating the project-iiif-annotate tasks.
+A script for generating the project-playbills tasks.
 """
 import json
 import argparse
