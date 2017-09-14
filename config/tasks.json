@@ -20,7 +20,7 @@
         },
         "file_path": "./assets/example_img.jpg"
       },
-      { 
+      {
         "info": {
           "key": "value"
         }
@@ -30,18 +30,20 @@
 
   "transcribe_titles": {
     "project": {
-      "mode": "transcribe",
-      "tag": "title",
+      "namePrefix": "Transcribe Titles",
+      "description": "Transcribe the titles of previoulsy marked up plays in historic playbills",
       "parent": "mark_titles"
     },
     "task": {
-      "namePrefix": "Transcribe Titles",
-      "description": "Transcribe the titles of plays in historic playbills",
+      "mode": "transcribe",
       "objective": "Transcribe the title",
       "guidance": "Type in the title exactly as displayed in the highlighted box on the page, including any subtitles and punctuation. You don't need to include the genre or description.",
       "form": {
         "model": {
           "title": ""
+        },
+        "classification": {
+          "title": "http://purl.org/dc/terms/title"
         },
         "schema": {
           "fields": [
@@ -50,8 +52,7 @@
               "inputType": "text",
               "label": "Title",
               "model": "title",
-              "placeholder": "Transcribe the title",
-              "required": true
+              "placeholder": "Transcribe the title"
             }
           ]
         }
