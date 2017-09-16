@@ -34,13 +34,14 @@ def enhance_task_data_from_results(task_data, results):
             source = anno['target']['source']
             selector = anno['target']['selector']['value']
             rect = selector.split('=')[1].split(',')
-            data = indexed_task_data[source]
+            print rect
+            data = indexed_task_data[source].copy()
             data['highlights'] = [
                 {
-                    'x': rect[0],
-                    'y': rect[1],
-                    'width': rect[2],
-                    'height': rect[3]
+                    'x': float(rect[0]),
+                    'y': float(rect[1]),
+                    'width': float(rect[2]),
+                    'height': float(rect[3])
                 }
             ]
             enhanced_task_data.append(data)
@@ -92,9 +93,10 @@ def generate(category, manifest_id, config=None, results=None, skip=None):
     if skip:
         task_data = task_data[int(skip):]
 
-    # to overcode LibCrowds Viewer's info field
-    task_data = [{'info': task} for task in task_data]
+    write_json('raw_tasks.json', task_data)
 
+    # Fix for "info" field also being used for metadata in task opts
+    task_data = [{'info': task} for task in task_data]
     write_json('tasks.json', task_data)
     return task_data
 
