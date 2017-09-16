@@ -46,7 +46,7 @@ def enhance_task_data_from_results(task_data, results):
                 ]
                 data['parent_task_id'] = row['task_id']
                 enhanced_task_data.append(data)
-            else:
+            elif anno['motivation'] != 'commenting':
                 raise ValueError('Unknown motivation')
 
     # Sort

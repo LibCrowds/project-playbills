@@ -31,7 +31,7 @@
   "transcribe_titles": {
     "project": {
       "namePrefix": "Transcribe Titles",
-      "description": "Transcribe the titles of previoulsy marked up plays in historic playbills",
+      "description": "Transcribe the titles of marked up plays in historic playbills",
       "parent": "mark_titles"
     },
     "task": {
