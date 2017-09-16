@@ -28,24 +28,26 @@ def enhance_task_data_from_results(task_data, results):
     indexed_task_data = {row['target']: row for row in task_data}
 
     enhanced_task_data = []
-    annotations = [a for row in results for a in row['info']['annotations']]
-    for anno in annotations:
-        if anno['motivation'] == 'tagging':
-            source = anno['target']['source']
-            selector = anno['target']['selector']['value']
-            rect = selector.split('=')[1].split(',')
-            data = indexed_task_data[source].copy()
-            data['highlights'] = [
-                {
-                    'x': float(rect[0]),
-                    'y': float(rect[1]),
-                    'width': float(rect[2]),
-                    'height': float(rect[3])
-                }
-            ]
-            enhanced_task_data.append(data)
-        else:
-            raise ValueError('Unknown motivation')
+    for row in results:
+        annotations = row['info']['annotations']
+        for anno in annotations:
+            if anno['motivation'] == 'tagging':
+                source = anno['target']['source']
+                selector = anno['target']['selector']['value']
+                rect = selector.split('=')[1].split(',')
+                data = indexed_task_data[source].copy()
+                data['highlights'] = [
+                    {
+                        'x': float(rect[0]),
+                        'y': float(rect[1]),
+                        'width': float(rect[2]),
+                        'height': float(rect[3])
+                    }
+                ]
+                data['parent_task_id'] = row['task_id']
+                enhanced_task_data.append(data)
+            else:
+                raise ValueError('Unknown motivation')
 
     # Sort
     return sorted(enhanced_task_data,
