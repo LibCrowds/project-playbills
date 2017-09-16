@@ -22,31 +22,37 @@ def get_share_url(manifest_url, canvas_index):
     return share_url_base.replace('/manifest.json', query)
 
 
-def get_task_data_from_json(json_data, taskset):
+def enhance_task_data_from_results(task_data, results):
     """Return the task data generated from JSON input data."""
-    task_data = taskset['tasks']
-    input_data = [{'img_info_uri': row['info']['img_info_uri'],
-                   'manifest_url': row['info']['manifest_url'],
-                   'parent_task_id': row['task_id'],
-                   'region': json.dumps(region)}
-                  for row in json_data
-                  for region in row['info']['regions']]
+    # Index task_data by target
+    indexed_task_data = {row['target']: row for row in task_data}
 
-    product = list(itertools.product(task_data, input_data))
-    data = [dict(row[0].items() + row[1].items()) for row in product]
+    enhanced_task_data = []
+    annotations = [a for row in results for a in row['info']['annotations']]
+    for anno in annotations:
+        if anno['motivation'] == 'tagging':
+            source = anno['target']['source']
+            selector = anno['target']['selector']['value']
+            rect = selector.split('=')[1].split(',')
+            data = indexed_task_data[source]
+            data['highlights'] = [
+                {
+                    'x': rect[0],
+                    'y': rect[1],
+                    'width': rect[2],
+                    'height': rect[3]
+                }
+            ]
+            enhanced_task_data.append(data)
+        else:
+            raise ValueError('Unknown motivation')
 
-    # Set default guidance
-    for d in data:
-        if not d['guidance']:
-            d['guidance'] = ("Identify each {0} associated with the "
-                             "highlighted {1}.").format(d['category'],
-                                                        d['parent_category'])
-    return data
+
+    return enhanced_task_data
 
 
-def get_task_data_from_manifest(category, manifest):
+def get_task_data_from_manifest(task, manifest):
     """Return the task data generated from a manifest."""
-    task = get_task(category)
     manifest_url = manifest['@id']
     canvases = manifest['sequences'][0]['canvases']
     images = [c['images'][0]['resource']['service']['@id'] for c in canvases]
@@ -69,12 +75,20 @@ def generate(category, manifest_id, config=None, results=None, skip=None):
     """Generate and return the tasks file."""
     mkdist()
     set_config_dir(config)
-    if results:
+
+    task = get_task(category)
+    manifest = get_manifest(manifest_id)
+    task_data = get_task_data_from_manifest(task, manifest)
+
+    if task['project']['parent'] and not results:
+        err_msg = '{0} projects must be built from the results of a {1} project'
+        err_msg = err_msg.format(category, task['project']['parent'])
+        raise ValueError(err_msg)
+
+    elif results:
         results_json = json.load(open(results, 'rb'))
-        task_data = get_task_data_from_json(results_json, category)
-    else:
-        manifest = get_manifest(manifest_id)
-        task_data = get_task_data_from_manifest(category, manifest)
+        task_data = enhance_task_data_from_results(task_data, results_json)
+
     if skip:
         task_data = task_data[int(skip):]
 
