@@ -34,7 +34,6 @@ def enhance_task_data_from_results(task_data, results):
             source = anno['target']['source']
             selector = anno['target']['selector']['value']
             rect = selector.split('=')[1].split(',')
-            print rect
             data = indexed_task_data[source].copy()
             data['highlights'] = [
                 {
@@ -48,8 +47,13 @@ def enhance_task_data_from_results(task_data, results):
         else:
             raise ValueError('Unknown motivation')
 
-
-    return enhanced_task_data
+    # Sort
+    return sorted(enhanced_task_data,
+                  key=lambda x: (
+                      x['target'],
+                      x['highlights'][0]['y'],
+                      x['highlights'][0]['x']
+                  ))
 
 
 def get_task_data_from_manifest(task, manifest):
