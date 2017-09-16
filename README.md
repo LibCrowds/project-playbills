@@ -19,16 +19,6 @@ chained to highlight increasingly more specific regions in the text (e.g. all
 names associated with a title). When a JSON results file is not used a task
 will be created for each image.
 
-## Configuring
-
-By default, the project is configured for the LibCrowds playbills site. However,
-alternative configurations can easily be created by making a copy of the
-[config](config) folder, editing the files contained within and providing the
-location of this custom config directory when running the scripts below.
-
-See [config/README.md](config/README.md) for more details about the various
-configuration files.
-
 ## Usage
 
 Install [Python](https://www.python.org/downloads/), and
