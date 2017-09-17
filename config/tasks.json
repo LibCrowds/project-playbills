@@ -12,17 +12,7 @@
       "guidance": "Draw rectangles around the titles of plays featured on the next performance date. When you're happy with the outline, choose the green tick to save it. Most playbills list more than one play for an evening, so mark all you can see. Please include subtitles (alternative titles, like 'or the something or other') where they exist. Ignore any performances on past or future dates. You don't need to include song titles. Press save/submit when you're finished marking up a page.",
       "classification": "http://purl.org/dc/terms/title"
     },
-    "help": [
-      {
-        "title": "something",
-        "body": "content",
-        "file_path": "../assets/marking_up.gif"
-      },
-      {
-        "title": "something",
-        "body": "content"
-      }
-    ]
+    "tutorial": "./tutorials/mark_titles.md"
   },
 
   "transcribe_titles": {
@@ -55,7 +45,7 @@
         }
       }
     },
-    "help": []
+    "tutorial": "./tutorials/transcribe_titles.md"
   },
 
   "mark_people": {
@@ -71,7 +61,7 @@
       "guidance": "Draw rectangles around the names of people associated with the highlighted title. As well as actors, they might be directors, producers, authors, stage managers etc.",
       "classification": "http://xmlns.com/foaf/spec/#term_Person"
     },
-    "help": []
+    "tutorial": "./tutorials/mark_people.md"
   },
 
   "transcribe_people": {
@@ -120,51 +110,7 @@
           ]
         }
       }
-    }
-  },
-
-  "mark_dates": {
-    "project": {
-      "mode": "select",
-      "tag": "date",
-      "parent": "mark_titles"
     },
-    "task": {
-      "namePrefix": "Identify Dates",
-      "description": "Identify dates in historic playbills",
-      "objective": "Identify dates",
-      "guidance": "Draw a rectangles around the dates associated with the highlighted title. If there is only one date present it should be entered as both the start and end date."
-    }
-  },
-
-  "transcribe_dates": {
-    "project": {
-      "mode": "transcribe",
-      "tag": "date",
-      "parent": "mark_dates"
-    },
-    "task": {
-      "namePrefix": "Transcribe Dates",
-      "description": "Transcribe the dates of plays in historic playbills",
-      "objective": "Transcribe the date",
-      "guidance": "Transcribe the date.",
-      "form": {
-        "model": {
-          "date": ""
-        },
-        "schema": {
-          "fields": [
-            {
-              "type": "input",
-              "inputType": "date",
-              "label": "Date",
-              "model": "date",
-              "placeholder": "Transcribe the date",
-              "required": true
-            }
-          ]
-        }
-      }
-    }
+    "tutorial": "./tutorials/transcribe_people.md"
   }
 }

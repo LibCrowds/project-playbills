@@ -73,8 +73,8 @@ def write_json(filename, data):
         json.dump(data, json_file, indent=2)
 
 
-def copy_config_file(filename):
+def copy_config_file(src_filename, out_filename):
     """Copy a config file to the dist folder."""
-    src_path = os.path.join(config_dir, filename)
-    dist_path = os.path.join(DIST_DIR, filename)
+    src_path = os.path.join(config_dir, src_filename)
+    dist_path = os.path.join(DIST_DIR, out_filename)
     shutil.copyfile(src_path, dist_path)

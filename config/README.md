@@ -2,7 +2,6 @@
 
 This folder contains the following configuration files.
 
-
 ### tasks.json
 
 Defines the configurations used to generate the project context and tasks.
@@ -21,3 +20,8 @@ the title and description.
 
 This file contains a mapping between IIIF manifest URIs and name suffixes that
 are appended to the name prefixes defined in tasks.json.
+
+## tutorials
+
+A set of markdown files that can be loaded as the tutorial for a project by
+linking them via the `tutorial` key in `tasks.json`.

@@ -4,22 +4,20 @@ A script for generating the project-playbills help.json file.
 """
 import re
 import argparse
-from helpers import get_task, mkdist, set_config_dir, write_json
+from helpers import get_task, set_config_dir, copy_config_file
 
 
 def generate(task, config=None):
-    """Generate the project.json file."""
-    mkdist()
+    """Generate the tutorial.md file."""
     set_config_dir(config)
     task = get_task(task)
-    _help = task['help']
-    write_json('help.json', _help)
+    copy_config_file(task['tutorial'], 'tutorial.md')
 
 
 if __name__ == '__main__':
-    PARSER = argparse.ArgumentParser(description='Generate help.json.')
+    PARSER = argparse.ArgumentParser(description='Generate tutorial.md.')
     PARSER.add_argument('task', help="A task listed in tasks.json.")
     PARSER.add_argument('--config', help="Project configuration.")
     ARGS = PARSER.parse_args()
     generate(ARGS.task, ARGS.config)
-    print('help.json created')
+    print('tutorial.md created')
