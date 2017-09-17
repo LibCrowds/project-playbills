@@ -60,17 +60,18 @@
 
   "mark_people": {
     "project": {
-      "mode": "select",
-      "tag": "person",
+      "namePrefix": "Mark People",
+      "description": "Mark up the people associated with plays in historic playbills",
       "parent": "mark_titles"
     },
     "task": {
-      "namePrefix": "Identify People",
-      "description": "Identify people in historic playbills",
-      "objective": "Identify people",
+      "mode": "select",
+      "tag": "person",
+      "objective": "Mark people",
       "guidance": "Draw rectangles around the names of people associated with the highlighted title. As well as actors, they might be directors, producers, authors, stage managers etc.",
-      "classification": "http://xmlns.com/foaf/0.1/Person"
-    }
+      "classification": "http://xmlns.com/foaf/spec/#term_Person"
+    },
+    "help": []
   },
 
   "transcribe_people": {
