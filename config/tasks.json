@@ -14,16 +14,13 @@
     },
     "help": [
       {
-        "info": {
-          "title": "something",
-          "body": "content"
-        },
-        "file_path": "./assets/example_img.jpg"
+        "title": "something",
+        "body": "content",
+        "file_path": "../assets/marking_up.gif"
       },
       {
-        "info": {
-          "key": "value"
-        }
+        "title": "something",
+        "body": "content"
       }
     ]
   },
@@ -57,7 +54,8 @@
           ]
         }
       }
-    }
+    },
+    "help": []
   },
 
   "mark_people": {

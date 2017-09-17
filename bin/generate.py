@@ -5,6 +5,7 @@ A script for generating a project-playbills project.
 import argparse
 import generate_context
 import generate_tasks
+import generate_help
 
 
 if __name__ == '__main__':
@@ -19,4 +20,5 @@ if __name__ == '__main__':
                                         ARGS.config)
     TASKS = generate_tasks.generate(ARGS.category, ARGS.manifestid, ARGS.config,
                                     ARGS.results)
+    generate_help.generate(ARGS.category, ARGS.config)
     print '\n"{0}" created with {1} tasks'.format(CONTEXT['name'], len(TASKS))
