@@ -44,6 +44,12 @@ def enhance_task_data_from_results(task_data, results):
                         'height': float(rect[3])
                     }
                 ]
+                data['bounds'] = {
+                    'x': float(rect[0]) + data['bounds']['x'],
+                    'y': float(rect[1]) + data['bounds']['y'],
+                    'width': float(rect[2]) + data['bounds']['width'],
+                    'height': float(rect[3]) + data['bounds']['height']
+                }
                 data['parent_task_id'] = row['task_id']
                 enhanced_task_data.append(data)
             elif anno['motivation'] != 'commenting':

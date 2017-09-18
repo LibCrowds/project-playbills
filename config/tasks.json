@@ -11,8 +11,7 @@
       "objective": "Mark titles",
       "guidance": "Draw rectangles around the titles of plays featured on the next performance date. When you're happy with the outline, choose the green tick to save it. Most playbills list more than one play for an evening, so mark all you can see. Please include subtitles (alternative titles, like 'or the something or other') where they exist. Ignore any performances on past or future dates. You don't need to include song titles. Press save/submit when you're finished marking up a page.",
       "classification": "http://purl.org/dc/terms/title"
-    },
-    "tutorial": "./tutorials/mark_titles.md"
+    }
   },
 
   "transcribe_titles": {
@@ -25,6 +24,7 @@
       "mode": "transcribe",
       "objective": "Transcribe the title",
       "guidance": "Type in the title exactly as displayed in the highlighted box on the page, including any subtitles and punctuation. You don't need to include the genre or description.",
+      "help": "!['Transcribing a title'](https://cdn.rawgit.com/LibCrowds/project-playbills/b15721d6/assets/transcribe_titles.gif) Type in the title exactly as displayed in the highlighted box on the page, including any subtitles and punctuation. You don't need to include the genre or description. Once the title is transcribed click the Save button; after which you will be presented with the next highlighted title.",
       "form": {
         "model": {
           "title": ""
@@ -43,9 +43,14 @@
             }
           ]
         }
+      },
+      "bounds": {
+        "x": -200,
+        "y": 0,
+        "width": 400,
+        "height": 0
       }
-    },
-    "tutorial": "./tutorials/transcribe_titles.md"
+    }
   },
 
   "mark_people": {
@@ -60,8 +65,7 @@
       "objective": "Mark people",
       "guidance": "Draw rectangles around the names of people associated with the highlighted title. As well as actors, they might be directors, producers, authors, stage managers etc.",
       "classification": "http://xmlns.com/foaf/spec/#term_Person"
-    },
-    "tutorial": "./tutorials/mark_people.md"
+    }
   },
 
   "transcribe_people": {
@@ -110,7 +114,6 @@
           ]
         }
       }
-    },
-    "tutorial": "./tutorials/transcribe_people.md"
+    }
   }
 }
