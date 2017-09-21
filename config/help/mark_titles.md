@@ -17,4 +17,4 @@ Frequently answered questions:
 - Ignore any performances on past or future dates. 
 - You don't need to include song titles or scenery. If you're not sure if something counts as a play, then add a note and go ahead and mark it anyway. 
 
-If you have a question that isn't answered here, please ask on our [project forum](https://community.libcrowds.com/) or on twitter ([@LibCrowds](https://twitter.com/libcrowds)). 
+If you have a question that isn't answered here, please post a question on our [discussion forum](https://community.libcrowds.com/) or on twitter ([@LibCrowds](https://twitter.com/libcrowds)). 
