@@ -10,4 +10,4 @@ Tips:
 - There is an exception to 'type what you see': if you come across a 'long f' - for example, the 'Sufpicious Hufband', please use 's' instead of 'f' in your transcription.
 - If you notice something interesting or odd about the playbill, or it needs to be reviewed because e.g. a title wasn't marked, let us know! Press the area that says 'Add a note' and type your comment in the white box that opens underneath. Your note will be saved when you save the next title.
 
-If you have a question that isn't answered here, please ask on our [project forum](https://community.libcrowds.com/) or on twitter ([@LibCrowds](https://twitter.com/libcrowds)). 
+If you have a question that isn't answered here, please post a question on our [discussion forum](https://community.libcrowds.com/) or on twitter ([@LibCrowds](https://twitter.com/libcrowds)). 
