@@ -10,7 +10,7 @@ import urllib2
 import shutil
 
 __all__ = ['get_task', 'get_csv_field', 'mkdist', 'get_manifest',
-           'set_config_dir', 'load_json', 'copy_config_file']
+           'set_config_dir', 'load_json', 'copy_config_file', 'load_markdown']
 
 DIST_DIR = os.path.join(os.path.dirname(os.path.dirname(__file__)), 'dist')
 
@@ -20,6 +20,13 @@ def load_json(filename):
     path = os.path.join(config_dir, filename)
     json_file = open(path, 'rb')
     return json.load(json_file)
+
+
+def load_markdown(filename):
+    """Return the contents of a Markdown config file."""
+    path = os.path.join(config_dir, filename)
+    _file = open(path, 'rb')
+    return _file.read()
 
 
 def get_task(name):

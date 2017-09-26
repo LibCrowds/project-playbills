@@ -5,7 +5,8 @@ A script for generating the project-playbills tasks.
 import json
 import argparse
 from helpers import get_task, mkdist, set_config_dir, write_json
-from helpers import get_manifest
+from helpers import get_manifest, load_markdown
+
 
 def get_share_url(manifest_url, canvas_index):
     """Return the BL Universal Viewer URL"""
@@ -91,6 +92,12 @@ def generate(category, manifest_id, config=None, results=None, skip=None):
     task = get_task(category)
     manifest = get_manifest(manifest_id)
     task_data = get_task_data_from_manifest(task, manifest)
+    help_path = task['project'].get('help')
+
+    if help_path:
+      _help = load_markdown(help_path)
+      for row in task_data:
+        row['help'] = _help
 
     if task['project']['parent'] and not results:
         err_msg = '{0} projects must be built from the results of a {1} project'
