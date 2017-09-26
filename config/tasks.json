@@ -93,6 +93,39 @@
     }
   },
 
+  "transcribe_dates": {
+    "project": {
+      "namePrefix": "Transcribe Dates",
+      "description": "Transcribe the dates of plays in historic playbills",
+      "parent": null,
+      "help": "./help/transcribe_dates.md"
+    },
+    "task": {
+      "mode": "transcribe",
+      "objective": "Transcribe the date",
+      "guidance": "Type in the main date of the playbill.",
+      "form": {
+        "model": {
+          "date": ""
+        },
+        "classification": {
+          "date": "http://www.w3.org/2001/XMLSchema#date"
+        },
+        "schema": {
+          "fields": [
+            {
+              "type": "input",
+              "inputType": "date",
+              "label": "Date",
+              "model": "date",
+              "placeholder": "dd/mm/yyyy"
+            }
+          ]
+        }
+      }
+    }
+  },
+
   "mark_people": {
     "project": {
       "namePrefix": "Mark People",
