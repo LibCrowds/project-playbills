@@ -9,7 +9,7 @@
       "mode": "select",
       "tag": "title",
       "objective": "Mark titles",
-      "guidance": "Draw rectangles around the titles of plays featured on the next performance date. When you're happy with the outline, choose the green tick to save it. Most playbills list more than one play for an evening, so mark all you can see. Please include subtitles (alternative titles, like 'or the something or other') where they exist. Ignore any performances on past or future dates. You don't need to include song titles. Press save/submit when you're finished marking up a page.",
+      "guidance": "Draw rectangles around the titles of plays in the upcoming performance. Press the green tick to save. Mark additional performances on the same date. Please include any subtitles or alternative titles. Ignore song titles and past or future performances. Press Save when the page is done.",
       "classification": "http://purl.org/dc/terms/title"
     }
   },
