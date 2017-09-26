@@ -4,8 +4,7 @@ A script for generating the project-playbills tasks.
 """
 import json
 import argparse
-import itertools
-from helpers import get_task, mkdist, set_config_dir, load_json, write_json
+from helpers import get_task, mkdist, set_config_dir, write_json
 from helpers import get_manifest
 
 def get_share_url(manifest_url, canvas_index):
