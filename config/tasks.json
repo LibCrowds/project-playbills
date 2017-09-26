@@ -54,6 +54,45 @@
     }
   },
 
+  "transcribe_genres": {
+    "project": {
+      "namePrefix": "Transcribe Genres",
+      "description": "Transcribe the genres of marked up plays in historic playbills",
+      "parent": "mark_titles",
+      "help": "./help/transcribe_genres.md"
+    },
+    "task": {
+      "mode": "transcribe",
+      "objective": "Transcribe the genre",
+      "guidance": "Type in the genre of the highlighted title, exactly as displayed on the page. If there is no genre displayed you can leave the field blank.",
+      "form": {
+        "model": {
+          "genre": ""
+        },
+        "classification": {
+          "genre": "http://purl.org/dc/terms/type"
+        },
+        "schema": {
+          "fields": [
+            {
+              "type": "input",
+              "inputType": "text",
+              "label": "Genre",
+              "model": "genre",
+              "placeholder": "Transcribe the genre"
+            }
+          ]
+        }
+      },
+      "bounds": {
+        "x": -200,
+        "y": 0,
+        "width": 400,
+        "height": 0
+      }
+    }
+  },
+
   "mark_people": {
     "project": {
       "namePrefix": "Mark People",
