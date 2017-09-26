@@ -29,7 +29,12 @@ def enhance_task_data_from_results(task_data, results):
 
     enhanced_task_data = []
     for row in results:
-        annotations = row['info']['annotations']
+        info = row['info']
+
+        if not info:
+            raise ValueError('The info field for a result is empty')
+        annotations = info['annotations']
+
         for anno in annotations:
             if anno['motivation'] == 'tagging':
                 source = anno['target']['source']
