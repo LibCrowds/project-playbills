@@ -57,14 +57,14 @@
   "transcribe_genres": {
     "project": {
       "namePrefix": "Transcribe Genres",
-      "description": "Transcribe the genres of marked up plays in historic playbills",
+      "description": "Transcribe the genres of the highlighted title",
       "parent": "mark_titles",
       "help": "./help/transcribe_genres.md"
     },
     "task": {
       "mode": "transcribe",
       "objective": "Transcribe the genre",
-      "guidance": "Type in the genre of the highlighted title, exactly as displayed on the page. If there is no genre displayed you can leave the field blank.",
+      "guidance": "Type in the genre listed for the highlighted title. Terms like 'comedy' or 'melodrama' usually appear above or below the title. If you can't see a genre, leave it blank.",
       "form": {
         "model": {
           "genre": ""
