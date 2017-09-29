@@ -2,7 +2,7 @@ Transcribe the main performance date shown on a playbill to help researchers ana
 
 The date usually appears in the first few lines of the playbill.
 
-![Playbill showing date](https://user-images.githubusercontent.com/380763/31012325-4f307bd6-a509-11e7-9aa2-939cbb561819.png)
+![Playbill showing date](https://cdn.rawgit.com/LibCrowds/project-playbills/cfe5d1c8/assets/dates_snippet.png)
 
 - The date format is dd/mm/yyyy - the day of the month goes first, then the month, then the year. In this example, it'd be 29/01/1829
 - You don't need to type the day of the week
