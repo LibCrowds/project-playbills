@@ -21,7 +21,7 @@ the title and description.
 This file contains a mapping between IIIF manifest URIs and name suffixes that
 are appended to the name prefixes defined in tasks.json.
 
-## tutorials
+## help
 
-A set of markdown files that can be loaded as the tutorial for a project by
-linking them via the `tutorial` key in `tasks.json`.
+The help folder contains a set of markdown files that can be loaded as the 
+tutorial for a project by linking them via the `tutorial` key in `tasks.json`.
