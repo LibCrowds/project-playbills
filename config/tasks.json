@@ -103,7 +103,7 @@
     "task": {
       "mode": "transcribe",
       "objective": "Transcribe the date",
-      "guidance": "Type in the main date of the playbill.",
+      "guidance": "Type in the main date of the playbill. Put the day date first, then the month, then the year.",
       "form": {
         "model": {
           "date": ""
