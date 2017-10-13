@@ -4,9 +4,9 @@ In this case, the genre is 'musical farce'.
 
 ![Highlighted title](https://cdn.rawgit.com/LibCrowds/project-playbills/6fd4ce26/assets/genre_snippet.png)
 
-- Type in the genre of the highlighted title, as it appears on the page.
-- Genres you're likely to see include various forms of farce, comedy, melodrama. 
-- If the genre is in ALL CAPS, you can type it in lowercase or title case.
+- Type in the genre of the highlighted title in lower case 
+(but it's ok if you type the case used on the page - we'll tidy up the data before finalising it).
+- Genres you're likely to see include various forms of farce, comedy, melodrama, or wonderful combinations thereof. 
 - If there is no genre displayed just leave the field blank.
 - The screen will automatically move to the next title when you hit enter or the save button.
 
