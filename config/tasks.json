@@ -10,7 +10,7 @@
       "mode": "select",
       "tag": "title",
       "objective": "Mark titles",
-      "guidance": "Draw rectangles around the titles of plays in the upcoming performance. Press the green tick to save. Mark additional performances on the same date. Please include any subtitles or alternative titles. Ignore song titles and past or future performances. Press Save when the page is done.",
+      "guidance": "Draw rectangles around the titles of plays in the upcoming performance, then press the green tick to save. Mark any other performances on the same date. Please include any subtitles or alternative titles. Ignore song titles, past or future performances. Press Save when the page is done.",
       "classification": "http://purl.org/dc/terms/title"
     }
   },
@@ -25,7 +25,7 @@
     "task": {
       "mode": "transcribe",
       "objective": "Transcribe the title",
-      "guidance": "Type in the title exactly as displayed in the highlighted box on the page, including any subtitles and punctuation. You don't need to include the genre or description.",
+      "guidance": "Type in the title exactly as displayed in the highlighted box on the page, including any subtitles and punctuation. You don't need to include any genre or description.",
       "form": {
         "model": {
           "title": ""
