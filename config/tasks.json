@@ -115,7 +115,7 @@
           "fields": [
             {
               "type": "input",
-              "inputType": "date",
+              "inputType": "text",
               "label": "Date",
               "model": "date",
               "placeholder": "dd/mm/yyyy"
